@@ -1,1 +1,4 @@
+<!-- ngSkipHydration: NgbAccordionBody creates views via raw ViewContainerRef, which
+     Angular's SSR hydration can't reconcile with the prerendered DOM (throws
+     "Expecting instance of DOM Element" and content silently fails to expand). -->
 <app-pai ngSkipHydration></app-pai>
