@@ -1,0 +1,157 @@
+<header class="raiox-hero">
+  <div class="raiox-hero-content">
+    <span class="raiox-hero-badge"><i class="bi bi-bar-chart-line-fill"></i></span>
+    <h1 class="raiox-hero-title">Painel Raio-X Unidades</h1>
+    <p class="raiox-hero-subtitle">Acompanhe, em um só lugar, os indicadores essenciais da unidade</p>
+  </div>
+</header>
+
+<main class="container raiox-container">
+  <div ngbAccordion [closeOthers]="false" class="raiox-accordion">
+
+    <!-- ITEM 1: Frequência Sacramental -->
+    <div ngbAccordionItem="itemUm" [collapsed]="false" class="raiox-card">
+      <h2 ngbAccordionHeader>
+        <button ngbAccordionButton class="raiox-toggle">
+          <span class="raiox-icon"><i class="bi bi-cup-fill"></i></span>
+          <span class="raiox-label">Frequência Sacramental</span>
+          <span class="raiox-chevron"><i class="bi bi-chevron-down"></i></span>
+        </button>
+      </h2>
+      <div ngbAccordionCollapse>
+        <div ngbAccordionBody class="raiox-body">
+          <ng-template>
+            <app-frequencia-sacramental></app-frequencia-sacramental>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+    <!-- ITEM 2: Recém Conversos -->
+    <div ngbAccordionItem="itemDois" class="raiox-card">
+      <h2 ngbAccordionHeader>
+        <button ngbAccordionButton class="raiox-toggle">
+          <span class="raiox-icon"><i class="bi bi-person-plus-fill"></i></span>
+          <span class="raiox-label">Recém Conversos</span>
+          <span class="raiox-chevron"><i class="bi bi-chevron-down"></i></span>
+        </button>
+      </h2>
+      <div ngbAccordionCollapse>
+        <div ngbAccordionBody class="raiox-body">
+          <ng-template>
+            <app-recem-conversos></app-recem-conversos>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+    <!-- ITEM 3: Jovens e Crianças -->
+    <div ngbAccordionItem="itemTres" class="raiox-card">
+      <h2 ngbAccordionHeader>
+        <button ngbAccordionButton class="raiox-toggle">
+          <span class="raiox-icon"><i class="bi bi-emoji-smile-fill"></i></span>
+          <span class="raiox-label">Jovens e Crianças</span>
+          <span class="raiox-chevron"><i class="bi bi-chevron-down"></i></span>
+        </button>
+      </h2>
+      <div ngbAccordionCollapse>
+        <div ngbAccordionBody class="raiox-body">
+          <ng-template>
+            <app-jovens-criancas></app-jovens-criancas>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+    <!-- ITEM 4: Seminário -->
+    <div ngbAccordionItem="itemQuatro" class="raiox-card">
+      <h2 ngbAccordionHeader>
+        <button ngbAccordionButton class="raiox-toggle">
+          <span class="raiox-icon"><i class="bi bi-book-half"></i></span>
+          <span class="raiox-label">Seminário</span>
+          <span class="raiox-chevron"><i class="bi bi-chevron-down"></i></span>
+        </button>
+      </h2>
+      <div ngbAccordionCollapse>
+        <div ngbAccordionBody class="raiox-body">
+          <ng-template>
+            <app-seminario></app-seminario>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+    <!-- ITEM 5: Qualificação da Unidade -->
+    <div ngbAccordionItem="itemCinco" class="raiox-card">
+      <h2 ngbAccordionHeader>
+        <button ngbAccordionButton class="raiox-toggle">
+          <span class="raiox-icon"><i class="bi bi-patch-check-fill"></i></span>
+          <span class="raiox-label">Qualificação da Unidade</span>
+          <span class="raiox-chevron"><i class="bi bi-chevron-down"></i></span>
+        </button>
+      </h2>
+      <div ngbAccordionCollapse>
+        <div ngbAccordionBody class="raiox-body">
+          <ng-template>
+            <app-qualificacao-unidade></app-qualificacao-unidade>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+    <!-- ITEM 6: Homens Avançando ao Sacerdócio -->
+    <div ngbAccordionItem="itemSeis" class="raiox-card">
+      <h2 ngbAccordionHeader>
+        <button ngbAccordionButton class="raiox-toggle">
+          <span class="raiox-icon"><i class="bi bi-person-arms-up"></i></span>
+          <span class="raiox-label">Homens Avançando ao Sacerdócio</span>
+          <span class="raiox-chevron"><i class="bi bi-chevron-down"></i></span>
+        </button>
+      </h2>
+      <div ngbAccordionCollapse>
+        <div ngbAccordionBody class="raiox-body">
+          <ng-template>
+            <app-homens-avancando-sacerdocio></app-homens-avancando-sacerdocio>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+    <!-- ITEM 7: Reuniões, Atividades e Lançamentos -->
+    <div ngbAccordionItem="itemSete" class="raiox-card">
+      <h2 ngbAccordionHeader>
+        <button ngbAccordionButton class="raiox-toggle">
+          <span class="raiox-icon"><i class="bi bi-calendar2-event-fill"></i></span>
+          <span class="raiox-label">Reuniões, Atividades e Lançamentos</span>
+          <span class="raiox-chevron"><i class="bi bi-chevron-down"></i></span>
+        </button>
+      </h2>
+      <div ngbAccordionCollapse>
+        <div ngbAccordionBody class="raiox-body">
+          <ng-template>
+            <app-reunioes-atividades-lancamentos></app-reunioes-atividades-lancamentos>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+    <!-- ITEM 8: Prioridades Proféticas -->
+    <div ngbAccordionItem="itemOito" class="raiox-card">
+      <h2 ngbAccordionHeader>
+        <button ngbAccordionButton class="raiox-toggle">
+          <span class="raiox-icon"><i class="bi bi-star-fill"></i></span>
+          <span class="raiox-label">Prioridades Proféticas</span>
+          <span class="raiox-chevron"><i class="bi bi-chevron-down"></i></span>
+        </button>
+      </h2>
+      <div ngbAccordionCollapse>
+        <div ngbAccordionBody class="raiox-body">
+          <ng-template>
+            <app-prioridades-profeticas></app-prioridades-profeticas>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>

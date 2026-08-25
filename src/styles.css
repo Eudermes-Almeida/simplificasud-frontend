@@ -1,1 +1,15 @@
-/* You can add global styles to this file, and also import other style files */
+/* src/styles.css */
+
+/* Fundo azul clarinho por trás do painel, para os cards se destacarem */
+html, body, app-root {
+  background-color: #eef6ff;
+  color: #0f2c59;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  display: block;
+}
+
+/* Cor azul escura padrão para títulos globais (componentes podem sobrescrever) */
+h1, h2, h3, h4, h5, h6 {
+  color: #0f2c59;
+}
