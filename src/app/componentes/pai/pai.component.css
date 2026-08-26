@@ -71,6 +71,114 @@
   margin-bottom: 0;
 }
 
+/* ---------- SELEÇÃO DE UNIDADE ---------- */
+
+.raiox-unit-picker {
+  background: #fff;
+  border: 1px solid var(--rx-100);
+  border-radius: 1rem;
+  padding: 1rem 1.1rem;
+  box-shadow: 0 8px 24px -14px rgba(15, 44, 89, 0.25);
+}
+
+.raiox-unit-label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--rx-700);
+  margin-bottom: 0.5rem;
+  padding: 0 0.15rem;
+}
+
+.raiox-unit-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.raiox-unit-icon {
+  position: absolute;
+  left: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1002;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 0.6rem;
+  background: linear-gradient(135deg, var(--rx-500), var(--rx-700));
+  color: #fff;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 10px -4px rgba(15, 44, 89, 0.45);
+  pointer-events: none;
+}
+
+.raiox-unit-select {
+  flex: 1 1 auto;
+}
+
+.raiox-unit-select ::ng-deep .ng-select-container {
+  min-height: 52px;
+  padding-left: 2.6rem;
+  border-radius: 0.75rem;
+  border: 1.5px solid var(--rx-200);
+  background: var(--rx-50);
+  color: var(--rx-900);
+  font-weight: 600;
+  font-size: 1rem;
+  box-shadow: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.raiox-unit-select ::ng-deep .ng-select-container:hover {
+  border-color: var(--rx-300);
+}
+
+.raiox-unit-select.ng-select-focused ::ng-deep .ng-select-container {
+  border-color: var(--rx-500);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+}
+
+.raiox-unit-select ::ng-deep .ng-value-label {
+  color: var(--rx-900) !important;
+  font-weight: 600;
+}
+
+.raiox-unit-select ::ng-deep .ng-arrow-wrapper {
+  padding-right: 0.4rem;
+}
+
+.raiox-unit-select ::ng-deep .ng-arrow {
+  border-color: var(--rx-600) transparent transparent;
+}
+
+.raiox-unit-select ::ng-deep .ng-dropdown-panel {
+  border-radius: 0.75rem;
+  border: 1px solid var(--rx-200);
+  box-shadow: 0 14px 30px -14px rgba(15, 44, 89, 0.35);
+  overflow: hidden;
+  margin-top: 0.35rem;
+}
+
+.raiox-unit-select ::ng-deep .ng-dropdown-panel .ng-option {
+  color: var(--rx-900);
+  font-weight: 500;
+  padding: 0.65rem 1rem;
+}
+
+.raiox-unit-select ::ng-deep .ng-dropdown-panel .ng-option.ng-option-marked {
+  background: var(--rx-50);
+}
+
+.raiox-unit-select ::ng-deep .ng-dropdown-panel .ng-option.ng-option-selected {
+  background: linear-gradient(120deg, var(--rx-600), var(--rx-800));
+  color: #fff;
+  font-weight: 600;
+}
+
 /* ---------- LAYOUT ---------- */
 
 .raiox-container {

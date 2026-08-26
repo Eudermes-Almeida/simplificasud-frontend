@@ -1,1 +1,122 @@
-<p>frequencia-sacramental works!</p>
+<!-- 1. Os Botões das Abas gerenciados pelo Angular -->
+<ul class="nav nav-tabs rx-tabs" id="frequenciaTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link rx-tab-btn"
+            [ngClass]="{ 'active': abaAtiva === 'resumo' }"
+            (click)="mudarAba('resumo')"
+            type="button" role="tab">
+      <i class="bi bi-clipboard-data"></i>
+      <span>Resumo</span>
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link rx-tab-btn"
+            [ngClass]="{ 'active': abaAtiva === 'detalhes' }"
+            (click)="mudarAba('detalhes')"
+            type="button" role="tab">
+      <i class="bi bi-table"></i>
+      <span>Detalhes</span>
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link rx-tab-btn"
+            [ngClass]="{ 'active': abaAtiva === 'grafico' }"
+            (click)="mudarAba('grafico')"
+            type="button" role="tab">
+      <i class="bi bi-graph-up"></i>
+      <span>Gráfico</span>
+    </button>
+  </li>
+</ul>
+
+<!-- 2. O Conteúdo de cada Aba alternado pelo Angular -->
+<div class="tab-content mt-3" id="frequenciaTabConteudo">
+  
+ <!-- CONTEÚDO DA ABA RESUMO -->
+<div class="tab-pane fade" [ngClass]="{ 'show active': abaAtiva === 'resumo' }" role="tabpanel">
+
+  <div class="rx-kpi-grid my-3">
+
+    <!-- Card em destaque: valor atual -->
+    <div class="rx-kpi-card rx-kpi-hero">
+      <span class="rx-kpi-icon"><i class="bi bi-graph-up-arrow"></i></span>
+      <span class="rx-kpi-text">
+        <span class="rx-kpi-value">{{ resumoFrequencia.atual }}</span>
+        <span class="rx-kpi-label">Frequência média atual</span>
+      </span>
+    </div>
+
+    <div class="rx-kpi-card">
+      <span class="rx-kpi-icon"><i class="bi bi-clock-history"></i></span>
+      <span class="rx-kpi-text">
+        <span class="rx-kpi-value">{{ resumoFrequencia.anoAnterior }}</span>
+        <span class="rx-kpi-label">Frequência média 1 ano atrás</span>
+      </span>
+    </div>
+
+    <div class="rx-kpi-card" [ngClass]="evolucaoPositiva ? 'rx-kpi-positivo' : 'rx-kpi-negativo'">
+      <span class="rx-kpi-icon"><i class="bi" [ngClass]="evolucaoPositiva ? 'bi-arrow-up-right' : 'bi-arrow-down-right'"></i></span>
+      <span class="rx-kpi-text">
+        <span class="rx-kpi-value">{{ evolucaoPositiva ? '+' : '' }}{{ evolucao }}</span>
+        <span class="rx-kpi-label">Evolução</span>
+      </span>
+    </div>
+
+    <div class="rx-kpi-card" [ngClass]="evolucaoPositiva ? 'rx-kpi-positivo' : 'rx-kpi-negativo'">
+      <span class="rx-kpi-icon"><i class="bi bi-percent"></i></span>
+      <span class="rx-kpi-text">
+        <span class="rx-kpi-value">{{ evolucaoPositiva ? '+' : '' }}{{ evolucaoPercentual }}%</span>
+        <span class="rx-kpi-label">Evolução %</span>
+      </span>
+    </div>
+
+    <div class="rx-kpi-card">
+      <span class="rx-kpi-icon"><i class="bi bi-binoculars"></i></span>
+      <span class="rx-kpi-text">
+        <span class="rx-kpi-value">{{ resumoFrequencia.projecao5Anos }}</span>
+        <span class="rx-kpi-label">Projeção para daqui 5 anos</span>
+      </span>
+    </div>
+
+  </div>
+
+</div>
+
+
+ <!-- CONTEÚDO DA ABA DETALHES -->
+<div class="tab-pane fade" [ngClass]="{ 'show active': abaAtiva === 'detalhes' }" role="tabpanel">
+
+  <div class="rx-mes-grid my-3">
+    <div class="rx-mes-card" *ngFor="let item of historicoComVariacao" [ngClass]="{ 'rx-mes-atual': item.isAtual }">
+      <span class="rx-mes-label">{{ item.mes }}</span>
+      <span class="rx-mes-valor">{{ item.valor }}</span>
+      <span class="rx-mes-variacao"
+            *ngIf="item.variacao !== null"
+            [ngClass]="item.variacao >= 0 ? 'rx-variacao-positiva' : 'rx-variacao-negativa'">
+        <i class="bi" [ngClass]="item.variacao >= 0 ? 'bi-arrow-up-short' : 'bi-arrow-down-short'"></i>
+        {{ item.variacao >= 0 ? '+' : '' }}{{ item.variacao }}
+      </span>
+    </div>
+  </div>
+
+</div>
+
+
+ <!-- CONTEÚDO DA ABA GRÁFICO -->
+<div class="tab-pane fade" [ngClass]="{ 'show active': abaAtiva === 'grafico' }" role="tabpanel">
+
+  <div class="card border-0 shadow-sm my-3 mx-auto">
+    <div class="card-body p-4">
+
+      <h4 class="text-center text-uppercase mb-4 fw-bold text-primary tracking-wide">
+        Evolução da Frequência
+      </h4>
+
+      <div #graficoFrequencia></div>
+
+    </div>
+  </div>
+
+</div>
+
+</div>

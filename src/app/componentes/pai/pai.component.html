@@ -8,10 +8,37 @@
 </header>
 
 <main class="container raiox-container">
+
+   <!-- 🔽 SELEÇÃO DE UNIDADE (Inserido perfeitamente aqui) 🔽 -->
+  <div class="row justify-content-center mb-4">
+    <div class="col-12 col-sm-8 col-md-6 col-lg-5">
+      <div class="raiox-unit-picker">
+        <label for="selectUnidade" class="raiox-unit-label">
+          Selecione a Unidade para visualizar os dados
+        </label>
+        <div class="raiox-unit-field">
+          <span class="raiox-unit-icon"><i class="fa-solid fa-church"></i></span>
+          <ng-select
+            id="selectUnidade"
+            class="raiox-unit-select"
+            [items]="unidades"
+            bindLabel="label"
+            bindValue="value"
+            [clearable]="false"
+            [searchable]="false"
+            [(ngModel)]="unidadeSelecionada"
+            aria-label="Seleção de Unidade">
+          </ng-select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 🔼 FIM DA SELEÇÃO DE UNIDADE 🔼 -->
+
   <div ngbAccordion [closeOthers]="false" class="raiox-accordion">
 
     <!-- ITEM 1: Frequência Sacramental -->
-    <div ngbAccordionItem="itemUm" [collapsed]="false" class="raiox-card">
+    <div ngbAccordionItem="itemUm" [collapsed]="true" class="raiox-card">
       <h2 ngbAccordionHeader>
         <button ngbAccordionButton class="raiox-toggle">
           <span class="raiox-icon"><i class="bi bi-people-fill"></i></span>
