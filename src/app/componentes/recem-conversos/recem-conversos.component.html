@@ -1,1 +1,219 @@
-<p>recem-conversos works!</p>
+<!-- 1. Os Botões das Abas gerenciados pelo Angular -->
+<ul class="nav nav-tabs rx-tabs" id="conversosTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link rx-tab-btn"
+            [ngClass]="{ 'active': abaAtiva === 'resumo' }"
+            (click)="mudarAba('resumo')"
+            type="button" role="tab">
+      <i class="bi bi-clipboard-data"></i>
+      <span>Resumo</span>
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link rx-tab-btn"
+            [ngClass]="{ 'active': abaAtiva === 'detalhes' }"
+            (click)="mudarAba('detalhes')"
+            type="button" role="tab">
+      <i class="bi bi-table"></i>
+      <span>Detalhes</span>
+    </button>
+  </li>
+  <!-- Atualizado: Alterado de Gráfico para Ministradores -->
+  <li class="nav-item" role="presentation">
+    <button class="nav-link rx-tab-btn"
+            [ngClass]="{ 'active': abaAtiva === 'ministradores' }"
+            (click)="mudarAba('ministradores')"
+            type="button" role="tab">
+      <i class="bi bi-people-fill"></i>
+      <span>Ministradores</span>
+    </button>
+  </li>
+</ul>
+
+<!-- 2. O Conteúdo de cada Aba alternado pelo Angular -->
+<div class="tab-content mt-3" id="conversosTabConteudo">
+  
+  <!-- CONTEÚDO DA ABA RESUMO************************************************************** (Atualizado com os dados da imagem) -->
+  <div class="tab-pane fade" [ngClass]="{ 'show active': abaAtiva === 'resumo' }" role="tabpanel">
+    <div class="rx-kpi-grid my-3">
+
+      <!-- 1. Qt Batismos -->
+      <div class="rx-kpi-card rx-kpi-hero">
+        <span class="rx-kpi-icon"><i class="bi bi-person-plus-fill"></i></span>
+        <span class="rx-kpi-text">
+          <span class="rx-kpi-value">{{ resumoConversos.qtBatismos.valor }}</span>
+          <span class="rx-kpi-label">Qt Batismos últimos 12 meses</span>
+        </span>
+      </div>
+
+      <!-- 2. Ativos -->
+      <div class="rx-kpi-card">
+        <span class="rx-kpi-icon"><i class="bi bi-person-check-fill"></i></span>
+        <span class="rx-kpi-text">
+          <span class="rx-kpi-value">
+            {{ resumoConversos.ativos.valor }}
+            <small class="rx-kpi-pct">{{ resumoConversos.ativos.pct }}%</small>
+          </span>
+          <span class="rx-kpi-label">Ativos</span>
+        </span>
+      </div>
+
+      <!-- 3. Sexo Masculino -->
+      <div class="rx-kpi-card">
+        <span class="rx-kpi-icon"><i class="bi bi-gender-male"></i></span>
+        <span class="rx-kpi-text">
+          <span class="rx-kpi-value">
+            {{ resumoConversos.sexoMasculino.valor }}
+            <small class="rx-kpi-pct">{{ resumoConversos.sexoMasculino.pct }}%</small>
+          </span>
+          <span class="rx-kpi-label">Sexo Masculino</span>
+        </span>
+      </div>
+
+      <!-- 4. Ordenandos ao Sacerdócio -->
+      <div class="rx-kpi-card">
+        <span class="rx-kpi-icon"><i class="bi bi-award-fill"></i></span>
+        <span class="rx-kpi-text">
+          <span class="rx-kpi-value">
+            {{ resumoConversos.ordenandosSacerdocio.valor }}
+            <small class="rx-kpi-pct">{{ resumoConversos.ordenandosSacerdocio.pct }}%</small>
+          </span>
+          <span class="rx-kpi-label">Ordenandos ao sacerdócio</span>
+        </span>
+      </div>
+
+      <!-- 5. Com Recomendação ao Templo -->
+      <div class="rx-kpi-card">
+        <span class="rx-kpi-icon"><i class="bi bi-bank2"></i></span>
+        <span class="rx-kpi-text">
+          <span class="rx-kpi-value">
+            {{ resumoConversos.comRecomendacaoTemplos.valor }}
+            <small class="rx-kpi-pct">{{ resumoConversos.comRecomendacaoTemplos.pct }}%</small>
+          </span>
+          <span class="rx-kpi-label">Com recomendação ao templo</span>
+        </span>
+      </div>
+
+      <!-- 6. Receberam um Chamado -->
+      <div class="rx-kpi-card">
+        <span class="rx-kpi-icon"><i class="bi bi-briefcase-fill"></i></span>
+        <span class="rx-kpi-text">
+          <span class="rx-kpi-value">
+            {{ resumoConversos.receberamChamado.valor }}
+            <small class="rx-kpi-pct">{{ resumoConversos.receberamChamado.pct }}%</small>
+          </span>
+          <span class="rx-kpi-label">Receberam um chamado</span>
+        </span>
+      </div>
+
+      <!-- 7. Com Ministradores -->
+      <div class="rx-kpi-card">
+        <span class="rx-kpi-icon"><i class="bi bi-people-fill"></i></span>
+        <span class="rx-kpi-text">
+          <span class="rx-kpi-value">
+            {{ resumoConversos.comMinistradores.valor }}
+            <small class="rx-kpi-pct">{{ resumoConversos.comMinistradores.pct }}%</small>
+          </span>
+          <span class="rx-kpi-label">Com ministradores</span>
+        </span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CONTEÚDO DA ABA DETALHES********************************************************************** (Permanece a grade de meses original) -->
+  <div class="tab-pane fade" [ngClass]="{ 'show active': abaAtiva === 'detalhes' }" role="tabpanel">
+    
+    <div class="rx-pessoa-lista my-3">
+      <div class="rx-pessoa-card" *ngFor="let pessoa of detalhesConversos">
+
+        <div class="rx-pessoa-header">
+          <span class="rx-pessoa-nome">{{ pessoa.nome }}</span>
+          <span class="rx-pessoa-idade">{{ pessoa.idade }} anos</span>
+        </div>
+
+        <div class="rx-pessoa-campos">
+          <div class="rx-pessoa-campo" [ngClass]="pessoa.ativo ? 'rx-campo-positivo' : 'rx-campo-negativo'">
+            <span class="rx-pessoa-campo-icon"><i class="bi" [ngClass]="pessoa.ativo ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i></span>
+            <span class="rx-pessoa-campo-texto">
+              <span class="rx-pessoa-campo-label">Ativo</span>
+              <span class="rx-pessoa-campo-valor">{{ pessoa.ativo ? 'Sim' : 'Não' }}</span>
+            </span>
+          </div>
+
+          <div class="rx-pessoa-campo" [ngClass]="pessoa.chamado ? 'rx-campo-positivo' : 'rx-campo-negativo'">
+            <span class="rx-pessoa-campo-icon"><i class="bi" [ngClass]="pessoa.chamado ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i></span>
+            <span class="rx-pessoa-campo-texto">
+              <span class="rx-pessoa-campo-label">Chamado</span>
+              <span class="rx-pessoa-campo-valor">{{ pessoa.chamado ? 'Sim' : 'Não' }}</span>
+            </span>
+          </div>
+
+          <div class="rx-pessoa-campo" [ngClass]="pessoa.ministrador ? 'rx-campo-positivo' : 'rx-campo-negativo'">
+            <span class="rx-pessoa-campo-icon"><i class="bi" [ngClass]="pessoa.ministrador ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i></span>
+            <span class="rx-pessoa-campo-texto">
+              <span class="rx-pessoa-campo-label">Ministrador</span>
+              <span class="rx-pessoa-campo-valor">{{ pessoa.ministrador ? 'Sim' : 'Não' }}</span>
+            </span>
+          </div>
+
+          <div class="rx-pessoa-campo" [ngClass]="recomendacaoEmitida(pessoa.recomendacao) ? 'rx-campo-positivo' : 'rx-campo-neutro'">
+            <span class="rx-pessoa-campo-icon"><i class="bi bi-bank2"></i></span>
+            <span class="rx-pessoa-campo-texto">
+              <span class="rx-pessoa-campo-label">Recomendação</span>
+              <span class="rx-pessoa-campo-valor">{{ pessoa.recomendacao }}</span>
+            </span>
+          </div>
+
+          <div class="rx-pessoa-campo" [ngClass]="sacerdocioClasse(pessoa.sacerdocio)">
+            <span class="rx-pessoa-campo-icon"><i class="bi bi-award-fill"></i></span>
+            <span class="rx-pessoa-campo-texto">
+              <span class="rx-pessoa-campo-label">Sacerdócio</span>
+              <span class="rx-pessoa-campo-valor">{{ pessoa.sacerdocio }}</span>
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+
+    <!-- CONTEÚDO DA ABA MINISTRADORES********************************************************************* (Substituiu a aba de Gráfico) -->
+  <div class="tab-pane fade" [ngClass]="{ 'show active': abaAtiva === 'ministradores' }" role="tabpanel">
+    
+    <div class="rx-pessoa-lista my-3">
+      <div class="rx-pessoa-card" *ngFor="let pessoa of ministradoresConversos">
+
+        <div class="rx-pessoa-header">
+          <span class="rx-pessoa-nome">{{ pessoa.nome }}</span>
+        </div>
+
+        <div class="rx-minist-grid">
+
+          <div class="rx-minist-bloco">
+            <span class="rx-minist-label"><i class="bi bi-gender-male"></i> Ministrador</span>
+            <div class="rx-minist-tags">
+              <span class="rx-tag" *ngFor="let nome of pessoa.ministrador">{{ nome }}</span>
+              <span class="rx-tag rx-tag-alerta" *ngIf="!pessoa.ministrador.length">Não designado</span>
+            </div>
+          </div>
+
+          <div class="rx-minist-bloco" *ngIf="pessoa.sexo === 'F'">
+            <span class="rx-minist-label"><i class="bi bi-gender-female"></i> Ministradora</span>
+            <div class="rx-minist-tags">
+              <span class="rx-tag" *ngFor="let nome of pessoa.ministradora">{{ nome }}</span>
+              <span class="rx-tag rx-tag-alerta" *ngIf="!pessoa.ministradora.length">Não designada</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+
+</div>
