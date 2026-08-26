@@ -1,0 +1,80 @@
+/* Reaproveita as variáveis --rx-* definidas no host de <app-pai> (herdadas via cascata do DOM) */
+
+.rx-rodape {
+  background: linear-gradient(135deg, var(--rx-500, #3b82f6) 0%, var(--rx-700, #1d4ed8) 55%, var(--rx-900, #0f2c59) 100%);
+  border-radius: 1rem;
+  padding: 1.75rem 1.5rem;
+  color: #fff;
+  text-align: center;
+  box-shadow: 0 8px 24px -14px rgba(15, 44, 89, 0.35);
+  position: relative;
+  overflow: hidden;
+}
+
+.rx-rodape::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.12) 0, transparent 45%),
+    radial-gradient(circle at 85% 80%, rgba(255, 255, 255, 0.08) 0, transparent 40%);
+  pointer-events: none;
+}
+
+.rx-rodape-content {
+  position: relative;
+  max-width: 640px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.rx-rodape-aviso,
+.rx-rodape-contato {
+  margin: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.rx-rodape-aviso {
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.rx-rodape-aviso i {
+  color: #fde68a;
+  font-size: 1rem;
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+}
+
+.rx-rodape-contato {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.85);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.rx-rodape-contato i {
+  color: #86efac;
+  flex-shrink: 0;
+}
+
+@media (max-width: 576px) {
+  .rx-rodape {
+    padding: 1.35rem 1.1rem;
+    border-radius: 0.85rem;
+  }
+
+  .rx-rodape-aviso {
+    font-size: 0.82rem;
+  }
+
+  .rx-rodape-contato {
+    font-size: 0.76rem;
+  }
+}
