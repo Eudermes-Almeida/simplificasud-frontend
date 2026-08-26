@@ -1,1 +1,97 @@
-<p>seminario works!</p>
+<!-- 1. Os Botões das Abas gerenciados pelo Angular -->
+<ul class="nav nav-tabs rx-tabs" id="seminarioTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link rx-tab-btn"
+            [ngClass]="{ 'active': abaAtiva === 'resumo' }"
+            (click)="mudarAba('resumo')"
+            type="button" role="tab">
+      <i class="bi bi-clipboard-data"></i>
+      <span>Resumo</span>
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link rx-tab-btn"
+            [ngClass]="{ 'active': abaAtiva === 'detalhes' }"
+            (click)="mudarAba('detalhes')"
+            type="button" role="tab">
+      <i class="bi bi-table"></i>
+      <span>Detalhes</span>
+    </button>
+  </li>
+</ul>
+
+<!-- 2. O Conteúdo de cada Aba alternado pelo Angular -->
+<div class="tab-content mt-3" id="seminarioTabConteudo">
+  
+  <!-- CONTEÚDO DA ABA RESUMO -->
+  <div class="tab-pane fade" [ngClass]="{ 'show active': abaAtiva === 'resumo' }" role="tabpanel">
+    <div class="rx-kpi-grid my-3">
+
+      <!-- 1. Total de Jovens Ala -->
+      <div class="rx-kpi-card rx-kpi-hero">
+        <span class="rx-kpi-icon"><i class="bi bi-people-fill"></i></span>
+        <span class="rx-kpi-text">
+          <span class="rx-kpi-value">{{ resumoSeminario.totalJovensAla }}</span>
+          <span class="rx-kpi-label">Total de Jovens Ala</span>
+        </span>
+      </div>
+
+      <!-- 2. Total de Matriculados -->
+      <div class="rx-kpi-card">
+        <span class="rx-kpi-icon"><i class="bi bi-person-check-fill"></i></span>
+        <span class="rx-kpi-text">
+          <span class="rx-kpi-value">
+            {{ resumoSeminario.totalMatriculados.valor }}
+            <small class="fs-6 text-secondary fw-normal ms-1">({{ resumoSeminario.totalMatriculados.pct }}%)</small>
+          </span>
+          <span class="rx-kpi-label">Total de matriculados</span>
+        </span>
+      </div>
+
+      <!-- 3. Frequência Acima de 75% -->
+      <div class="rx-kpi-card rx-kpi-positivo">
+        <span class="rx-kpi-icon"><i class="bi bi-graph-up-arrow"></i></span>
+        <span class="rx-kpi-text">
+          <span class="rx-kpi-value">
+            {{ resumoSeminario.frequenciaAcima75.valor }}
+            <small class="fs-6 text-secondary fw-normal ms-1">({{ resumoSeminario.frequenciaAcima75.pct }}%)</small>
+          </span>
+          <span class="rx-kpi-label">Frequência acima de 75%</span>
+        </span>
+      </div>
+
+      <!-- 4. Frequência Abaixo de 75% -->
+      <div class="rx-kpi-card rx-kpi-negativo">
+        <span class="rx-kpi-icon"><i class="bi bi-graph-down-arrow"></i></span>
+        <span class="rx-kpi-text">
+          <span class="rx-kpi-value">
+            {{ resumoSeminario.frequenciaAbaixo75.valor }}
+            <small class="fs-6 text-secondary fw-normal ms-1">({{ resumoSeminario.frequenciaAbaixo75.pct }}%)</small>
+          </span>
+          <span class="rx-kpi-label">Frequência Abaixo de 75%</span>
+        </span>
+      </div>
+
+      <!-- 5. Frequência Média Turma -->
+      <div class="rx-kpi-card">
+        <span class="rx-kpi-icon text-primary bg-primary-subtle"><i class="bi bi-percent"></i></span>
+        <span class="rx-kpi-text">
+          <span class="rx-kpi-value text-primary">{{ resumoSeminario.frequenciaMediaTurma }}%</span>
+          <span class="rx-kpi-label">Frequência média turma</span>
+        </span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CONTEÚDO DA ABA DETALHES -->
+  <div class="tab-pane fade" [ngClass]="{ 'show active': abaAtiva === 'detalhes' }" role="tabpanel">
+    <div class="card border-0 shadow-sm my-3 mx-auto">
+      <div class="card-body p-4 text-center">
+        <p class="text-secondary mb-0">Listagem detalhada dos alunos do Seminário será implementada aqui.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
