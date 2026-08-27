@@ -1,0 +1,32 @@
+.rx-area-bloco {
+  margin-top: 1.35rem;
+}
+
+.rx-area-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-bottom: 0.75rem;
+  padding: 0 0.1rem;
+}
+
+.rx-area-nome {
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--rx-700);
+}
+
+.rx-area-subtitulo {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #64748b;
+}
+
+@media (max-width: 576px) {
+  .rx-area-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15rem;
+  }
+}

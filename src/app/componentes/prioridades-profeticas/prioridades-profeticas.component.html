@@ -1,1 +1,57 @@
-<p>prioridades-profeticas works!</p>
+<div class="my-3">
+
+  <!-- Título Interno -->
+  <h5 class="text-uppercase mb-3 fw-bold text-secondary small px-1 tracking-wide">
+    Prioridades Proféticas
+  </h5>
+
+  <!-- Abas: Atual / Meta / Falta -->
+  <ul class="nav nav-tabs rx-tabs" id="prioridadesTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link rx-tab-btn"
+              [ngClass]="{ 'active': abaAtiva === 'atual' }"
+              (click)="mudarAba('atual')"
+              type="button" role="tab">
+        <i class="bi bi-speedometer2"></i>
+        <span>Atual</span>
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link rx-tab-btn"
+              [ngClass]="{ 'active': abaAtiva === 'meta' }"
+              (click)="mudarAba('meta')"
+              type="button" role="tab">
+        <i class="bi bi-bullseye"></i>
+        <span>Meta</span>
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link rx-tab-btn"
+              [ngClass]="{ 'active': abaAtiva === 'falta' }"
+              (click)="mudarAba('falta')"
+              type="button" role="tab">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <span>Falta</span>
+      </button>
+    </li>
+  </ul>
+
+  <!-- Áreas: VIVER / CUIDAR / CONVIDAR / UNIR -->
+  <div class="rx-area-bloco" *ngFor="let area of areas">
+    <div class="rx-area-header">
+      <span class="rx-area-nome">{{ area.area }}</span>
+      <span class="rx-area-subtitulo">{{ area.subtitulo }}</span>
+    </div>
+
+    <div class="rx-kpi-grid">
+      <div class="rx-kpi-card" *ngFor="let item of area.itens" [ngClass]="corClasse(item)">
+        <span class="rx-kpi-icon"><i class="bi" [ngClass]="item.icone"></i></span>
+        <span class="rx-kpi-text">
+          <span class="rx-kpi-value">{{ valorExibido(item) }}</span>
+          <span class="rx-kpi-label">{{ item.nome }}</span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+</div>

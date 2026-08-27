@@ -1,0 +1,67 @@
+/* Título do indicador, no topo do card, em azul evidente */
+.rx-qualif-titulo {
+  width: 100%;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--rx-700);
+  margin-bottom: 0.75rem;
+}
+
+/* Topo do card: ícone à esquerda, selo de status à direita */
+.rx-qualif-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* .rx-selo/.rx-selo-ok/.rx-selo-pendente agora vivem em src/styles.css —
+   compartilhados com reunioes-atividades-lancamentos e outras seções. */
+
+/* Rodapé do card com o valor necessário */
+.rx-qualif-meta {
+  width: 100%;
+  font-size: 0.8rem;
+  color: #64748b;
+  border-top: 1px solid var(--rx-50);
+  padding-top: 0.6rem;
+  margin-top: 0.2rem;
+}
+
+.rx-qualif-meta strong {
+  color: var(--rx-900);
+}
+
+/* O card de qualificação tem 4 blocos (topo com ícone+selo, valor, label,
+   rodapé "necessário"), não os 2 filhos (ícone + texto) que o layout mobile
+   compartilhado em styles.css espera para virar uma linha compacta — nesse
+   modo o card virava uma faixa horizontal enorme e empurrava o 2º card para
+   fora da tela. Aqui ele fica empilhado (1 por linha), como no desktop. */
+@media (max-width: 576px) {
+  .rx-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .rx-kpi-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem 1.1rem;
+    border-radius: 1rem;
+  }
+
+  .rx-kpi-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+    border-radius: 0.7rem;
+  }
+
+  .rx-kpi-value {
+    font-size: 1.85rem;
+  }
+
+  .rx-kpi-label {
+    font-size: 0.85rem;
+    line-height: normal;
+  }
+}

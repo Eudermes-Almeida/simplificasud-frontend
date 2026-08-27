@@ -1,1 +1,103 @@
-<p>reunioes-atividades-lancamentos works!</p>
+<div class="my-3">
+
+  <!-- Título Interno -->
+  <h5 class="text-uppercase mb-3 fw-bold text-secondary small px-1 tracking-wide">
+    Reuniões, Atividades e Lançamentos
+  </h5>
+
+  <!-- Abas: Reuniões / Lançamentos / Entrevistas / Atividades -->
+  <ul class="nav nav-tabs rx-tabs" id="reunioesTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link rx-tab-btn"
+              [ngClass]="{ 'active': abaAtiva === 'reunioes' }"
+              (click)="mudarAba('reunioes')"
+              type="button" role="tab">
+        <i class="bi bi-people-fill"></i>
+        <span>Reuniões</span>
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link rx-tab-btn"
+              [ngClass]="{ 'active': abaAtiva === 'lancamentos' }"
+              (click)="mudarAba('lancamentos')"
+              type="button" role="tab">
+        <i class="bi bi-journal-check"></i>
+        <span>Lançamentos</span>
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link rx-tab-btn"
+              [ngClass]="{ 'active': abaAtiva === 'entrevistas' }"
+              (click)="mudarAba('entrevistas')"
+              type="button" role="tab">
+        <i class="bi bi-chat-square-text-fill"></i>
+        <span>Entrevistas</span>
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link rx-tab-btn"
+              [ngClass]="{ 'active': abaAtiva === 'atividades' }"
+              (click)="mudarAba('atividades')"
+              type="button" role="tab">
+        <i class="bi bi-calendar2-event-fill"></i>
+        <span>Atividades</span>
+      </button>
+    </li>
+  </ul>
+
+  <!-- CONTEÚDO: ABA REUNIÕES -->
+  <div class="rx-check-lista my-3" *ngIf="abaAtiva === 'reunioes'">
+    <div class="rx-check-item" *ngFor="let item of reunioes">
+      <span class="rx-check-nome">
+        <span class="rx-check-icon"><i class="bi" [ngClass]="item.icone"></i></span>
+        {{ item.nome }}
+      </span>
+      <span class="rx-selo" [ngClass]="seloClasse(item)">
+        <i class="bi" [ngClass]="item.feito ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+        {{ item.feito ? 'OK' : 'NÃO' }}
+      </span>
+    </div>
+  </div>
+
+  <!-- CONTEÚDO: ABA LANÇAMENTOS -->
+  <div class="rx-check-lista my-3" *ngIf="abaAtiva === 'lancamentos'">
+    <div class="rx-check-item" *ngFor="let item of lancamentos">
+      <span class="rx-check-nome">
+        <span class="rx-check-icon"><i class="bi" [ngClass]="item.icone"></i></span>
+        {{ item.nome }}
+      </span>
+      <span class="rx-selo" [ngClass]="seloClasse(item)">
+        <i class="bi" [ngClass]="item.feito ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+        {{ item.feito ? 'OK' : 'NÃO' }}
+      </span>
+    </div>
+  </div>
+
+  <!-- CONTEÚDO: ABA ENTREVISTAS -->
+  <div class="rx-check-lista my-3" *ngIf="abaAtiva === 'entrevistas'">
+    <div class="rx-check-item" *ngFor="let item of entrevistas">
+      <span class="rx-check-nome">
+        <span class="rx-check-icon"><i class="bi" [ngClass]="item.icone"></i></span>
+        {{ item.nome }}
+      </span>
+      <span class="rx-selo" [ngClass]="seloClasse(item)">
+        {{ item.feitos }} de {{ item.total }}
+      </span>
+    </div>
+  </div>
+
+  <!-- CONTEÚDO: ABA ATIVIDADES -->
+  <div class="rx-check-lista my-3" *ngIf="abaAtiva === 'atividades'">
+    <div class="rx-check-item" *ngFor="let item of atividades">
+      <span class="rx-check-nome">
+        <span class="rx-check-icon"><i class="bi" [ngClass]="item.icone"></i></span>
+        {{ item.nome }}
+      </span>
+      <span class="rx-selo" [ngClass]="seloClasse(item)">
+        <i class="bi" [ngClass]="item.feito ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+        {{ item.feito ? 'OK' : 'NÃO' }}
+      </span>
+    </div>
+  </div>
+
+</div>

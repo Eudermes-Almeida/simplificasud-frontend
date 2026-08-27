@@ -1,1 +1,41 @@
-<p>qualificacao-unidade works!</p>
+<div class="my-3">
+
+  <!-- Título Interno -->
+  <h5 class="text-uppercase mb-3 fw-bold text-secondary small px-1 tracking-wide">
+    Qualificação da Unidade
+  </h5>
+
+  <!-- Grade com os 3 Cards de Indicadores -->
+  <div class="rx-kpi-grid mb-4">
+
+    <div class="rx-kpi-card" *ngFor="let item of indicadores"
+         [ngClass]="cumprido(item) ? 'rx-kpi-positivo' : 'rx-kpi-negativo'">
+
+      <span class="rx-qualif-titulo">{{ item.nome }}</span>
+
+      <div class="rx-qualif-topo">
+        <span class="rx-kpi-icon"><i class="bi" [ngClass]="item.icone"></i></span>
+        <span class="rx-selo" [ngClass]="cumprido(item) ? 'rx-selo-ok' : 'rx-selo-pendente'">
+          <i class="bi" [ngClass]="cumprido(item) ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'"></i>
+          {{ cumprido(item) ? 'Cumprido' : 'Faltam ' + faltam(item) }}
+        </span>
+      </div>
+
+      <span class="rx-kpi-value">{{ item.atual }}</span>
+
+      <div class="rx-qualif-meta">
+        Necessário: <strong>{{ item.necessario }}</strong>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Banner do Status de Resultado Final -->
+  <div class="card border-0 text-white text-center py-3 fw-bold shadow-sm"
+       [ngClass]="isQualificada ? 'bg-success' : 'bg-danger'"
+       style="border-radius: 12px; letter-spacing: 0.05rem; font-size: 1.1rem;">
+    <i class="bi" [ngClass]="isQualificada ? 'bi-check-circle-fill me-2' : 'bi-exclamation-triangle-fill me-2'"></i>
+    {{ resultadoTexto | uppercase }}
+  </div>
+
+</div>

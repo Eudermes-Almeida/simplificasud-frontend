@@ -366,3 +366,38 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 0.95rem;
   }
 }
+
+/* ---------- SELO DE STATUS (pílula verde/vermelha) ----------
+   Usado em qualquer indicador binário/de progresso (qualificacao-unidade,
+   reunioes-atividades-lancamentos, ...): "Cumprido"/"Faltam N", "OK"/"NÃO",
+   uma fração colorida, etc. */
+
+.rx-selo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.rx-selo-ok {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.rx-selo-pendente {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+@media (max-width: 576px) {
+  .rx-selo {
+    font-size: 0.62rem;
+    padding: 0.25rem 0.5rem;
+  }
+}
