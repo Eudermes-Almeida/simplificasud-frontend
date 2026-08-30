@@ -1,1 +1,112 @@
-<p>jovens-criancas works!</p>
+<div class="my-3">
+
+  <!-- Título Interno -->
+  <h5 class="text-uppercase mb-3 fw-bold text-secondary small px-1 tracking-wide">
+    Jovens e Crianças
+  </h5>
+
+  <!-- Abas: Resumo / Rapazes / Moças / Crianças (sem ícones, fonte reduzida p/ caber no mobile) -->
+  <ul class="nav nav-tabs rx-tabs rx-tabs-compacta" id="jovensTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link rx-tab-btn"
+              [ngClass]="{ 'active': abaAtiva === 'resumo' }"
+              (click)="mudarAba('resumo')"
+              type="button" role="tab">
+        <span>Resumo</span>
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link rx-tab-btn"
+              [ngClass]="{ 'active': abaAtiva === 'rapazes' }"
+              (click)="mudarAba('rapazes')"
+              type="button" role="tab">
+        <span>Rapazes</span>
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link rx-tab-btn"
+              [ngClass]="{ 'active': abaAtiva === 'mocas' }"
+              (click)="mudarAba('mocas')"
+              type="button" role="tab">
+        <span>Moças</span>
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link rx-tab-btn"
+              [ngClass]="{ 'active': abaAtiva === 'criancas' }"
+              (click)="mudarAba('criancas')"
+              type="button" role="tab">
+        <span>Crianças</span>
+      </button>
+    </li>
+  </ul>
+
+  <!-- CONTEÚDO: ABA RESUMO -->
+  <div class="rx-progresso-grid my-3" *ngIf="abaAtiva === 'resumo'">
+    <div class="rx-progresso-card" *ngFor="let item of resumoJovens">
+      <div class="rx-progresso-topo">
+        <span class="rx-progresso-icon"><i class="bi" [ngClass]="item.icone"></i></span>
+        <span class="rx-progresso-nome">{{ item.nome }}</span>
+      </div>
+
+      <div class="rx-progresso-valores">
+        <span class="rx-progresso-valor">{{ item.ativos }}</span>
+        <span class="rx-progresso-total">de {{ item.total }}</span>
+        <span class="rx-progresso-pct">{{ percentual(item) }}%</span>
+      </div>
+
+      <div class="rx-progresso-nota" *ngIf="item.nota">
+        <i class="bi bi-info-circle-fill"></i> {{ item.nota }}
+      </div>
+
+      <div class="rx-progresso-barra">
+        <div class="rx-progresso-barra-fill" [style.width.%]="percentual(item)"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTEÚDO: ABA RAPAZES -->
+  <div class="rx-pessoa-lista my-3" *ngIf="abaAtiva === 'rapazes'">
+    <div class="rx-pessoa-card" *ngFor="let pessoa of rapazes">
+      <div class="rx-pessoa-header">
+        <span class="rx-pessoa-nome">{{ pessoa.nome }}</span>
+        <span class="rx-pessoa-idade">{{ pessoa.idade }} anos</span>
+      </div>
+
+      <div class="rx-pessoa-campos">
+        <div class="rx-pessoa-campo" [ngClass]="sacerdocioClasse(pessoa.sacerdocio)">
+          <span class="rx-pessoa-campo-icon"><i class="bi bi-award-fill"></i></span>
+          <span class="rx-pessoa-campo-texto">
+            <span class="rx-pessoa-campo-label">Sacerdócio</span>
+            <span class="rx-pessoa-campo-valor">{{ pessoa.sacerdocio }}</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTEÚDO: ABA MOÇAS -->
+  <div class="rx-nome-lista my-3" *ngIf="abaAtiva === 'mocas'">
+    <div class="rx-nome-item" *ngFor="let pessoa of mocas">
+      <span class="rx-nome-texto">
+        <span class="rx-nome-icon"><i class="bi bi-gender-female"></i></span>
+        {{ pessoa.nome }}
+      </span>
+      <span class="rx-nome-idade">{{ pessoa.idade }} anos</span>
+    </div>
+  </div>
+
+  <!-- CONTEÚDO: ABA CRIANÇAS -->
+  <div class="rx-nome-lista my-3" *ngIf="abaAtiva === 'criancas'">
+    <div class="rx-nome-item" *ngFor="let crianca of criancas">
+      <span class="rx-nome-texto">
+        <span class="rx-nome-icon">
+          <i class="bi" [ngClass]="crianca.sexo === 'F' ? 'bi-gender-female' : 'bi-gender-male'"></i>
+        </span>
+        {{ crianca.nome }}
+      </span>
+      <span class="rx-nome-idade">{{ crianca.idade }} anos</span>
+    </div>
+  </div>
+
+</div>

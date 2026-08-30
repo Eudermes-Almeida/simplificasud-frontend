@@ -1,1 +1,32 @@
-<p>homens-avancando-sacerdocio works!</p>
+<div class="my-3">
+
+  <!-- Título Interno -->
+  <h5 class="text-uppercase mb-3 fw-bold text-secondary small px-1 tracking-wide">
+    Homens Avançando ao Sacerdócio
+  </h5>
+
+  <!-- Sem abas: seção tem um único conteúdo -->
+  <div class="rx-pessoa-lista my-3">
+    <div class="rx-pessoa-card" *ngFor="let homem of homens">
+
+      <div class="rx-pessoa-header">
+        <span class="rx-pessoa-nome">{{ homem.nome }}</span>
+        <span class="rx-pessoa-idade">{{ homem.idade }} anos</span>
+      </div>
+
+      <div class="rx-pessoa-campos">
+        <div class="rx-pessoa-campo" [ngClass]="ativoClasse(homem.ativo)">
+          <span class="rx-pessoa-campo-icon">
+            <i class="bi" [ngClass]="homem.ativo ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+          </span>
+          <span class="rx-pessoa-campo-texto">
+            <span class="rx-pessoa-campo-label">Ativo</span>
+            <span class="rx-pessoa-campo-valor">{{ homem.ativo ? 'Sim' : 'Não' }}</span>
+          </span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

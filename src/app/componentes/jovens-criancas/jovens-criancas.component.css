@@ -1,0 +1,259 @@
+/* Abas sem ícone: fonte um pouco menor que o padrão global, pra garantir
+   que os 4 botões caibam numa linha só no mobile mesmo sem precisar
+   escondê-los/reduzir mais nada além da fonte. */
+.rx-tabs-compacta .rx-tab-btn.nav-link {
+  font-size: 0.85rem;
+}
+
+@media (max-width: 576px) {
+  .rx-tabs-compacta .rx-tab-btn.nav-link {
+    font-size: 0.76rem;
+    padding: 0.5rem 0.35rem;
+  }
+}
+
+/* ---------- CARD DE PROGRESSO (ativos / total) ---------- */
+
+.rx-progresso-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  /* Sem stretch: o card de Matrículas Seminário tem uma linha a mais (a nota)
+     e não deve esticar os cards vizinhos, deixando espaço vazio embaixo deles. */
+  align-items: start;
+}
+
+.rx-progresso-card {
+  background: #fff;
+  border: 1px solid var(--rx-100);
+  border-radius: 1rem;
+  padding: 1.25rem 1.35rem;
+  box-shadow: 0 8px 20px -14px rgba(15, 44, 89, 0.25);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.rx-progresso-card:hover {
+  box-shadow: 0 14px 26px -14px rgba(15, 44, 89, 0.32);
+  transform: translateY(-2px);
+}
+
+.rx-progresso-topo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.9rem;
+}
+
+.rx-progresso-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 0.7rem;
+  background: var(--rx-50);
+  color: var(--rx-700);
+  font-size: 1.1rem;
+}
+
+.rx-progresso-nome {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--rx-900);
+}
+
+.rx-progresso-valores {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  margin-bottom: 0.7rem;
+}
+
+.rx-progresso-valor {
+  font-size: 1.85rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--rx-900);
+  font-variant-numeric: proportional-nums;
+}
+
+.rx-progresso-total {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.rx-progresso-pct {
+  margin-left: auto;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--rx-700);
+}
+
+.rx-progresso-nota {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.35rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--rx-700);
+  background: var(--rx-50);
+  border-radius: 0.6rem;
+  padding: 0.4rem 0.6rem;
+  margin-bottom: 0.7rem;
+  line-height: 1.3;
+}
+
+.rx-progresso-nota i {
+  margin-top: 0.15rem;
+  flex-shrink: 0;
+}
+
+.rx-progresso-barra {
+  width: 100%;
+  height: 8px;
+  background: var(--rx-50);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.rx-progresso-barra-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--rx-500), var(--rx-700));
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+/* ---------- PLACEHOLDER PARA ABAS AINDA NÃO ELABORADAS ---------- */
+
+.rx-em-construcao {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 2.5rem 1rem;
+  color: #94a3b8;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: var(--rx-50);
+  border-radius: 1rem;
+  border: 1px dashed var(--rx-100);
+}
+
+@media (max-width: 576px) {
+  .rx-progresso-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+  }
+
+  .rx-progresso-card {
+    padding: 0.85rem 0.9rem;
+    border-radius: 0.85rem;
+  }
+
+  .rx-progresso-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+    border-radius: 0.55rem;
+  }
+
+  .rx-progresso-nome {
+    font-size: 0.78rem;
+  }
+
+  .rx-progresso-valor {
+    font-size: 1.4rem;
+  }
+
+  .rx-progresso-total {
+    font-size: 0.72rem;
+  }
+
+  .rx-progresso-pct {
+    font-size: 0.72rem;
+  }
+}
+
+/* ---------- LISTA COMPACTA: NOME + IDADE (sem chip de status) ---------- */
+
+.rx-nome-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.rx-nome-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  background: #fff;
+  border: 1px solid var(--rx-100);
+  border-radius: 0.85rem;
+  padding: 0.7rem 1rem;
+  box-shadow: 0 6px 16px -12px rgba(15, 44, 89, 0.22);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.rx-nome-item:hover {
+  box-shadow: 0 10px 20px -12px rgba(15, 44, 89, 0.3);
+  transform: translateY(-1px);
+}
+
+.rx-nome-texto {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--rx-900);
+  min-width: 0;
+}
+
+.rx-nome-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 0.6rem;
+  background: var(--rx-50);
+  color: var(--rx-700);
+  font-size: 1rem;
+}
+
+.rx-nome-idade {
+  flex-shrink: 0;
+  background: var(--rx-50);
+  color: var(--rx-700);
+  font-weight: 700;
+  font-size: 0.78rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+@media (max-width: 576px) {
+  .rx-nome-item {
+    padding: 0.6rem 0.8rem;
+  }
+
+  .rx-nome-texto {
+    font-size: 0.8rem;
+    gap: 0.5rem;
+  }
+
+  .rx-nome-icon {
+    width: 28px;
+    height: 28px;
+    font-size: 0.85rem;
+  }
+
+  .rx-nome-idade {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+  }
+}
