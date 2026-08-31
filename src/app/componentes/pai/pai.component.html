@@ -42,14 +42,14 @@
       <h2 ngbAccordionHeader>
         <button ngbAccordionButton class="raiox-toggle">
           <span class="raiox-icon"><i class="bi bi-people-fill"></i></span>
-          <span class="raiox-label">Frequência Sacramental</span>
+          <span class="raiox-label">Frequência Sacramental {{ unidadeSelecionadaLabel }}</span>
           <span class="raiox-chevron"><i class="bi bi-chevron-down"></i></span>
         </button>
       </h2>
       <div ngbAccordionCollapse>
         <div ngbAccordionBody class="raiox-body">
           <ng-template>
-            <app-frequencia-sacramental></app-frequencia-sacramental>
+            <app-frequencia-sacramental [unidade]="unidadeSelecionadaLabel"></app-frequencia-sacramental>
           </ng-template>
         </div>
       </div>
@@ -60,7 +60,7 @@
       <h2 ngbAccordionHeader>
         <button ngbAccordionButton class="raiox-toggle">
           <span class="raiox-icon"><i class="bi bi-person-plus-fill"></i></span>
-          <span class="raiox-label">Recém Conversos</span>
+          <span class="raiox-label">Recém Conversos {{ unidadeSelecionadaLabel }}</span>
           <span class="raiox-chevron"><i class="bi bi-chevron-down"></i></span>
         </button>
       </h2>
@@ -78,7 +78,7 @@
       <h2 ngbAccordionHeader>
         <button ngbAccordionButton class="raiox-toggle">
           <span class="raiox-icon"><i class="bi bi-emoji-smile-fill"></i></span>
-          <span class="raiox-label">Jovens e Crianças</span>
+          <span class="raiox-label">Jovens e Crianças {{ unidadeSelecionadaLabel }}</span>
           <span class="raiox-chevron"><i class="bi bi-chevron-down"></i></span>
         </button>
       </h2>
@@ -96,7 +96,7 @@
       <h2 ngbAccordionHeader>
         <button ngbAccordionButton class="raiox-toggle">
           <span class="raiox-icon"><i class="bi bi-book-half"></i></span>
-          <span class="raiox-label">Seminário</span>
+          <span class="raiox-label">Seminário {{ unidadeSelecionadaLabel }}</span>
           <span class="raiox-chevron"><i class="bi bi-chevron-down"></i></span>
         </button>
       </h2>
@@ -114,7 +114,7 @@
       <h2 ngbAccordionHeader>
         <button ngbAccordionButton class="raiox-toggle">
           <span class="raiox-icon"><i class="bi bi-patch-check-fill"></i></span>
-          <span class="raiox-label">Qualificação da Unidade</span>
+          <span class="raiox-label">Qualificação da Unidade {{ unidadeSelecionadaLabel }}</span>
           <span class="raiox-chevron"><i class="bi bi-chevron-down"></i></span>
         </button>
       </h2>
@@ -132,7 +132,7 @@
       <h2 ngbAccordionHeader>
         <button ngbAccordionButton class="raiox-toggle">
           <span class="raiox-icon"><i class="bi bi-person-arms-up"></i></span>
-          <span class="raiox-label">Homens Avançando ao Sacerdócio</span>
+          <span class="raiox-label">Homens Avançando ao Sacerdócio {{ unidadeSelecionadaLabel }}</span>
           <span class="raiox-chevron"><i class="bi bi-chevron-down"></i></span>
         </button>
       </h2>
@@ -150,7 +150,7 @@
       <h2 ngbAccordionHeader>
         <button ngbAccordionButton class="raiox-toggle">
           <span class="raiox-icon"><i class="bi bi-calendar2-event-fill"></i></span>
-          <span class="raiox-label">Reuniões, Atividades e Lançamentos</span>
+          <span class="raiox-label">Reuniões, Atividades e Lançamentos {{ unidadeSelecionadaLabel }}</span>
           <span class="raiox-chevron"><i class="bi bi-chevron-down"></i></span>
         </button>
       </h2>
@@ -168,7 +168,7 @@
       <h2 ngbAccordionHeader>
         <button ngbAccordionButton class="raiox-toggle">
           <span class="raiox-icon"><i class="bi bi-compass-fill"></i></span>
-          <span class="raiox-label">Prioridades Proféticas</span>
+          <span class="raiox-label">Prioridades Proféticas {{ unidadeSelecionadaLabel }}</span>
           <span class="raiox-chevron"><i class="bi bi-chevron-down"></i></span>
         </button>
       </h2>

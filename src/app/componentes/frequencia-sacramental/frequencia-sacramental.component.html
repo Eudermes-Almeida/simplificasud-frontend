@@ -1,3 +1,12 @@
+<div class="d-flex align-items-center gap-2 text-muted my-3" *ngIf="carregando">
+  <div class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
+  <span>Carregando dados de frequência sacramental...</span>
+</div>
+
+<div class="alert alert-danger my-3" role="alert" *ngIf="erroCarregamento">
+  {{ erroCarregamento }}
+</div>
+
 <!-- 1. Os Botões das Abas gerenciados pelo Angular -->
 <ul class="nav nav-tabs rx-tabs" id="frequenciaTab" role="tablist">
   <li class="nav-item" role="presentation">
@@ -73,7 +82,7 @@
     <div class="rx-kpi-card">
       <span class="rx-kpi-icon"><i class="bi bi-binoculars"></i></span>
       <span class="rx-kpi-text">
-        <span class="rx-kpi-value">{{ resumoFrequencia.projecao5Anos }}</span>
+        <span class="rx-kpi-value">{{ projecaoCincoAnos }}</span>
         <span class="rx-kpi-label">Projeção para daqui 5 anos</span>
       </span>
     </div>

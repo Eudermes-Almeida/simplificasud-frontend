@@ -34,4 +34,10 @@ export class PaiComponent {
   ];
 
   unidadeSelecionada = this.unidades[0].value;
+
+  // A API espera o nome real da unidade (ex: "Ala Betim 1"), não o slug do seletor
+  // (ex: "ala-betim-1") — esta é a fonte única dessa conversão para os componentes filhos.
+  get unidadeSelecionadaLabel(): string {
+    return this.unidades.find(u => u.value === this.unidadeSelecionada)?.label ?? '';
+  }
 }
