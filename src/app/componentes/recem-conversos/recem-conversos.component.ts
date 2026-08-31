@@ -1,5 +1,23 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DetalhesConversosDTO, RaioxApiService } from '../../services/raiox-api.service';
+
+interface ConversoDetalhe {
+  nome: string;
+  idade: number;
+  ativo: boolean;
+  chamado: boolean;
+  ministrador: boolean;
+  recomendacao: string;
+  sacerdocio: string;
+}
+
+interface ConversoMinistracao {
+  nome: string;
+  sexo: string;
+  ministrador: string[];
+  ministradora: string[];
+}
 
 @Component({
   selector: 'app-recem-conversos',
@@ -8,34 +26,126 @@ import { CommonModule } from '@angular/common';
   templateUrl: './recem-conversos.component.html',
   styleUrl: './recem-conversos.component.css'
 })
-export class RecemConversosComponent {
+export class RecemConversosComponent implements OnChanges {
+
+  // Nome real da unidade (ex: "Ala Betim 1" ou "Estaca Betim"), recebido do pai.component —
+  // é o que dispara a busca no backend.
+  @Input() unidade = '';
+
   // Controle de Abas Internas
   abaAtiva: string = 'resumo';
 
-  // Dados reais extraídos da planilha de Recém-Conversos
+  carregando = false;
+  erroCarregamento: string | null = null;
+
+  // Fonte única dos KPIs do card de Resumo — todos derivados da lista bruta vinda da API,
+  // recalculados a cada busca (ver buscarDados/calcularResumo).
   resumoConversos = {
-    qtBatismos: { valor: 10, pct: 100 },
-    ativos: { valor: 6, pct: 60},
-    sexoMasculino: { valor: 6, pct: 60 },
-    ordenandosSacerdocio: { valor: 1, pct: 17 },
-    comRecomendacaoTemplos: { valor: 1, pct: 10 },
+    qtBatismos: { valor: 0, pct: 100 },
+    ativos: { valor: 0, pct: 0 },
+    sexoMasculino: { valor: 0, pct: 0 },
+    ordenandosSacerdocio: { valor: 0, pct: 0 },
+    comRecomendacaoTemplos: { valor: 0, pct: 0 },
     receberamChamado: { valor: 0, pct: 0 },
-    comMinistradores: { valor: 8, pct: 80 }
+    comMinistradores: { valor: 0, pct: 0 }
   };
 
   // Lista de recém-conversos (fonte única usada pela tabela da aba Detalhes)
-  detalhesConversos = [
-    { nome: 'Brasilio Da Silva, Fagner Henrique', idade: 23, ativo: false, chamado: false, ministrador: false, recomendacao: 'Não Emitida', sacerdocio: 'Não ordenado' },
-    { nome: 'Cardoso, Moacir', idade: 73, ativo: false, chamado: false, ministrador: true, recomendacao: 'Não Emitida', sacerdocio: 'Não ordenado' },
-    { nome: 'De Paula Faria, Luiz Felipe', idade: 20, ativo: false, chamado: false, ministrador: true, recomendacao: 'Não Emitida', sacerdocio: 'Não ordenado' },
-    { nome: 'Dos Santos, Valmir Conceição', idade: 50, ativo: false, chamado: false, ministrador: true, recomendacao: 'Não Emitida', sacerdocio: 'Não ordenado' },
-    { nome: 'Ferreira dos Anjos, Otavio Henrique', idade: 25, ativo: true, chamado: false, ministrador: true, recomendacao: 'Não Emitida', sacerdocio: 'Não ordenado' },
-    { nome: 'Gonçalves Lourenço, Neli Terezinha', idade: 48, ativo: true, chamado: false, ministrador: true, recomendacao: 'Não Emitida', sacerdocio: 'Não se aplica' },
-    { nome: 'Larissa De Souza Rocha, Sabrina', idade: 44, ativo: true, chamado: false, ministrador: true, recomendacao: 'Não Emitida', sacerdocio: 'Não se aplica' },
-    { nome: 'Penna Machado, Bruna', idade: 34, ativo: true, chamado: false, ministrador: true, recomendacao: '31/10/2026', sacerdocio: 'Não se aplica' },
-    { nome: 'Pereira, Adrielle', idade: 24, ativo: true, chamado: false, ministrador: true, recomendacao: 'Não Emitida', sacerdocio: 'Não se aplica' },
-    { nome: 'Silva, Othon de Paula Menezes', idade: 13, ativo: true, chamado: false, ministrador: false, recomendacao: 'Não Emitida', sacerdocio: 'Diácono' },
-  ];
+  detalhesConversos: ConversoDetalhe[] = [];
+
+  // Ministradores designados por recém-converso (fonte única usada pelos cards da aba Ministradores)
+  // "sexo" define se o card de Ministradora é renderizado: homens só têm Ministrador.
+  ministradoresConversos: ConversoMinistracao[] = [];
+
+  constructor(private raioxApiService: RaioxApiService) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['unidade'] && this.unidade) {
+      this.buscarDados();
+    }
+  }
+
+  private buscarDados(): void {
+    this.carregando = true;
+    this.erroCarregamento = null;
+
+    this.raioxApiService.buscaDetalhesConversos(this.unidade).subscribe({
+      next: (dados) => {
+        // O backend omite a chave inteira (JSON-B) quando sacerdocio/recomendacao vêm nulos no
+        // banco — normaliza para as strings de convenção já usadas no resto do dado (single
+        // source of truth) antes de qualquer contagem/mapeamento, para nunca tratar "em branco"
+        // como se fosse um valor real (ex: um sacerdocio ausente não pode contar como "ordenado").
+        const dadosNormalizados = dados.map(dto => ({
+          ...dto,
+          sacerdocio: dto.sacerdocio || 'Não se aplica',
+          recomendacao: dto.recomendacao || 'Não Emitida',
+        }));
+
+        this.resumoConversos = this.calcularResumo(dadosNormalizados);
+        this.detalhesConversos = dadosNormalizados.map(dto => this.mapDetalhe(dto));
+        this.ministradoresConversos = dadosNormalizados.map(dto => this.mapMinistracao(dto));
+        this.carregando = false;
+      },
+      error: (err) => {
+        this.erroCarregamento = 'Não foi possível carregar os dados de recém-conversos.';
+        this.carregando = false;
+        console.error('Erro ao buscar detalhes de conversos:', err);
+      },
+    });
+  }
+
+  private calcularResumo(dados: DetalhesConversosDTO[]): typeof this.resumoConversos {
+    const total = dados.length;
+    const pct = (contagem: number) => total > 0 ? Math.round((contagem / total) * 100) : 0;
+
+    const ativos = dados.filter(d => d.ativo === 'Sim').length;
+    const sexoMasculino = dados.filter(d => d.sexo === 'M').length;
+    const ordenandosSacerdocio = dados.filter(d => d.sacerdocio !== 'Não ordenado' && d.sacerdocio !== 'Não se aplica').length;
+    const comRecomendacaoTemplos = dados.filter(d => this.recomendacaoEmitida(d.recomendacao)).length;
+    const receberamChamado = dados.filter(d => d.tem_chamado === 'Sim').length;
+    const comMinistradores = dados.filter(d => this.temMinistracao(d)).length;
+
+    return {
+      qtBatismos: { valor: total, pct: 100 },
+      ativos: { valor: ativos, pct: pct(ativos) },
+      sexoMasculino: { valor: sexoMasculino, pct: pct(sexoMasculino) },
+      ordenandosSacerdocio: { valor: ordenandosSacerdocio, pct: pct(ordenandosSacerdocio) },
+      comRecomendacaoTemplos: { valor: comRecomendacaoTemplos, pct: pct(comRecomendacaoTemplos) },
+      receberamChamado: { valor: receberamChamado, pct: pct(receberamChamado) },
+      comMinistradores: { valor: comMinistradores, pct: pct(comMinistradores) },
+    };
+  }
+
+  private mapDetalhe(dto: DetalhesConversosDTO): ConversoDetalhe {
+    return {
+      nome: dto.nome,
+      idade: Number(dto.idade),
+      ativo: dto.ativo === 'Sim',
+      chamado: dto.tem_chamado === 'Sim',
+      ministrador: this.temMinistracao(dto),
+      recomendacao: dto.recomendacao,
+      sacerdocio: dto.sacerdocio,
+    };
+  }
+
+  // Tem ministração se houver um ministrador OU uma ministradora designados — homens só têm
+  // ministrador ("ministradora" vem "null" na origem para eles, nunca uma designação real).
+  private temMinistracao(dto: DetalhesConversosDTO): boolean {
+    return dto.ministrador !== 'Sem Designação' || (dto.ministradora !== 'Sem Designação' && dto.ministradora !== 'null');
+  }
+
+  // "Sem Designação" (sem ministrador/ministradora) e "null" (campo Ministradora em
+  // registros masculinos, literal na origem) viram lista vazia — nunca um nome de fato.
+  private mapMinistracao(dto: DetalhesConversosDTO): ConversoMinistracao {
+    const paraLista = (valor: string) => (valor === 'Sem Designação' || valor === 'null') ? [] : valor.split(',').map(nome => nome.trim());
+
+    return {
+      nome: dto.nome,
+      sexo: dto.sexo,
+      ministrador: paraLista(dto.ministrador),
+      ministradora: paraLista(dto.ministradora),
+    };
+  }
 
   sacerdocioClasse(valor: string): string {
     if (valor === 'Não se aplica') return 'rx-campo-neutro';
@@ -46,37 +156,6 @@ export class RecemConversosComponent {
   recomendacaoEmitida(valor: string): boolean {
     return valor !== 'Não Emitida';
   }
-
-  // Ministradores designados por recém-converso (fonte única usada pelos cards da aba Ministradores)
-  // "sexo" define se o card de Ministradora é renderizado: homens só têm Ministrador.
-  ministradoresConversos = [
-    { nome: 'Brasilio Da Silva, Fagner Henrique', sexo: 'M', ministrador: [], ministradora: [] as string[] },
-    { nome: 'Cardoso, Moacir', sexo: 'M', ministrador: ['Márcio Silva', 'Miraldo Santos'], ministradora: [] as string[] },
-    { nome: 'De Paula Faria, Luiz Felipe', sexo: 'M', ministrador: ['Miguel Gama', 'Romulo Gama'], ministradora: [] as string[] },
-    { nome: 'Dos Santos, Valmir Conceição', sexo: 'M', ministrador: ['Márcio Silva', 'Miraldo Santos'] as string[], ministradora: [] as string[] },
-    { nome: 'Ferreira dos Anjos, Otavio Henrique', sexo: 'M', ministrador: ['Gustavo Rodrigues', 'Marcos Rocha'], ministradora: [] as string[] },
-    { nome: 'Gonçalves Lourenço, Neli Terezinha', sexo: 'F', ministrador: ['Márcio Silva', 'Miraldo Santos'], ministradora: ['Raquel Oliveira', 'Alcione Ferreira'] },
-    { nome: 'Larissa De Souza Rocha, Sabrina', sexo: 'F', ministrador: ['Juliano Costa'], ministradora: ['Laura Costa'] },
-    { nome: 'Penna Machado, Bruna', sexo: 'F', ministrador: [], ministradora: ['Gabriela Santos', 'Ana Paula Dias de Oliveira Santo'] },
-    { nome: 'Pereira, Adrielle', sexo: 'F', ministrador: ['Marcos Rocha', 'Gustavo Rodrigues'], ministradora: ['Lucélia Gomes dos Santos', 'Ana Ribeiro'] },
-    { nome: 'Silva, Othon de Paula Menezes', sexo: 'M', ministrador: [] as string[], ministradora: [] as string[] },
-  ];
-
-  // Histórico de Meses (Mantido para a aba Detalhes)
-  historicoComVariacao = [
-    { mes: 'Set/25', valor: 1, variacao: null, isAtual: false },
-    { mes: 'Out/25', valor: 2, variacao: 1, isAtual: false },
-    { mes: 'Nov/25', valor: 1, variacao: -1, isAtual: false },
-    { mes: 'Dez/25', valor: 3, variacao: 2, isAtual: false },
-    { mes: 'Jan/26', valor: 0, variacao: -3, isAtual: false },
-    { mes: 'Fev/26', valor: 1, variacao: 1, isAtual: false },
-    { mes: 'Mar/26', valor: 2, variacao: 1, isAtual: false },
-    { mes: 'Abr/26', valor: 0, variacao: -2, isAtual: false },
-    { mes: 'Mai/26', valor: 1, variacao: 1, isAtual: false },
-    { mes: 'Jun/26', valor: 2, variacao: 1, isAtual: false },
-    { mes: 'Jul/26', valor: 1, variacao: -1, isAtual: false },
-    { mes: 'Ago/26', valor: 1, variacao: 0, isAtual: true }
-  ];
 
   mudarAba(nomeDaAba: string): void {
     this.abaAtiva = nomeDaAba;

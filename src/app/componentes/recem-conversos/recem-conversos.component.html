@@ -1,3 +1,12 @@
+<div class="d-flex align-items-center gap-2 text-muted my-3" *ngIf="carregando">
+  <div class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
+  <span>Carregando dados de recém-conversos...</span>
+</div>
+
+<div class="alert alert-danger my-3" role="alert" *ngIf="erroCarregamento">
+  {{ erroCarregamento }}
+</div>
+
 <!-- 1. Os Botões das Abas gerenciados pelo Angular -->
 <ul class="nav nav-tabs rx-tabs" id="conversosTab" role="tablist">
   <li class="nav-item" role="presentation">

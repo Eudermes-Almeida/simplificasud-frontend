@@ -1,7 +1,7 @@
 <header class="raiox-hero">
   <div class="raiox-hero-content">
     <span class="raiox-hero-badge"><i class="bi bi-bar-chart-line-fill"></i></span>
-    <h1 class="raiox-hero-title">Painel Raio-X Unidades</h1>
+    <h1 class="raiox-hero-title">Simplifica Sud</h1>
     <h5>Estaca Betim</h5>
     <p class="raiox-hero-subtitle">Acompanhe, em um só lugar, os indicadores essenciais da unidade</p>
   </div>
@@ -67,7 +67,7 @@
       <div ngbAccordionCollapse>
         <div ngbAccordionBody class="raiox-body">
           <ng-template>
-            <app-recem-conversos></app-recem-conversos>
+            <app-recem-conversos [unidade]="unidadeSelecionadaLabel"></app-recem-conversos>
           </ng-template>
         </div>
       </div>
@@ -85,7 +85,7 @@
       <div ngbAccordionCollapse>
         <div ngbAccordionBody class="raiox-body">
           <ng-template>
-            <app-jovens-criancas></app-jovens-criancas>
+            <app-jovens-criancas [unidade]="unidadeSelecionadaLabel"></app-jovens-criancas>
           </ng-template>
         </div>
       </div>
@@ -121,7 +121,7 @@
       <div ngbAccordionCollapse>
         <div ngbAccordionBody class="raiox-body">
           <ng-template>
-            <app-qualificacao-unidade></app-qualificacao-unidade>
+            <app-qualificacao-unidade [unidade]="unidadeSelecionadaLabel"></app-qualificacao-unidade>
           </ng-template>
         </div>
       </div>
@@ -132,14 +132,14 @@
       <h2 ngbAccordionHeader>
         <button ngbAccordionButton class="raiox-toggle">
           <span class="raiox-icon"><i class="bi bi-person-arms-up"></i></span>
-          <span class="raiox-label">Homens Avançando ao Sacerdócio {{ unidadeSelecionadaLabel }}</span>
+          <span class="raiox-label">Homens Recém-Conversos Ativos {{ unidadeSelecionadaLabel }}</span>
           <span class="raiox-chevron"><i class="bi bi-chevron-down"></i></span>
         </button>
       </h2>
       <div ngbAccordionCollapse>
         <div ngbAccordionBody class="raiox-body">
           <ng-template>
-            <app-homens-avancando-sacerdocio></app-homens-avancando-sacerdocio>
+            <app-homens-avancando-sacerdocio [unidade]="unidadeSelecionadaLabel"></app-homens-avancando-sacerdocio>
           </ng-template>
         </div>
       </div>
@@ -175,7 +175,7 @@
       <div ngbAccordionCollapse>
         <div ngbAccordionBody class="raiox-body">
           <ng-template>
-            <app-prioridades-profeticas></app-prioridades-profeticas>
+            <app-prioridades-profeticas [unidade]="unidadeSelecionadaLabel"></app-prioridades-profeticas>
           </ng-template>
         </div>
       </div>

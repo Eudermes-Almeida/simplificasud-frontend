@@ -5,6 +5,15 @@
     Jovens e Crianças
   </h5>
 
+  <div class="d-flex align-items-center gap-2 text-muted my-3" *ngIf="carregando">
+    <div class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
+    <span>Carregando dados de jovens e crianças...</span>
+  </div>
+
+  <div class="alert alert-danger my-3" role="alert" *ngIf="erroCarregamento">
+    {{ erroCarregamento }}
+  </div>
+
   <!-- Abas: Resumo / Rapazes / Moças / Crianças (sem ícones, fonte reduzida p/ caber no mobile) -->
   <ul class="nav nav-tabs rx-tabs rx-tabs-compacta" id="jovensTab" role="tablist">
     <li class="nav-item" role="presentation">
