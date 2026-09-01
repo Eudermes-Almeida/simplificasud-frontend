@@ -128,16 +128,33 @@ export class RecemConversosComponent implements OnChanges {
     };
   }
 
-  // Tem ministração se houver um ministrador OU uma ministradora designados — homens só têm
-  // ministrador ("ministradora" vem "null" na origem para eles, nunca uma designação real).
-  private temMinistracao(dto: DetalhesConversosDTO): boolean {
-    return dto.ministrador !== 'Sem Designação' || (dto.ministradora !== 'Sem Designação' && dto.ministradora !== 'null');
+  // Valores de "sem designação" já usados na origem em momentos diferentes — a planilha trocou
+  // o vocabulário em 2026-09 ("Sem Designação"→"Não designado", "null"→"Null") sem aviso prévio,
+  // e o código antigo só reconhecia os termos velhos (bug real: recém-converso sem nenhum
+  // ministrador/ministradora contava como "tem ministração"). Aceita os dois conjuntos pra não
+  // quebrar de novo se a planilha oscilar entre convenções.
+  private static readonly SEM_DESIGNACAO = ['Sem Designação', 'Não designado'];
+  private static readonly SEM_MINISTRADORA_HOMEM = ['null', 'Null'];
+
+  private semDesignacao(valor: string): boolean {
+    return RecemConversosComponent.SEM_DESIGNACAO.includes(valor);
   }
 
-  // "Sem Designação" (sem ministrador/ministradora) e "null" (campo Ministradora em
-  // registros masculinos, literal na origem) viram lista vazia — nunca um nome de fato.
+  // Tem ministração se houver um ministrador OU uma ministradora designados — homens só têm
+  // ministrador (o campo "ministradora" vem com um placeholder de "não se aplica" na origem
+  // pra eles, nunca uma designação real).
+  private temMinistracao(dto: DetalhesConversosDTO): boolean {
+    const semMinistradora = this.semDesignacao(dto.ministradora) || RecemConversosComponent.SEM_MINISTRADORA_HOMEM.includes(dto.ministradora);
+    return !this.semDesignacao(dto.ministrador) || !semMinistradora;
+  }
+
+  // "Sem designação" (nenhum ministrador/ministradora) e o placeholder do campo Ministradora em
+  // registros masculinos viram lista vazia — nunca um nome de fato.
   private mapMinistracao(dto: DetalhesConversosDTO): ConversoMinistracao {
-    const paraLista = (valor: string) => (valor === 'Sem Designação' || valor === 'null') ? [] : valor.split(',').map(nome => nome.trim());
+    const paraLista = (valor: string) =>
+      (this.semDesignacao(valor) || RecemConversosComponent.SEM_MINISTRADORA_HOMEM.includes(valor))
+        ? []
+        : valor.split(',').map(nome => nome.trim());
 
     return {
       nome: dto.nome,

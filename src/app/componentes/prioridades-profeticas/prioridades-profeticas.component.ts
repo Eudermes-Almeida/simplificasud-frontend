@@ -2,8 +2,6 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PrioridadesProfeticasDTO, RaioxApiService } from '../../services/raiox-api.service';
 
-type ColunaAba = 'atual' | 'meta' | 'falta';
-
 interface PrioridadeItem {
   nome: string;
   icone: string;
@@ -42,8 +40,6 @@ export class PrioridadesProfeticasComponent implements OnChanges {
   // Nome real da unidade (ex: "Ala Betim 1" ou "Estaca Betim"), recebido do pai.component —
   // é o que dispara a busca no backend.
   @Input() unidade = '';
-
-  abaAtiva: ColunaAba = 'atual';
 
   carregando = false;
   erroCarregamento: string | null = null;
@@ -117,23 +113,12 @@ export class PrioridadesProfeticasComponent implements OnChanges {
     });
   }
 
-  mudarAba(aba: ColunaAba): void {
-    this.abaAtiva = aba;
-  }
-
   faltam(item: PrioridadeItem): number {
     return Math.max(item.meta - item.atual, 0);
   }
 
-  valorExibido(item: PrioridadeItem): string {
-    return this.abaAtiva === 'falta' ? String(this.faltam(item)) : String(item[this.abaAtiva]);
-  }
-
-  // Vermelho/verde só valem na aba Falta; nas outras o card fica neutro.
-  corClasse(item: PrioridadeItem): string {
-    if (this.abaAtiva !== 'falta') {
-      return '';
-    }
-    return this.faltam(item) > 0 ? 'rx-kpi-negativo' : 'rx-kpi-positivo';
+  // Falta 0 (meta batida ou superada) = verde; falta > 0 = vermelho.
+  faltaClasse(item: PrioridadeItem): string {
+    return this.faltam(item) === 0 ? 'rx-progresso-num-positivo' : 'rx-progresso-num-negativo';
   }
 }
