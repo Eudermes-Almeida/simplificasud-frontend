@@ -69,9 +69,20 @@
           <span class="rx-progresso-label rx-progresso-label-ativos">{{ labelAtivos(item) }}:</span>
           <span>
             <span class="rx-progresso-num" [ngClass]="classeAtivos(item)">{{ item.ativos }}</span>
-            <span class="rx-progresso-pct" *ngIf="mostrarPercentual(item)" [ngClass]="classeAtivos(item)">({{ percentual(item) }}%)</span>
+            <span class="rx-progresso-pct" *ngIf="mostrarPercentual(item)">({{ percentual(item) }}%)</span>
           </span>
         </div>
+        <div class="rx-progresso-linha" *ngIf="item.recomendacaoBatisterio !== undefined">
+          <span class="rx-progresso-label">Recomendação Batistério:</span>
+          <span>
+            <span class="rx-progresso-num">{{ item.recomendacaoBatisterio }}</span>
+            <span class="rx-progresso-pct">({{ percentualRecomendacaoBatisterio(item) }}%)*</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="rx-progresso-nota" *ngIf="item.recomendacaoBatisterio !== undefined">
+        * Percentual em relação aos jovens ativos
       </div>
     </div>
   </div>
@@ -92,18 +103,35 @@
             <span class="rx-pessoa-campo-valor">{{ pessoa.sacerdocio }}</span>
           </span>
         </div>
+
+        <div class="rx-pessoa-campo" [ngClass]="statusRecomendacaoBatisterio(pessoa.recomendacaoBatisterio).classe">
+          <span class="rx-pessoa-campo-icon"><i class="bi bi-droplet-fill"></i></span>
+          <span class="rx-pessoa-campo-texto">
+            <span class="rx-pessoa-campo-label">Recomendação Batistério</span>
+            <span class="rx-pessoa-campo-valor">{{ statusRecomendacaoBatisterio(pessoa.recomendacaoBatisterio).texto }}</span>
+          </span>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- CONTEÚDO: ABA MOÇAS -->
-  <div class="rx-nome-lista my-3" *ngIf="abaAtiva === 'mocas'">
-    <div class="rx-nome-item" *ngFor="let pessoa of mocas">
-      <span class="rx-nome-texto">
-        <span class="rx-nome-icon"><i class="bi bi-gender-female"></i></span>
-        {{ pessoa.nome }}
-      </span>
-      <span class="rx-nome-idade">{{ pessoa.idade }} anos</span>
+  <div class="rx-pessoa-lista my-3" *ngIf="abaAtiva === 'mocas'">
+    <div class="rx-pessoa-card" *ngFor="let pessoa of mocas">
+      <div class="rx-pessoa-header">
+        <span class="rx-pessoa-nome">{{ pessoa.nome }}</span>
+        <span class="rx-pessoa-idade">{{ pessoa.idade }} anos</span>
+      </div>
+
+      <div class="rx-pessoa-campos">
+        <div class="rx-pessoa-campo" [ngClass]="statusRecomendacaoBatisterio(pessoa.recomendacaoBatisterio).classe">
+          <span class="rx-pessoa-campo-icon"><i class="bi bi-droplet-fill"></i></span>
+          <span class="rx-pessoa-campo-texto">
+            <span class="rx-pessoa-campo-label">Recomendação Batistério</span>
+            <span class="rx-pessoa-campo-valor">{{ statusRecomendacaoBatisterio(pessoa.recomendacaoBatisterio).texto }}</span>
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 

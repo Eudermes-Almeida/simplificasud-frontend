@@ -30,6 +30,7 @@ export interface RapazesDTO {
   nome: string;
   idade: string;
   sacerdocio: string;
+  recomendacao_batisterio: string;
 }
 
 export interface MocasDTO {
@@ -37,6 +38,7 @@ export interface MocasDTO {
   unidade: string;
   nome: string;
   idade: string;
+  recomendacao_batisterio: string;
 }
 
 export interface CriancasDTO {
@@ -107,6 +109,8 @@ export interface ResumoJovensDTO {
   total_criancas: string;
   total_matriculados_seminario: string;
   frequencia_acima_75: string;
+  rapazes_recomendacao_batisterio: string;
+  mocas_recomendacao_batisterio: string;
 }
 
 // Service único para todas as chamadas HTTP ao backend Quarkus (SIMPLIFICASUD) —

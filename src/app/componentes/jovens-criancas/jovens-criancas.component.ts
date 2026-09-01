@@ -19,17 +19,30 @@ interface GrupoResumo {
   // usado só em Matrículas Seminário pra ele não ficar "sem vida" ao lado
   // dos outros 3 cards, todos com o mesmo ícone azul-padrão.
   iconeDestaque?: boolean;
+  // Só definido nos cards Rapazes/Moças — quantidade com recomendação de
+  // batistério ativa. undefined nos demais cards (Crianças/Matrículas Seminário),
+  // que não têm essa informação na tabela resumojovens.
+  recomendacaoBatisterio?: number;
 }
 
 interface Rapaz {
   nome: string;
   idade: number;
   sacerdocio: string;
+  recomendacaoBatisterio: string;
 }
 
 interface Moca {
   nome: string;
   idade: number;
+  recomendacaoBatisterio: string;
+}
+
+// Status calculado da Recomendação Batistério (rx-campo-positivo/negativo/neutro
+// já existem em styles.css, reaproveitados aqui em vez de criar cores novas).
+interface StatusRecomendacao {
+  texto: string;
+  classe: string;
 }
 
 interface Crianca {
@@ -81,8 +94,20 @@ export class JovensCriancasComponent implements OnChanges {
       resumo: this.raioxApiService.buscaResumoJovens(this.unidade),
     }).subscribe({
       next: ({ rapazes, mocas, criancas, resumo }) => {
-        this.rapazes = rapazes.map(dto => ({ nome: dto.nome, idade: Number(dto.idade), sacerdocio: dto.sacerdocio }));
-        this.mocas = mocas.map(dto => ({ nome: dto.nome, idade: Number(dto.idade) }));
+        // Backend omite a chave (JSON-B) quando recomendacao_batisterio vem nulo no banco
+        // (registros com dado quebrado, ex: idade='*') — normaliza pro mesmo texto usado
+        // pra quem nunca teve recomendação emitida, igual já feito em recem-conversos.
+        this.rapazes = rapazes.map(dto => ({
+          nome: dto.nome,
+          idade: Number(dto.idade),
+          sacerdocio: dto.sacerdocio,
+          recomendacaoBatisterio: dto.recomendacao_batisterio || 'Não Emitida',
+        }));
+        this.mocas = mocas.map(dto => ({
+          nome: dto.nome,
+          idade: Number(dto.idade),
+          recomendacaoBatisterio: dto.recomendacao_batisterio || 'Não Emitida',
+        }));
         this.criancas = criancas.map(dto => ({ nome: dto.nome, sexo: dto.sexo as 'M' | 'F', idade: Number(dto.idade) }));
 
         // "Estaca Betim" traz 1 linha por unidade (9 no total) — somar sempre funciona,
@@ -91,8 +116,8 @@ export class JovensCriancasComponent implements OnChanges {
           resumo.reduce((acc, item) => acc + Number(item[campo]), 0);
 
         this.resumoJovens = [
-          { nome: 'Rapazes', icone: 'bi-gender-male', ativos: somar('rapazes_ativos'), total: somar('rapazes_total'), labelAtivos: 'Ativos' },
-          { nome: 'Moças', icone: 'bi-gender-female', ativos: somar('mocas_ativas'), total: somar('mocas_total'), labelAtivos: 'Ativas' },
+          { nome: 'Rapazes', icone: 'bi-gender-male', ativos: somar('rapazes_ativos'), total: somar('rapazes_total'), labelAtivos: 'Ativos', recomendacaoBatisterio: somar('rapazes_recomendacao_batisterio') },
+          { nome: 'Moças', icone: 'bi-gender-female', ativos: somar('mocas_ativas'), total: somar('mocas_total'), labelAtivos: 'Ativas', recomendacaoBatisterio: somar('mocas_recomendacao_batisterio') },
           { nome: 'Crianças', icone: 'bi-emoji-smile-fill', ativos: somar('criancas_total_ativas'), total: somar('total_criancas'), labelAtivos: 'Ativas' },
           {
             nome: 'Matrículas Seminário',
@@ -123,6 +148,12 @@ export class JovensCriancasComponent implements OnChanges {
     return item.total === 0 ? 0 : Math.round((item.ativos / item.total) * 100);
   }
 
+  // Percentual da Recomendação Batistério é relativo aos jovens ativos (não ao total),
+  // por pedido explícito do usuário — denominador diferente do percentual() acima.
+  percentualRecomendacaoBatisterio(item: GrupoResumo): number {
+    return item.ativos === 0 ? 0 : Math.round(((item.recomendacaoBatisterio ?? 0) / item.ativos) * 100);
+  }
+
   labelTotal(item: GrupoResumo): string {
     return item.labelTotal ?? 'Total';
   }
@@ -143,5 +174,28 @@ export class JovensCriancasComponent implements OnChanges {
 
   sacerdocioClasse(status: string): string {
     return status === 'Não Ordenado' ? 'rx-campo-negativo' : 'rx-campo-positivo';
+  }
+
+  // Recomendação Batistério: valor vem "dd/mm/aaaa" (vencimento) ou "Não Emitida".
+  // Comparação considera só mês/ano (regra explícita do usuário) — um dia qualquer
+  // do mês de vencimento não importa, e vencendo no mês atual ainda conta como ativa.
+  statusRecomendacaoBatisterio(valor: string): StatusRecomendacao {
+    if (!valor || valor === 'Não Emitida') {
+      return { texto: 'Não Emitida', classe: 'rx-campo-neutro' };
+    }
+
+    const [, mesStr, anoStr] = valor.split('/');
+    const mesVencimento = Number(mesStr);
+    const anoVencimento = Number(anoStr);
+
+    const hoje = new Date();
+    const mesAtual = hoje.getMonth() + 1;
+    const anoAtual = hoje.getFullYear();
+
+    const vencida = anoVencimento < anoAtual || (anoVencimento === anoAtual && mesVencimento < mesAtual);
+
+    return vencida
+      ? { texto: `Vencida em ${valor}`, classe: 'rx-campo-negativo' }
+      : { texto: `Ativa vence em ${valor}`, classe: 'rx-campo-positivo' };
   }
 }

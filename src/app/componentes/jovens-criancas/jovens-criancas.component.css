@@ -112,9 +112,19 @@
 }
 
 .rx-progresso-pct {
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 700;
+  color: #94a3b8;
   margin-left: 0.2rem;
+}
+
+/* Nota de rodapé do card, explicando o asterisco da Recomendação Batistério
+   (percentual calculado sobre os jovens ativos, não sobre o total). */
+.rx-progresso-nota {
+  margin-top: 0.6rem;
+  font-size: 0.72rem;
+  font-style: italic;
+  color: #94a3b8;
 }
 
 /* Ícone de destaque (âmbar) — só o card de Matrículas Seminário usa,
@@ -168,7 +178,11 @@
   }
 
   .rx-progresso-pct {
-    font-size: 0.64rem;
+    font-size: 0.58rem;
+  }
+
+  .rx-progresso-nota {
+    font-size: 0.62rem;
   }
 }
 
