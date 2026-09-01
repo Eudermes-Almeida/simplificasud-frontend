@@ -71,14 +71,17 @@ export class RecemConversosComponent implements OnChanges {
 
     this.raioxApiService.buscaDetalhesConversos(this.unidade).subscribe({
       next: (dados) => {
-        // O backend omite a chave inteira (JSON-B) quando sacerdocio/recomendacao vêm nulos no
-        // banco — normaliza para as strings de convenção já usadas no resto do dado (single
-        // source of truth) antes de qualquer contagem/mapeamento, para nunca tratar "em branco"
-        // como se fosse um valor real (ex: um sacerdocio ausente não pode contar como "ordenado").
+        // O backend omite a chave inteira (JSON-B) quando sacerdocio/recomendacao/ministrador/
+        // ministradora vêm nulos no banco — normaliza para as strings de convenção já usadas no
+        // resto do dado (single source of truth) antes de qualquer contagem/mapeamento, para
+        // nunca tratar "em branco" como se fosse um valor real (ex: um sacerdocio ausente não
+        // pode contar como "ordenado", um ministrador ausente não pode virar undefined.split()).
         const dadosNormalizados = dados.map(dto => ({
           ...dto,
           sacerdocio: dto.sacerdocio || 'Não se aplica',
           recomendacao: dto.recomendacao || 'Não Emitida',
+          ministrador: dto.ministrador || 'Não designado',
+          ministradora: dto.ministradora || 'Não designado',
         }));
 
         this.resumoConversos = this.calcularResumo(dadosNormalizados);
