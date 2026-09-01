@@ -84,6 +84,16 @@ export interface PrioridadesProfeticasDTO {
   meta_recomendacao_batisterio: string;
 }
 
+export interface SeminarioDTO {
+  id: number;
+  unidade: string;
+  nome: string;
+  sexo: string;
+  idade: string;
+  percentual_frequencia: string;
+  data_ultima_presenca: string;
+}
+
 export interface ResumoJovensDTO {
   id: number;
   unidade: string;
@@ -151,5 +161,10 @@ export class RaioxApiService {
   buscaResumoJovens(unidade: string): Observable<ResumoJovensDTO[]> {
     const params = new HttpParams().set('unidade', unidade);
     return this.http.get<ResumoJovensDTO[]>(`${this.baseUrl}/resumojovens`, { params });
+  }
+
+  buscaSeminario(unidade: string): Observable<SeminarioDTO[]> {
+    const params = new HttpParams().set('unidade', unidade);
+    return this.http.get<SeminarioDTO[]>(`${this.baseUrl}/seminario`, { params });
   }
 }

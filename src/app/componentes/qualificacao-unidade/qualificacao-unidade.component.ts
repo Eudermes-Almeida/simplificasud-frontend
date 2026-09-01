@@ -94,6 +94,6 @@ export class QualificacaoUnidadeComponent implements OnChanges {
   }
 
   get resultadoTexto(): string {
-    return this.isQualificada ? 'Resultado: Ala qualificada' : 'Resultado: Ala NÃO qualificada';
+    return this.isQualificada ? 'Resultado: Unidade qualificada' : 'Resultado: Unidade NÃO qualificada';
   }
 }
