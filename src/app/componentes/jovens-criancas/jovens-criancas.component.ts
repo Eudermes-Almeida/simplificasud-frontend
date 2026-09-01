@@ -10,7 +10,15 @@ interface GrupoResumo {
   icone: string;
   ativos: number;
   total: number;
-  nota?: string;
+  // Rótulos customizáveis por card — Matrículas Seminário precisa de textos diferentes
+  // do padrão "Total"/"Ativos" e não mostra percentual (ver mostrarPercentual).
+  labelTotal?: string;
+  labelAtivos?: string;
+  mostrarPercentual?: boolean;
+  // Dá um acento de cor diferente (âmbar) ao ícone deste card específico —
+  // usado só em Matrículas Seminário pra ele não ficar "sem vida" ao lado
+  // dos outros 3 cards, todos com o mesmo ícone azul-padrão.
+  iconeDestaque?: boolean;
 }
 
 interface Rapaz {
@@ -48,20 +56,7 @@ export class JovensCriancasComponent implements OnChanges {
   carregando = false;
   erroCarregamento: string | null = null;
 
-  // Ainda não há dados reais no banco para este escopo (metas/matrículas do seminário) —
-  // mock mantido de propósito até o backend cobrir essas métricas.
-  resumoJovens: GrupoResumo[] = [
-    { nome: 'Rapazes', icone: 'bi-gender-male', ativos: 2, total: 8 },
-    { nome: 'Moças', icone: 'bi-gender-female', ativos: 2, total: 8 },
-    { nome: 'Crianças', icone: 'bi-emoji-smile-fill', ativos: 6, total: 12 },
-    {
-      nome: 'Matrículas Seminário',
-      icone: 'bi-book-half',
-      ativos: 4,
-      total: 4,
-      nota: 'Alunos com frequência média acima de 75%'
-    }
-  ];
+  resumoJovens: GrupoResumo[] = [];
 
   rapazes: Rapaz[] = [];
   mocas: Moca[] = [];
@@ -83,17 +78,39 @@ export class JovensCriancasComponent implements OnChanges {
       rapazes: this.raioxApiService.buscaRapazes(this.unidade),
       mocas: this.raioxApiService.buscaMocas(this.unidade),
       criancas: this.raioxApiService.buscaCriancas(this.unidade),
+      resumo: this.raioxApiService.buscaResumoJovens(this.unidade),
     }).subscribe({
-      next: ({ rapazes, mocas, criancas }) => {
+      next: ({ rapazes, mocas, criancas, resumo }) => {
         this.rapazes = rapazes.map(dto => ({ nome: dto.nome, idade: Number(dto.idade), sacerdocio: dto.sacerdocio }));
         this.mocas = mocas.map(dto => ({ nome: dto.nome, idade: Number(dto.idade) }));
         this.criancas = criancas.map(dto => ({ nome: dto.nome, sexo: dto.sexo as 'M' | 'F', idade: Number(dto.idade) }));
+
+        // "Estaca Betim" traz 1 linha por unidade (9 no total) — somar sempre funciona,
+        // seja 1 unidade específica (soma = no-op) ou a estaca inteira (soma = total real).
+        const somar = (campo: keyof typeof resumo[0]) =>
+          resumo.reduce((acc, item) => acc + Number(item[campo]), 0);
+
+        this.resumoJovens = [
+          { nome: 'Rapazes', icone: 'bi-gender-male', ativos: somar('rapazes_ativos'), total: somar('rapazes_total'), labelAtivos: 'Ativos' },
+          { nome: 'Moças', icone: 'bi-gender-female', ativos: somar('mocas_ativas'), total: somar('mocas_total'), labelAtivos: 'Ativas' },
+          { nome: 'Crianças', icone: 'bi-emoji-smile-fill', ativos: somar('criancas_total_ativas'), total: somar('total_criancas'), labelAtivos: 'Ativas' },
+          {
+            nome: 'Matrículas Seminário',
+            icone: 'bi-book-half',
+            ativos: somar('frequencia_acima_75'),
+            total: somar('total_matriculados_seminario'),
+            labelTotal: 'Total Matrículas',
+            labelAtivos: 'Alunos com frequência acima de 75%',
+            iconeDestaque: true
+          }
+        ];
+
         this.carregando = false;
       },
       error: (err) => {
         this.erroCarregamento = 'Não foi possível carregar os dados de jovens e crianças.';
         this.carregando = false;
-        console.error('Erro ao buscar rapazes/moças/crianças:', err);
+        console.error('Erro ao buscar rapazes/moças/crianças/resumo:', err);
       },
     });
   }
@@ -104,6 +121,24 @@ export class JovensCriancasComponent implements OnChanges {
 
   percentual(item: GrupoResumo): number {
     return item.total === 0 ? 0 : Math.round((item.ativos / item.total) * 100);
+  }
+
+  labelTotal(item: GrupoResumo): string {
+    return item.labelTotal ?? 'Total';
+  }
+
+  labelAtivos(item: GrupoResumo): string {
+    return item.labelAtivos ?? 'Ativos';
+  }
+
+  mostrarPercentual(item: GrupoResumo): boolean {
+    return item.mostrarPercentual !== false;
+  }
+
+  // Mesmo corte >=75% verde / <75% vermelho já usado no componente seminario
+  // (frequenciaClasse) — reaproveitado aqui pro número/percentual de "ativos".
+  classeAtivos(item: GrupoResumo): string {
+    return this.percentual(item) >= 75 ? 'rx-progresso-num-positivo' : 'rx-progresso-num-negativo';
   }
 
   sacerdocioClasse(status: string): string {

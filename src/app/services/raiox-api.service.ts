@@ -84,6 +84,21 @@ export interface PrioridadesProfeticasDTO {
   meta_recomendacao_batisterio: string;
 }
 
+export interface ResumoJovensDTO {
+  id: number;
+  unidade: string;
+  rapazes_total: string;
+  rapazes_ativos: string;
+  mocas_total: string;
+  mocas_ativas: string;
+  criancas_0_a_2: string;
+  criancas_3_a_11_potencial: string;
+  criancas_total_ativas: string;
+  total_criancas: string;
+  total_matriculados_seminario: string;
+  frequencia_acima_75: string;
+}
+
 // Service único para todas as chamadas HTTP ao backend Quarkus (SIMPLIFICASUD) —
 // cada tabela nova ganha aqui seu próprio método buscaXxx, todos devolvendo Observable.
 @Injectable({ providedIn: 'root' })
@@ -131,5 +146,10 @@ export class RaioxApiService {
   buscaPrioridadesProfeticas(unidade: string): Observable<PrioridadesProfeticasDTO[]> {
     const params = new HttpParams().set('unidade', unidade);
     return this.http.get<PrioridadesProfeticasDTO[]>(`${this.baseUrl}/prioridadesprofeticas`, { params });
+  }
+
+  buscaResumoJovens(unidade: string): Observable<ResumoJovensDTO[]> {
+    const params = new HttpParams().set('unidade', unidade);
+    return this.http.get<ResumoJovensDTO[]>(`${this.baseUrl}/resumojovens`, { params });
   }
 }

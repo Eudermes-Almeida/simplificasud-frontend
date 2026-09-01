@@ -54,22 +54,24 @@
   <div class="rx-progresso-grid my-3" *ngIf="abaAtiva === 'resumo'">
     <div class="rx-progresso-card" *ngFor="let item of resumoJovens">
       <div class="rx-progresso-topo">
-        <span class="rx-progresso-icon"><i class="bi" [ngClass]="item.icone"></i></span>
+        <span class="rx-progresso-icon" [ngClass]="{ 'rx-progresso-icon-destaque': item.iconeDestaque }">
+          <i class="bi" [ngClass]="item.icone"></i>
+        </span>
         <span class="rx-progresso-nome">{{ item.nome }}</span>
       </div>
 
-      <div class="rx-progresso-valores">
-        <span class="rx-progresso-valor">{{ item.ativos }}</span>
-        <span class="rx-progresso-total">de {{ item.total }}</span>
-        <span class="rx-progresso-pct">{{ percentual(item) }}%</span>
-      </div>
-
-      <div class="rx-progresso-nota" *ngIf="item.nota">
-        <i class="bi bi-info-circle-fill"></i> {{ item.nota }}
-      </div>
-
-      <div class="rx-progresso-barra">
-        <div class="rx-progresso-barra-fill" [style.width.%]="percentual(item)"></div>
+      <div class="rx-progresso-linhas">
+        <div class="rx-progresso-linha">
+          <span class="rx-progresso-label">{{ labelTotal(item) }}:</span>
+          <span class="rx-progresso-num">{{ item.total }}</span>
+        </div>
+        <div class="rx-progresso-linha">
+          <span class="rx-progresso-label rx-progresso-label-ativos">{{ labelAtivos(item) }}:</span>
+          <span>
+            <span class="rx-progresso-num" [ngClass]="classeAtivos(item)">{{ item.ativos }}</span>
+            <span class="rx-progresso-pct" *ngIf="mostrarPercentual(item)" [ngClass]="classeAtivos(item)">({{ percentual(item) }}%)</span>
+          </span>
+        </div>
       </div>
     </div>
   </div>
