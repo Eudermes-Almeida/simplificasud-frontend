@@ -1,16 +1,20 @@
 <header class="raiox-hero">
   <div class="raiox-hero-content">
+    <button type="button" class="raiox-sair-btn" (click)="sair.emit()">
+      <i class="bi bi-box-arrow-right"></i> Sair
+    </button>
     <span class="raiox-hero-badge"><i class="bi bi-bar-chart-line-fill"></i></span>
     <h1 class="raiox-hero-title">Simplifica Sud</h1>
     <h5>Estaca Betim</h5>
     <p class="raiox-hero-subtitle">Acompanhe, em um só lugar, os indicadores essenciais da unidade</p>
+    <p class="raiox-hero-usuario" *ngIf="nomeLogado">Olá, {{ nomeLogado }}</p>
   </div>
 </header>
 
 <main class="container raiox-container">
 
-   <!-- 🔽 SELEÇÃO DE UNIDADE (Inserido perfeitamente aqui) 🔽 -->
-  <div class="row justify-content-center mb-4">
+   <!-- 🔽 SELEÇÃO DE UNIDADE (só aparece se o líder puder ver mais de 1 unidade) 🔽 -->
+  <div class="row justify-content-center mb-4" *ngIf="unidades.length > 1">
     <div class="col-12 col-sm-8 col-md-6 col-lg-5">
       <div class="raiox-unit-picker">
         <label for="selectUnidade" class="raiox-unit-label">
@@ -31,6 +35,11 @@
           </ng-select>
         </div>
       </div>
+    </div>
+  </div>
+  <div class="row justify-content-center mb-4" *ngIf="unidades.length === 1">
+    <div class="col-12 text-center raiox-unit-fixa">
+      Exibindo dados de: <strong>{{ unidadeSelecionadaLabel }}</strong>
     </div>
   </div>
   <!-- 🔼 FIM DA SELEÇÃO DE UNIDADE 🔼 -->

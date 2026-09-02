@@ -1,0 +1,45 @@
+<div class="rx-auth-tela">
+  <header class="rx-auth-hero">
+    <span class="rx-auth-badge"><i class="bi bi-bar-chart-line-fill"></i></span>
+    <h1 class="rx-auth-title">Simplifica Sud</h1>
+    <p class="rx-auth-subtitle">Estaca Betim</p>
+  </header>
+
+  <div class="rx-auth-card">
+    <h2 class="rx-auth-card-titulo">Entrar</h2>
+
+    <div class="rx-auth-campo">
+      <label for="loginInput">Login</label>
+      <input
+        id="loginInput"
+        type="text"
+        [(ngModel)]="login"
+        (keyup.enter)="entrar()"
+        [disabled]="carregando"
+        autocomplete="username"
+        placeholder="Seu login" />
+    </div>
+
+    <div class="rx-auth-campo">
+      <label for="senhaInput">Senha</label>
+      <input
+        id="senhaInput"
+        type="password"
+        [(ngModel)]="senha"
+        (keyup.enter)="entrar()"
+        [disabled]="carregando"
+        autocomplete="current-password"
+        placeholder="Sua senha" />
+    </div>
+
+    <p class="rx-auth-erro" *ngIf="erro">{{ erro }}</p>
+
+    <button type="button" class="rx-auth-btn" [disabled]="carregando" (click)="entrar()">
+      {{ carregando ? 'Entrando...' : 'Entrar' }}
+    </button>
+
+    <button type="button" class="rx-auth-link" (click)="irParaPrimeiroAcesso.emit()">
+      Primeiro acesso? Cadastre seu login aqui
+    </button>
+  </div>
+</div>

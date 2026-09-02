@@ -1,4 +1,23 @@
-<!-- ngSkipHydration: NgbAccordionBody creates views via raw ViewContainerRef, which
-     Angular's SSR hydration can't reconcile with the prerendered DOM (throws
-     "Expecting instance of DOM Element" and content silently fails to expand). -->
-<app-pai ngSkipHydration></app-pai>
+<!-- ngSkipHydration em cada tela: Angular não deve tentar reconciliar o DOM
+     pré-renderizado (SSR) contra o estado real de autenticação (que só existe no
+     cliente, via localStorage) -- mesmo motivo já documentado para <app-pai>. -->
+<app-login-senha
+  *ngIf="tela === 'login'"
+  ngSkipHydration
+  [mensagemInicial]="mensagemLogin"
+  (autenticado)="aoAutenticar()"
+  (irParaPrimeiroAcesso)="irParaPrimeiroAcesso()">
+</app-login-senha>
+
+<app-primeiro-acesso
+  *ngIf="tela === 'primeiro-acesso'"
+  ngSkipHydration
+  (autenticado)="aoAutenticar()"
+  (voltarParaLogin)="irParaLogin()">
+</app-primeiro-acesso>
+
+<app-pai
+  *ngIf="tela === 'dashboard'"
+  ngSkipHydration
+  (sair)="sair()">
+</app-pai>

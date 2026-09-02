@@ -401,3 +401,177 @@ h1, h2, h3, h4, h5, h6 {
     padding: 0.25rem 0.5rem;
   }
 }
+
+/* =====================================================================
+   AUTENTICAÇÃO (login-senha.component / primeiro-acesso.component) —
+   mesma lógica das outras seções compartilhadas: vive aqui porque os
+   dois componentes usam exatamente as mesmas classes visuais.
+   ===================================================================== */
+
+.rx-auth-tela {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rx-auth-hero {
+  width: 100%;
+  background: linear-gradient(135deg, var(--rx-500) 0%, var(--rx-700) 55%, var(--rx-900) 100%);
+  padding: 3rem 1.5rem 4.5rem;
+  text-align: center;
+  color: #fff;
+  border-radius: 0 0 2rem 2rem;
+  box-shadow: 0 10px 30px -12px rgba(15, 44, 89, 0.45);
+}
+
+.rx-auth-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.rx-auth-title {
+  color: #fff;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.rx-auth-subtitle {
+  margin: 0;
+  opacity: 0.9;
+}
+
+.rx-auth-card {
+  width: 100%;
+  max-width: 380px;
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px -12px rgba(15, 44, 89, 0.25);
+  padding: 1.75rem;
+  margin-top: -3rem;
+  z-index: 1;
+}
+
+.rx-auth-card-titulo {
+  margin-bottom: 1.25rem;
+  font-size: 1.15rem;
+}
+
+.rx-auth-card-texto {
+  color: #475569;
+  margin-bottom: 1.25rem;
+  font-size: 0.92rem;
+}
+
+.rx-auth-campo {
+  margin-bottom: 1rem;
+}
+
+.rx-auth-campo label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--rx-900);
+  margin-bottom: 0.35rem;
+}
+
+.rx-auth-campo input {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--rx-200);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+}
+
+.rx-auth-campo input:focus {
+  outline: none;
+  border-color: var(--rx-500);
+}
+
+.rx-auth-campo small {
+  display: block;
+  margin-top: 0.3rem;
+  color: #64748b;
+  font-size: 0.76rem;
+}
+
+.rx-auth-erro {
+  background: #fee2e2;
+  color: #dc2626;
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.rx-auth-nome-confirmacao {
+  background: var(--rx-50);
+  color: var(--rx-900);
+  padding: 0.9rem 1rem;
+  border-radius: 0.6rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+.rx-auth-btn {
+  width: 100%;
+  padding: 0.7rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, var(--rx-500), var(--rx-700));
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.rx-auth-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.rx-auth-btn-secundario {
+  background: #fff;
+  color: var(--rx-700);
+  border: 1px solid var(--rx-300);
+}
+
+.rx-auth-link {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--rx-700);
+  font-size: 0.85rem;
+  text-align: center;
+  margin-top: 1.1rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.rx-auth-linha-botoes {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.rx-auth-linha-botoes .rx-auth-btn {
+  margin: 0;
+}
+
+@media (max-width: 480px) {
+  .rx-auth-card {
+    max-width: 100%;
+    margin: -2.5rem 1rem 0;
+    padding: 1.5rem;
+  }
+}
