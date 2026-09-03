@@ -118,19 +118,19 @@
       </div>
     </div>
 
-    <!-- ITEM 5: Qualificação da Unidade -->
-    <div ngbAccordionItem="itemCinco" class="raiox-card">
+    <!-- ITEM 5: Missionários Retornados -->
+    <div ngbAccordionItem="itemNove" class="raiox-card">
       <h2 ngbAccordionHeader>
         <button ngbAccordionButton class="raiox-toggle">
-          <span class="raiox-icon"><i class="bi bi-patch-check-fill"></i></span>
-          <span class="raiox-label">Qualificação da Unidade {{ unidadeSelecionadaLabel }}</span>
+          <span class="raiox-icon"><i class="bi bi-airplane-fill"></i></span>
+          <span class="raiox-label">Missionários Retornados {{ unidadeSelecionadaLabel }}</span>
           <span class="raiox-chevron"><i class="bi bi-chevron-down"></i></span>
         </button>
       </h2>
       <div ngbAccordionCollapse>
         <div ngbAccordionBody class="raiox-body">
           <ng-template>
-            <app-qualificacao-unidade [unidade]="unidadeSelecionadaLabel"></app-qualificacao-unidade>
+            <app-missionarios-retornados [unidade]="unidadeSelecionadaLabel"></app-missionarios-retornados>
           </ng-template>
         </div>
       </div>
@@ -154,7 +154,25 @@
       </div>
     </div>
 
-    <!-- ITEM 7: Reuniões, Atividades e Lançamentos (temporariamente desativado)
+    <!-- ITEM 7: Qualificação da Unidade -->
+    <div ngbAccordionItem="itemCinco" class="raiox-card">
+      <h2 ngbAccordionHeader>
+        <button ngbAccordionButton class="raiox-toggle">
+          <span class="raiox-icon"><i class="bi bi-patch-check-fill"></i></span>
+          <span class="raiox-label">Qualificação da Unidade {{ unidadeSelecionadaLabel }}</span>
+          <span class="raiox-chevron"><i class="bi bi-chevron-down"></i></span>
+        </button>
+      </h2>
+      <div ngbAccordionCollapse>
+        <div ngbAccordionBody class="raiox-body">
+          <ng-template>
+            <app-qualificacao-unidade [unidade]="unidadeSelecionadaLabel"></app-qualificacao-unidade>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reuniões, Atividades e Lançamentos (temporariamente desativado)
     <div ngbAccordionItem="itemSete" class="raiox-card">
       <h2 ngbAccordionHeader>
         <button ngbAccordionButton class="raiox-toggle">

@@ -54,27 +54,8 @@
   gap: 0.4rem;
 }
 
-.rx-tag {
-  display: inline-flex;
-  align-items: center;
-  background: #fff;
-  border: 1px solid var(--rx-100, #dceefe);
-  color: var(--rx-900, #0f2c59);
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 0.3rem 0.7rem;
-  border-radius: 999px;
-}
-
-.rx-tag-alerta {
-  background: #fee2e2;
-  border-color: transparent;
-  color: #dc2626;
-  font-weight: 700;
-  text-transform: uppercase;
-  font-size: 0.72rem;
-  letter-spacing: 0.02em;
-}
+/* .rx-tag/.rx-tag-alerta agora vivem em src/styles.css — promovidas a globais quando
+   missionarios-retornados passou a precisar do mesmo padrão de pílula. */
 
 @media (max-width: 576px) {
   .rx-minist-grid {

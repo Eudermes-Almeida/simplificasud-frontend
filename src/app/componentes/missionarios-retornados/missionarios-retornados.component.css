@@ -1,0 +1,192 @@
+/* Nota de rodapé do card Inativos, explicando o critério usado (recomendação ao
+   templo vencida) já que "Inativos" sozinho não é uma coluna literal da planilha. */
+.rx-kpi-nota {
+  font-size: 0.72rem;
+  font-style: italic;
+  color: #94a3b8;
+}
+
+/* Bandeira (SVG estático em assets/flags/, vendorizado do pacote flag-icons — ver
+   assets/flags/README.txt) no lugar do bi-* padrão do campo "País onde serviu". */
+.rx-pessoa-campo-icon-bandeira {
+  overflow: hidden;
+  padding: 0;
+}
+
+.rx-pessoa-campo-icon-bandeira img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---------- BLOCO DE CHAMADOS (tags dentro do card, abaixo dos campos) ---------- */
+
+.rx-chamados-bloco {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--rx-50);
+}
+
+.rx-chamados-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+}
+
+.rx-chamados-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+/* ---------- PIZZA 3D (CSS puro: conic-gradient + rotateX pra simular disco inclinado,
+   base mais escura deslocada pra baixo simulando a "borda"/espessura do disco) ----------
+   Sem lib de gráfico de propósito: só 2 fatias fixas (Ativos/Inativos), então um SVG/canvas
+   de terceiros seria peso extra pra um efeito que CSS puro já resolve, e evita o cuidado que
+   ApexCharts exige (lazy-render + ResizeObserver) pra medir corretamente dentro de uma aba
+   escondida (ver frequencia-sacramental.component.ts). */
+
+.rx-pizza3d-wrap {
+  position: relative;
+  width: 220px;
+  height: 190px;
+  margin: 0 auto 1.75rem;
+}
+
+.rx-pizza3d-sombra {
+  position: absolute;
+  left: 50%;
+  bottom: -4px;
+  width: 200px;
+  height: 36px;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, rgba(15, 44, 89, 0.35) 0%, rgba(15, 44, 89, 0) 72%);
+  border-radius: 50%;
+}
+
+.rx-pizza3d-base,
+.rx-pizza3d-topo {
+  position: absolute;
+  left: 50%;
+  width: 200px;
+  height: 200px;
+  margin-left: -100px;
+  border-radius: 50%;
+  transform: rotateX(55deg);
+}
+
+.rx-pizza3d-base {
+  top: 16px;
+  filter: brightness(0.6);
+}
+
+.rx-pizza3d-topo {
+  top: 0;
+  box-shadow: 0 2px 8px rgba(15, 44, 89, 0.3);
+}
+
+.rx-pizza3d-legenda {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.rx-pizza3d-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.rx-pizza3d-cor {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.rx-pizza3d-cor-ativo {
+  background: #16a34a;
+}
+
+.rx-pizza3d-cor-inativo {
+  background: #dc2626;
+}
+
+.rx-pizza3d-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.rx-pizza3d-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: #64748b;
+}
+
+.rx-pizza3d-valor {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--rx-900);
+}
+
+.rx-pizza3d-valor small {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+.rx-pizza3d-legenda-nota {
+  margin-top: 0.9rem;
+  text-align: center;
+  font-size: 0.72rem;
+  font-style: italic;
+  color: #94a3b8;
+}
+
+@media (max-width: 576px) {
+  .rx-pizza3d-wrap {
+    width: 180px;
+    height: 156px;
+  }
+
+  .rx-pizza3d-base,
+  .rx-pizza3d-topo {
+    width: 160px;
+    height: 160px;
+    margin-left: -80px;
+  }
+
+  .rx-pizza3d-sombra {
+    width: 160px;
+  }
+
+  .rx-pizza3d-legenda {
+    gap: 1.25rem;
+  }
+}
+
+/* ---------- PLACEHOLDER PARA ABAS AINDA NÃO ELABORADAS ---------- */
+
+.rx-em-construcao {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 2.5rem 1rem;
+  color: #94a3b8;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: var(--rx-50);
+  border-radius: 1rem;
+  border: 1px dashed var(--rx-100);
+}

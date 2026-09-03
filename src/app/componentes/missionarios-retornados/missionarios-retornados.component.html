@@ -1,0 +1,241 @@
+<div class="d-flex align-items-center gap-2 text-muted my-3" *ngIf="carregando">
+  <div class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
+  <span>Carregando dados de missionários retornados...</span>
+</div>
+
+<div class="alert alert-danger my-3" role="alert" *ngIf="erroCarregamento">
+  {{ erroCarregamento }}
+</div>
+
+<!-- 1. Os Botões das Abas gerenciados pelo Angular -->
+<ul class="nav nav-tabs rx-tabs" id="missionariosTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link rx-tab-btn"
+            [ngClass]="{ 'active': abaAtiva === 'resumo' }"
+            (click)="mudarAba('resumo')"
+            type="button" role="tab">
+      <i class="bi bi-clipboard-data"></i>
+      <span>Resumo</span>
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link rx-tab-btn"
+            [ngClass]="{ 'active': abaAtiva === 'detalhes' }"
+            (click)="mudarAba('detalhes')"
+            type="button" role="tab">
+      <i class="bi bi-table"></i>
+      <span>Detalhes</span>
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link rx-tab-btn"
+            [ngClass]="{ 'active': abaAtiva === 'grafico' }"
+            (click)="mudarAba('grafico')"
+            type="button" role="tab">
+      <i class="bi bi-graph-up"></i>
+      <span>Gráfico</span>
+    </button>
+  </li>
+</ul>
+
+<!-- 2. O Conteúdo de cada Aba alternado pelo Angular -->
+<div class="tab-content mt-3" id="missionariosTabConteudo">
+
+  <!-- CONTEÚDO DA ABA RESUMO -->
+  <div class="tab-pane fade" [ngClass]="{ 'show active': abaAtiva === 'resumo' }" role="tabpanel">
+    <div class="rx-kpi-grid my-3">
+
+      <!-- 1. Total missionários retornados -->
+      <div class="rx-kpi-card rx-kpi-hero">
+        <span class="rx-kpi-icon"><i class="bi bi-airplane-fill"></i></span>
+        <span class="rx-kpi-text">
+          <span class="rx-kpi-value">{{ resumoMissionarios.total.valor }}</span>
+          <span class="rx-kpi-label">Total missionários retornados</span>
+        </span>
+      </div>
+
+      <!-- 2. Inativos (total - recomendação ativa) -->
+      <div class="rx-kpi-card rx-kpi-negativo">
+        <span class="rx-kpi-icon"><i class="bi bi-emoji-tear-fill"></i></span>
+        <span class="rx-kpi-text">
+          <span class="rx-kpi-value">
+            {{ resumoMissionarios.inativos.valor }}
+            <small class="rx-kpi-pct">{{ resumoMissionarios.inativos.pct }}%</small>
+          </span>
+          <span class="rx-kpi-label">Inativos</span>
+          <span class="rx-kpi-nota">(Recomendação ao Templo vencida)</span>
+        </span>
+      </div>
+
+      <!-- 3. Recomendação ativa -->
+      <div class="rx-kpi-card rx-kpi-positivo">
+        <span class="rx-kpi-icon"><i class="bi bi-bank2"></i></span>
+        <span class="rx-kpi-text">
+          <span class="rx-kpi-value">
+            {{ resumoMissionarios.recomendacaoAtiva.valor }}
+            <small class="rx-kpi-pct">{{ resumoMissionarios.recomendacaoAtiva.pct }}%</small>
+          </span>
+          <span class="rx-kpi-label">Ativos</span>
+          <span class="rx-kpi-nota">(Recomendação ao templo Ativa)</span>
+        </span>
+      </div>
+
+      <!-- 4. Selados no templo -->
+      <div class="rx-kpi-card">
+        <span class="rx-kpi-icon"><i class="bi bi-gem"></i></span>
+        <span class="rx-kpi-text">
+          <span class="rx-kpi-value">
+            {{ resumoMissionarios.selados.valor }}
+            <small class="rx-kpi-pct">{{ resumoMissionarios.selados.pct }}%</small>
+          </span>
+          <span class="rx-kpi-label">Selados no templo</span>
+        </span>
+      </div>
+
+      <!-- 5. Com chamados -->
+      <div class="rx-kpi-card">
+        <span class="rx-kpi-icon"><i class="bi bi-briefcase-fill"></i></span>
+        <span class="rx-kpi-text">
+          <span class="rx-kpi-value">
+            {{ resumoMissionarios.comChamado.valor }}
+            <small class="rx-kpi-pct">{{ resumoMissionarios.comChamado.pct }}%</small>
+          </span>
+          <span class="rx-kpi-label">Com chamados</span>
+        </span>
+      </div>
+
+      <!-- 6. Solteiros -->
+      <div class="rx-kpi-card">
+        <span class="rx-kpi-icon"><i class="bi bi-person-fill"></i></span>
+        <span class="rx-kpi-text">
+          <span class="rx-kpi-value">
+            {{ resumoMissionarios.solteiros.valor }}
+            <small class="rx-kpi-pct">{{ resumoMissionarios.solteiros.pct }}%</small>
+          </span>
+          <span class="rx-kpi-label">Solteiros</span>
+        </span>
+      </div>
+
+      <!-- 7. Matriculados no instituto (temporariamente desativado a pedido do usuário)
+      <div class="rx-kpi-card">
+        <span class="rx-kpi-icon"><i class="bi bi-mortarboard-fill"></i></span>
+        <span class="rx-kpi-text">
+          <span class="rx-kpi-value">
+            {{ resumoMissionarios.matriculadosInstituto.valor }}
+            <small class="rx-kpi-pct">{{ resumoMissionarios.matriculadosInstituto.pct }}%</small>
+          </span>
+          <span class="rx-kpi-label">Matriculados no instituto</span>
+        </span>
+      </div>
+      -->
+
+    </div>
+  </div>
+
+  <!-- CONTEÚDO DA ABA DETALHES -->
+  <div class="tab-pane fade" [ngClass]="{ 'show active': abaAtiva === 'detalhes' }" role="tabpanel">
+    <div class="rx-pessoa-lista my-3">
+      <div class="rx-pessoa-card" *ngFor="let pessoa of detalhesMissionarios">
+
+        <div class="rx-pessoa-header">
+          <span class="rx-pessoa-nome">{{ pessoa.nome }}</span>
+          <span class="rx-pessoa-idade">{{ pessoa.idade }} anos</span>
+        </div>
+
+        <div class="rx-pessoa-campos">
+          <div class="rx-pessoa-campo" [ngClass]="recomendacaoClasse(pessoa.recomendacaoTemplo)">
+            <span class="rx-pessoa-campo-icon"><i class="bi bi-bank2"></i></span>
+            <span class="rx-pessoa-campo-texto">
+              <span class="rx-pessoa-campo-label">Recomendação ao templo</span>
+              <span class="rx-pessoa-campo-valor">{{ pessoa.recomendacaoTemplo }}</span>
+            </span>
+          </div>
+
+          <div class="rx-pessoa-campo">
+            <span class="rx-pessoa-campo-icon">
+              <i class="bi" [ngClass]="pessoa.estadoCivil === 'Solteiro' ? 'bi-person-fill' : 'bi-people-fill'"></i>
+            </span>
+            <span class="rx-pessoa-campo-texto">
+              <span class="rx-pessoa-campo-label">Estado civil</span>
+              <span class="rx-pessoa-campo-valor">{{ pessoa.estadoCivil }}</span>
+            </span>
+          </div>
+
+          <div class="rx-pessoa-campo">
+            <span class="rx-pessoa-campo-icon rx-pessoa-campo-icon-bandeira">
+              <img *ngIf="bandeiraCodigo(pessoa.paisMissao) as codigo"
+                   [src]="'assets/flags/' + codigo + '.svg'"
+                   [alt]="pessoa.paisMissao" />
+            </span>
+            <span class="rx-pessoa-campo-texto">
+              <span class="rx-pessoa-campo-label">País onde serviu</span>
+              <span class="rx-pessoa-campo-valor">{{ pessoa.paisMissao }}</span>
+            </span>
+          </div>
+
+          <div class="rx-pessoa-campo" *ngIf="unidade === 'Estaca Betim'">
+            <span class="rx-pessoa-campo-icon"><i class="bi bi-geo-alt-fill"></i></span>
+            <span class="rx-pessoa-campo-texto">
+              <span class="rx-pessoa-campo-label">Unidade</span>
+              <span class="rx-pessoa-campo-valor">{{ pessoa.unidade }}</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="rx-chamados-bloco">
+          <span class="rx-chamados-label"><i class="bi bi-briefcase-fill"></i> Chamados</span>
+          <div class="rx-chamados-tags">
+            <span class="rx-tag" *ngFor="let chamado of pessoa.chamados">{{ chamado }}</span>
+            <span class="rx-tag rx-tag-neutro" *ngIf="!pessoa.chamados.length">Nenhum</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTEÚDO DA ABA GRÁFICO -->
+  <div class="tab-pane fade" [ngClass]="{ 'show active': abaAtiva === 'grafico' }" role="tabpanel">
+    <div class="card border-0 shadow-sm my-3 mx-auto">
+      <div class="card-body p-4">
+
+        <h4 class="text-center text-uppercase mb-4 fw-bold text-primary tracking-wide">
+          Ativos x Inativos
+        </h4>
+
+        <div class="rx-pizza3d-wrap">
+          <div class="rx-pizza3d-sombra"></div>
+          <div class="rx-pizza3d-base" [style.background]="pizzaGradiente"></div>
+          <div class="rx-pizza3d-topo" [style.background]="pizzaGradiente"></div>
+        </div>
+
+        <div class="rx-pizza3d-legenda">
+          <div class="rx-pizza3d-item">
+            <span class="rx-pizza3d-cor rx-pizza3d-cor-ativo"></span>
+            <span class="rx-pizza3d-texto">
+              <span class="rx-pizza3d-label">Ativos*</span>
+              <span class="rx-pizza3d-valor">
+                {{ resumoMissionarios.recomendacaoAtiva.valor }}
+                <small>({{ resumoMissionarios.recomendacaoAtiva.pct }}%)</small>
+              </span>
+            </span>
+          </div>
+          <div class="rx-pizza3d-item">
+            <span class="rx-pizza3d-cor rx-pizza3d-cor-inativo"></span>
+            <span class="rx-pizza3d-texto">
+              <span class="rx-pizza3d-label">Inativos*</span>
+              <span class="rx-pizza3d-valor">
+                {{ resumoMissionarios.inativos.valor }}
+                <small>({{ resumoMissionarios.inativos.pct }}%)</small>
+              </span>
+            </span>
+          </div>
+        </div>
+
+        <div class="rx-pizza3d-legenda-nota">* considerando recomendações vencidas e ativas</div>
+
+      </div>
+    </div>
+  </div>
+
+</div>

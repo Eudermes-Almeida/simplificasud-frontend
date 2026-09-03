@@ -367,6 +367,39 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+/* ---------- TAG (pílula genérica dentro de um card de pessoa) ----------
+   Usada por qualquer seção que precise listar vários itens de um mesmo campo (ex.:
+   ministradores em recem-conversos, chamados em missionarios-retornados) como pílulas
+   individuais em vez de uma string separada por vírgula. */
+
+.rx-tag {
+  display: inline-flex;
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--rx-100);
+  color: var(--rx-900);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+}
+
+.rx-tag-alerta {
+  background: #fee2e2;
+  border-color: transparent;
+  color: #dc2626;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+}
+
+.rx-tag-neutro {
+  background: var(--rx-50);
+  border-color: transparent;
+  color: #94a3b8;
+}
+
 /* ---------- SELO DE STATUS (pílula verde/vermelha) ----------
    Usado em qualquer indicador binário/de progresso (qualificacao-unidade,
    reunioes-atividades-lancamentos, ...): "Cumprido"/"Faltam N", "OK"/"NÃO",

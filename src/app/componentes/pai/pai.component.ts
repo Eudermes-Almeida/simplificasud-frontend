@@ -11,13 +11,14 @@ import { PrioridadesProfeticasComponent } from '../prioridades-profeticas/priori
 import { HomensAvancandoSacerdocioComponent } from '../homens-avancando-sacerdocio/homens-avancando-sacerdocio.component';
 import { ReunioesAtividadesLancamentosComponent } from '../reunioes-atividades-lancamentos/reunioes-atividades-lancamentos.component';
 import { JovensCriancasComponent } from '../jovens-criancas/jovens-criancas.component';
+import { MissionariosRetornadosComponent } from '../missionarios-retornados/missionarios-retornados.component';
 import { RodapeComponent } from '../rodape/rodape.component';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-pai',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgSelectModule, NgbAccordionModule, FrequenciaSacramentalComponent, RecemConversosComponent, SeminarioComponent, QualificacaoUnidadeComponent, PrioridadesProfeticasComponent, HomensAvancandoSacerdocioComponent, ReunioesAtividadesLancamentosComponent, JovensCriancasComponent, RodapeComponent],
+  imports: [CommonModule, FormsModule, NgSelectModule, NgbAccordionModule, FrequenciaSacramentalComponent, RecemConversosComponent, SeminarioComponent, QualificacaoUnidadeComponent, PrioridadesProfeticasComponent, HomensAvancandoSacerdocioComponent, ReunioesAtividadesLancamentosComponent, JovensCriancasComponent, MissionariosRetornadosComponent, RodapeComponent],
   templateUrl: './pai.component.html',
   styleUrl: './pai.component.css'
 })
