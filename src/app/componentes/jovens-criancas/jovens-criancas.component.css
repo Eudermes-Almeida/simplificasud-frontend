@@ -246,6 +246,29 @@
   white-space: nowrap;
 }
 
+/* Envolve idade + unidade (quando visível) do lado direito do card, mantendo .rx-nome-item
+   com exatamente 2 filhos diretos (nome/ícone à esquerda, este bloco à direita) — mesmo
+   cuidado já documentado pra cards de 2 filhos no CSS mobile compartilhado do projeto. */
+.rx-nome-lado-direito {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.3rem;
+  flex-shrink: 0;
+}
+
+/* Unidade só aparece na visão agregada "Estaca Betim" — mesmo pill da idade, mas neutro
+   (sem destaque de cor) e com quebra de linha permitida (nomes de unidade são mais longos). */
+.rx-nome-unidade {
+  background: var(--rx-50);
+  color: var(--rx-600);
+  font-weight: 600;
+  font-size: 0.7rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  text-align: right;
+}
+
 @media (max-width: 576px) {
   .rx-nome-item {
     padding: 0.6rem 0.8rem;
@@ -265,5 +288,10 @@
   .rx-nome-idade {
     font-size: 0.7rem;
     padding: 0.25rem 0.5rem;
+  }
+
+  .rx-nome-unidade {
+    font-size: 0.62rem;
+    padding: 0.2rem 0.5rem;
   }
 }

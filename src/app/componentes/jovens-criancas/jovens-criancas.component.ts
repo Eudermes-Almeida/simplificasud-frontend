@@ -28,6 +28,7 @@ interface GrupoResumo {
 interface Rapaz {
   nome: string;
   idade: number;
+  unidade: string;
   sacerdocio: string;
   recomendacaoBatisterio: string;
 }
@@ -35,6 +36,7 @@ interface Rapaz {
 interface Moca {
   nome: string;
   idade: number;
+  unidade: string;
   recomendacaoBatisterio: string;
 }
 
@@ -49,6 +51,7 @@ interface Crianca {
   nome: string;
   sexo: 'M' | 'F';
   idade: number;
+  unidade: string;
 }
 
 @Component({
@@ -100,15 +103,17 @@ export class JovensCriancasComponent implements OnChanges {
         this.rapazes = rapazes.map(dto => ({
           nome: dto.nome,
           idade: Number(dto.idade),
+          unidade: dto.unidade,
           sacerdocio: dto.sacerdocio,
           recomendacaoBatisterio: dto.recomendacao_batisterio || 'Não Emitida',
         }));
         this.mocas = mocas.map(dto => ({
           nome: dto.nome,
           idade: Number(dto.idade),
+          unidade: dto.unidade,
           recomendacaoBatisterio: dto.recomendacao_batisterio || 'Não Emitida',
         }));
-        this.criancas = criancas.map(dto => ({ nome: dto.nome, sexo: dto.sexo as 'M' | 'F', idade: Number(dto.idade) }));
+        this.criancas = criancas.map(dto => ({ nome: dto.nome, sexo: dto.sexo as 'M' | 'F', idade: Number(dto.idade), unidade: dto.unidade }));
 
         // "Estaca Betim" traz 1 linha por unidade (9 no total) — somar sempre funciona,
         // seja 1 unidade específica (soma = no-op) ou a estaca inteira (soma = total real).

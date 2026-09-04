@@ -111,6 +111,14 @@
             <span class="rx-pessoa-campo-valor">{{ statusRecomendacaoBatisterio(pessoa.recomendacaoBatisterio).texto }}</span>
           </span>
         </div>
+
+        <div class="rx-pessoa-campo" *ngIf="unidade === 'Estaca Betim'">
+          <span class="rx-pessoa-campo-icon"><i class="bi bi-geo-alt-fill"></i></span>
+          <span class="rx-pessoa-campo-texto">
+            <span class="rx-pessoa-campo-label">Unidade</span>
+            <span class="rx-pessoa-campo-valor">{{ pessoa.unidade }}</span>
+          </span>
+        </div>
       </div>
     </div>
   </div>
@@ -131,6 +139,14 @@
             <span class="rx-pessoa-campo-valor">{{ statusRecomendacaoBatisterio(pessoa.recomendacaoBatisterio).texto }}</span>
           </span>
         </div>
+
+        <div class="rx-pessoa-campo" *ngIf="unidade === 'Estaca Betim'">
+          <span class="rx-pessoa-campo-icon"><i class="bi bi-geo-alt-fill"></i></span>
+          <span class="rx-pessoa-campo-texto">
+            <span class="rx-pessoa-campo-label">Unidade</span>
+            <span class="rx-pessoa-campo-valor">{{ pessoa.unidade }}</span>
+          </span>
+        </div>
       </div>
     </div>
   </div>
@@ -144,7 +160,10 @@
         </span>
         {{ crianca.nome }}
       </span>
-      <span class="rx-nome-idade">{{ crianca.idade }} anos</span>
+      <span class="rx-nome-lado-direito">
+        <span class="rx-nome-idade">{{ crianca.idade }} anos</span>
+        <span class="rx-nome-unidade" *ngIf="unidade === 'Estaca Betim'">{{ crianca.unidade }}</span>
+      </span>
     </div>
   </div>
 

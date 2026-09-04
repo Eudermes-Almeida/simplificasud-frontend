@@ -7,6 +7,7 @@ interface AlunoSeminario {
   nome: string;
   sexo: string;
   idade: number;
+  unidade: string;
   frequenciaPct: number;
   dataUltimaPresenca: string;
 }
@@ -86,6 +87,7 @@ export class SeminarioComponent implements OnChanges {
           nome: dto.nome,
           sexo: dto.sexo,
           idade: Number(dto.idade),
+          unidade: dto.unidade,
           frequenciaPct: this.parsePercentual(dto.percentual_frequencia),
           dataUltimaPresenca: dto.data_ultima_presenca,
         }));

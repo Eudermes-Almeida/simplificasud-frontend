@@ -5,6 +5,7 @@ import { RaioxApiService } from '../../services/raiox-api.service';
 interface Homem {
   nome: string;
   idade: number;
+  unidade: string;
   ativo: boolean;
 }
 
@@ -43,6 +44,7 @@ export class HomensAvancandoSacerdocioComponent implements OnChanges {
         this.homens = dados.map(dto => ({
           nome: dto.nome,
           idade: Number(dto.idade),
+          unidade: dto.unidade,
           ativo: dto.ativo === 'Sim',
         }));
         this.carregando = false;

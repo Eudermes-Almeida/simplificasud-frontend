@@ -6,3 +6,4 @@ different contents") entre as variantes 4x3/ e 1x1/ de alguns codigos de bandeir
 aqui (pc, sh-ac, sh-hl, sh-ta, un, xk) quando o flag-icons.css completo e incluido.
 
 Paises usados no projeto (missionarios-retornados): br, ve, ar, cl, cv, us, jp, mx, mz, pt.
+Paises usados em membros-adultos-solteiros (mesmo mapa, so acrescenta): gb (Reino Unido).

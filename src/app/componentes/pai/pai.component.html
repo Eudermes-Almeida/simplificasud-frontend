@@ -136,7 +136,25 @@
       </div>
     </div>
 
-    <!-- ITEM 6: Homens Avançando ao Sacerdócio -->
+    <!-- ITEM 6: Membros Adultos Solteiros -->
+    <div ngbAccordionItem="itemDez" class="raiox-card">
+      <h2 ngbAccordionHeader>
+        <button ngbAccordionButton class="raiox-toggle">
+          <span class="raiox-icon"><i class="bi bi-person-badge-fill"></i></span>
+          <span class="raiox-label">Membros Adultos Solteiros {{ unidadeSelecionadaLabel }}</span>
+          <span class="raiox-chevron"><i class="bi bi-chevron-down"></i></span>
+        </button>
+      </h2>
+      <div ngbAccordionCollapse>
+        <div ngbAccordionBody class="raiox-body">
+          <ng-template>
+            <app-membros-adultos-solteiros [unidade]="unidadeSelecionadaLabel"></app-membros-adultos-solteiros>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+    <!-- ITEM 7: Homens Avançando ao Sacerdócio -->
     <div ngbAccordionItem="itemSeis" class="raiox-card">
       <h2 ngbAccordionHeader>
         <button ngbAccordionButton class="raiox-toggle">
@@ -154,7 +172,7 @@
       </div>
     </div>
 
-    <!-- ITEM 7: Qualificação da Unidade -->
+    <!-- ITEM 8: Qualificação da Unidade -->
     <div ngbAccordionItem="itemCinco" class="raiox-card">
       <h2 ngbAccordionHeader>
         <button ngbAccordionButton class="raiox-toggle">
@@ -191,7 +209,7 @@
     </div>
     -->
 
-    <!-- ITEM 8: Prioridades Proféticas ** -->
+    <!-- ITEM 9: Prioridades Proféticas ** -->
     <div ngbAccordionItem="itemOito" class="raiox-card">
       <h2 ngbAccordionHeader>
         <button ngbAccordionButton class="raiox-toggle">

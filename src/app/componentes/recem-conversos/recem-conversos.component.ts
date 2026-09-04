@@ -5,6 +5,7 @@ import { DetalhesConversosDTO, RaioxApiService } from '../../services/raiox-api.
 interface ConversoDetalhe {
   nome: string;
   idade: number;
+  unidade: string;
   ativo: boolean;
   chamado: boolean;
   ministrador: boolean;
@@ -123,6 +124,7 @@ export class RecemConversosComponent implements OnChanges {
     return {
       nome: dto.nome,
       idade: Number(dto.idade),
+      unidade: dto.unidade,
       ativo: dto.ativo === 'Sim',
       chamado: dto.tem_chamado === 'Sim',
       ministrador: this.temMinistracao(dto),

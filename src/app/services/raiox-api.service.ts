@@ -127,6 +127,18 @@ export interface MissionariosRetornadosDTO {
   paismissao: string;
 }
 
+export interface MembrosAdultosSolteirosDTO {
+  id: number;
+  unidade: string;
+  nome: string;
+  sexo: string;
+  idade: string;
+  estadocivil: string;
+  recomendacaotemplo: string;
+  paismissao: string;
+  chamados: string;
+}
+
 // Service único para todas as chamadas HTTP ao backend Quarkus (SIMPLIFICASUD) —
 // cada tabela nova ganha aqui seu próprio método buscaXxx, todos devolvendo Observable.
 @Injectable({ providedIn: 'root' })
@@ -189,5 +201,10 @@ export class RaioxApiService {
   buscaMissionariosRetornados(unidade: string): Observable<MissionariosRetornadosDTO[]> {
     const params = new HttpParams().set('unidade', unidade);
     return this.http.get<MissionariosRetornadosDTO[]>(`${this.baseUrl}/missionariosretornados`, { params });
+  }
+
+  buscaMembrosAdultosSolteiros(unidade: string): Observable<MembrosAdultosSolteirosDTO[]> {
+    const params = new HttpParams().set('unidade', unidade);
+    return this.http.get<MembrosAdultosSolteirosDTO[]>(`${this.baseUrl}/membrosadultossolteiros`, { params });
   }
 }

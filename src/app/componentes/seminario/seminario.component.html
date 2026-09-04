@@ -128,6 +128,14 @@
               <span class="rx-pessoa-campo-valor">{{ aluno.dataUltimaPresenca }}</span>
             </span>
           </div>
+
+          <div class="rx-pessoa-campo" *ngIf="unidade === 'Estaca Betim'">
+            <span class="rx-pessoa-campo-icon"><i class="bi bi-geo-alt-fill"></i></span>
+            <span class="rx-pessoa-campo-texto">
+              <span class="rx-pessoa-campo-label">Unidade</span>
+              <span class="rx-pessoa-campo-valor">{{ aluno.unidade }}</span>
+            </span>
+          </div>
         </div>
 
       </div>
