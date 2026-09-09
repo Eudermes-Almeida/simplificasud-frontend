@@ -13,7 +13,7 @@ interface IndicadorQualificacao {
 // esta tabela, só os 3 valores atuais por unidade. A Estaca Betim tem metas próprias,
 // diferentes (e maiores) das de cada ala/ramo individual.
 const METAS_ALA = { totalMembros: 250, dizimistasIntegrais: 20, frequenciaSacramental: 100 };
-const METAS_ESTACA_BETIM = { totalMembros: 2000, dizimistasIntegrais: 150, frequenciaSacramental: 1000 };
+const METAS_ESTACA_BETIM = { totalMembros: 2000, dizimistasIntegrais: 150, frequenciaSacramental: 500 };
 const UNIDADE_ESTACA_BETIM = 'Estaca Betim';
 
 @Component({
