@@ -139,6 +139,24 @@ export interface MembrosAdultosSolteirosDTO {
   chamados: string;
 }
 
+// "id_planilha" e "registromembro" existem na tabela mas nao sao expostos pela API
+// (ver DadosMissionariosDTO no backend) - registromembro e o mesmo fator secreto de
+// identificacao usado no login de lideres.
+export interface DadosMissionariosDTO {
+  id: number;
+  unidade: string;
+  nomecompleto: string;
+  nomemissao: string;
+  sexo: string;
+  idade: string;
+  status: string;
+  iniciomissao: string;
+  finalmissao: string;
+  missao: string;
+  aniversario: string;
+  linkfoto: string;
+}
+
 // Service único para todas as chamadas HTTP ao backend Quarkus (SIMPLIFICASUD) —
 // cada tabela nova ganha aqui seu próprio método buscaXxx, todos devolvendo Observable.
 @Injectable({ providedIn: 'root' })
@@ -206,5 +224,10 @@ export class RaioxApiService {
   buscaMembrosAdultosSolteiros(unidade: string): Observable<MembrosAdultosSolteirosDTO[]> {
     const params = new HttpParams().set('unidade', unidade);
     return this.http.get<MembrosAdultosSolteirosDTO[]>(`${this.baseUrl}/membrosadultossolteiros`, { params });
+  }
+
+  buscaDadosMissionarios(unidade: string): Observable<DadosMissionariosDTO[]> {
+    const params = new HttpParams().set('unidade', unidade);
+    return this.http.get<DadosMissionariosDTO[]>(`${this.baseUrl}/dadosmissionarios`, { params });
   }
 }

@@ -1,0 +1,246 @@
+<div class="d-flex align-items-center gap-2 text-muted my-3" *ngIf="carregando">
+  <div class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
+  <span>Carregando dados de missionários na ativa...</span>
+</div>
+
+<div class="alert alert-danger my-3" role="alert" *ngIf="erroCarregamento">
+  {{ erroCarregamento }}
+</div>
+
+<!-- 1. Os Botões das Abas gerenciados pelo Angular -->
+<ul class="nav nav-tabs rx-tabs" id="missionariosNaAtivaTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link rx-tab-btn"
+            [ngClass]="{ 'active': abaAtiva === 'resumo' }"
+            (click)="mudarAba('resumo')"
+            type="button" role="tab">
+      <i class="bi bi-clipboard-data"></i>
+      <span>Resumo</span>
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link rx-tab-btn"
+            [ngClass]="{ 'active': abaAtiva === 'detalhes' }"
+            (click)="mudarAba('detalhes')"
+            type="button" role="tab">
+      <i class="bi bi-table"></i>
+      <span>Detalhes</span>
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link rx-tab-btn"
+            [ngClass]="{ 'active': abaAtiva === 'grafico' }"
+            (click)="mudarAba('grafico')"
+            type="button" role="tab">
+      <i class="bi bi-graph-up"></i>
+      <span>Gráfico</span>
+    </button>
+  </li>
+</ul>
+
+<!-- 2. O Conteúdo de cada Aba alternado pelo Angular -->
+<div class="tab-content mt-3" id="missionariosNaAtivaTabConteudo">
+
+  <!-- CONTEÚDO DA ABA RESUMO -->
+  <div class="tab-pane fade" [ngClass]="{ 'show active': abaAtiva === 'resumo' }" role="tabpanel">
+    <div class="rx-kpi-grid my-3">
+
+      <!-- 1. Total -->
+      <div class="rx-kpi-card rx-kpi-hero">
+        <span class="rx-kpi-icon"><i class="bi bi-person-video3"></i></span>
+        <span class="rx-kpi-text">
+          <span class="rx-kpi-value">{{ resumoMissionarios.total.valor }}</span>
+          <span class="rx-kpi-label">Total de missionários</span>
+        </span>
+      </div>
+
+      <!-- 2. No Campo -->
+      <div class="rx-kpi-card rx-kpi-positivo">
+        <span class="rx-kpi-icon"><i class="bi bi-airplane-fill"></i></span>
+        <span class="rx-kpi-text">
+          <span class="rx-kpi-value">
+            {{ resumoMissionarios.noCampo.valor }}
+            <small class="rx-kpi-pct">{{ resumoMissionarios.noCampo.pct }}%</small>
+          </span>
+          <span class="rx-kpi-label">No Campo</span>
+        </span>
+      </div>
+
+      <!-- 3. Sede da Igreja -->
+      <div class="rx-kpi-card">
+        <span class="rx-kpi-icon"><i class="bi bi-bank2"></i></span>
+        <span class="rx-kpi-text">
+          <span class="rx-kpi-value">
+            {{ resumoMissionarios.sedeIgreja.valor }}
+            <small class="rx-kpi-pct">{{ resumoMissionarios.sedeIgreja.pct }}%</small>
+          </span>
+          <span class="rx-kpi-label">Sede da Igreja</span>
+        </span>
+      </div>
+
+      <!-- 4. Preenchendo -->
+      <div class="rx-kpi-card">
+        <span class="rx-kpi-icon"><i class="bi bi-hourglass-split"></i></span>
+        <span class="rx-kpi-text">
+          <span class="rx-kpi-value">
+            {{ resumoMissionarios.preenchendo.valor }}
+            <small class="rx-kpi-pct">{{ resumoMissionarios.preenchendo.pct }}%</small>
+          </span>
+          <span class="rx-kpi-label">Preenchendo</span>
+        </span>
+      </div>
+
+      <!-- 5. Homens -->
+      <div class="rx-kpi-card">
+        <span class="rx-kpi-icon"><i class="bi bi-person-fill"></i></span>
+        <span class="rx-kpi-text">
+          <span class="rx-kpi-value">
+            {{ resumoMissionarios.homens.valor }}
+            <small class="rx-kpi-pct">{{ resumoMissionarios.homens.pct }}%</small>
+          </span>
+          <span class="rx-kpi-label">Homens</span>
+        </span>
+      </div>
+
+      <!-- 6. Mulheres -->
+      <div class="rx-kpi-card">
+        <span class="rx-kpi-icon"><i class="bi bi-person-dress"></i></span>
+        <span class="rx-kpi-text">
+          <span class="rx-kpi-value">
+            {{ resumoMissionarios.mulheres.valor }}
+            <small class="rx-kpi-pct">{{ resumoMissionarios.mulheres.pct }}%</small>
+          </span>
+          <span class="rx-kpi-label">Mulheres</span>
+        </span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CONTEÚDO DA ABA DETALHES -->
+  <div class="tab-pane fade" [ngClass]="{ 'show active': abaAtiva === 'detalhes' }" role="tabpanel">
+    <div class="rx-pessoa-lista my-3">
+      <div class="rx-pessoa-card" *ngFor="let pessoa of detalhesMissionarios">
+
+        <div class="rx-pessoa-header rx-pessoa-header-comfoto">
+          <span class="rx-avatar">
+            <img *ngIf="pessoa.foto && !pessoa.fotoQuebrada"
+                 [src]="pessoa.foto"
+                 [alt]="pessoa.nome"
+                 (error)="onFotoErro(pessoa)" />
+            <i *ngIf="!pessoa.foto || pessoa.fotoQuebrada" class="bi bi-person-circle"></i>
+          </span>
+          <span class="rx-pessoa-header-info">
+            <span class="rx-pessoa-nome">{{ pessoa.nome }}</span>
+            <span class="rx-pessoa-submissao">{{ pessoa.nomeMissao }}</span>
+          </span>
+          <span class="rx-pessoa-idade">{{ pessoa.idade }} anos</span>
+        </div>
+
+        <div class="rx-pessoa-campos">
+          <div class="rx-pessoa-campo" [ngClass]="statusClasse(pessoa.status)">
+            <span class="rx-pessoa-campo-icon"><i class="bi bi-signpost-split-fill"></i></span>
+            <span class="rx-pessoa-campo-texto">
+              <span class="rx-pessoa-campo-label">Status</span>
+              <span class="rx-pessoa-campo-valor">{{ pessoa.status }}</span>
+            </span>
+          </div>
+
+          <div class="rx-pessoa-campo">
+            <span class="rx-pessoa-campo-icon"><i class="bi bi-geo-fill"></i></span>
+            <span class="rx-pessoa-campo-texto">
+              <span class="rx-pessoa-campo-label">Missão</span>
+              <span class="rx-pessoa-campo-valor">{{ pessoa.missao }}</span>
+            </span>
+          </div>
+
+          <div class="rx-pessoa-campo">
+            <span class="rx-pessoa-campo-icon"><i class="bi bi-calendar-check-fill"></i></span>
+            <span class="rx-pessoa-campo-texto">
+              <span class="rx-pessoa-campo-label">Início da missão</span>
+              <span class="rx-pessoa-campo-valor">{{ pessoa.iniciomissao }}</span>
+            </span>
+          </div>
+
+          <div class="rx-pessoa-campo">
+            <span class="rx-pessoa-campo-icon"><i class="bi bi-calendar-x-fill"></i></span>
+            <span class="rx-pessoa-campo-texto">
+              <span class="rx-pessoa-campo-label">Término da missão</span>
+              <span class="rx-pessoa-campo-valor">{{ pessoa.finalmissao }}</span>
+            </span>
+          </div>
+
+          <div class="rx-pessoa-campo">
+            <span class="rx-pessoa-campo-icon"><i class="bi bi-gift-fill"></i></span>
+            <span class="rx-pessoa-campo-texto">
+              <span class="rx-pessoa-campo-label">Aniversário</span>
+              <span class="rx-pessoa-campo-valor">{{ pessoa.aniversario }}</span>
+            </span>
+          </div>
+
+          <div class="rx-pessoa-campo" *ngIf="unidade === 'Estaca Betim'">
+            <span class="rx-pessoa-campo-icon"><i class="bi bi-geo-alt-fill"></i></span>
+            <span class="rx-pessoa-campo-texto">
+              <span class="rx-pessoa-campo-label">Unidade</span>
+              <span class="rx-pessoa-campo-valor">{{ pessoa.unidade }}</span>
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTEÚDO DA ABA GRÁFICO -->
+  <div class="tab-pane fade" [ngClass]="{ 'show active': abaAtiva === 'grafico' }" role="tabpanel">
+    <div class="card border-0 shadow-sm my-3 mx-auto">
+      <div class="card-body p-4">
+
+        <h4 class="text-center text-uppercase mb-4 fw-bold text-primary tracking-wide">
+          No Campo x Sede da Igreja x Preenchendo
+        </h4>
+
+        <div class="rx-pizza3d-wrap">
+          <div class="rx-pizza3d-sombra"></div>
+          <div class="rx-pizza3d-base" [style.background]="pizzaGradiente"></div>
+          <div class="rx-pizza3d-topo" [style.background]="pizzaGradiente"></div>
+        </div>
+
+        <div class="rx-pizza3d-legenda">
+          <div class="rx-pizza3d-item">
+            <span class="rx-pizza3d-cor rx-pizza3d-cor-nocampo"></span>
+            <span class="rx-pizza3d-texto">
+              <span class="rx-pizza3d-label">No Campo</span>
+              <span class="rx-pizza3d-valor">
+                {{ resumoMissionarios.noCampo.valor }}
+                <small>({{ resumoMissionarios.noCampo.pct }}%)</small>
+              </span>
+            </span>
+          </div>
+          <div class="rx-pizza3d-item">
+            <span class="rx-pizza3d-cor rx-pizza3d-cor-sede"></span>
+            <span class="rx-pizza3d-texto">
+              <span class="rx-pizza3d-label">Sede da Igreja</span>
+              <span class="rx-pizza3d-valor">
+                {{ resumoMissionarios.sedeIgreja.valor }}
+                <small>({{ resumoMissionarios.sedeIgreja.pct }}%)</small>
+              </span>
+            </span>
+          </div>
+          <div class="rx-pizza3d-item">
+            <span class="rx-pizza3d-cor rx-pizza3d-cor-preenchendo"></span>
+            <span class="rx-pizza3d-texto">
+              <span class="rx-pizza3d-label">Preenchendo</span>
+              <span class="rx-pizza3d-valor">
+                {{ resumoMissionarios.preenchendo.valor }}
+                <small>({{ resumoMissionarios.preenchendo.pct }}%)</small>
+              </span>
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>

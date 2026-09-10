@@ -136,6 +136,24 @@
       </div>
     </div>
 
+    <!-- ITEM: Missionários na Ativa -->
+    <div ngbAccordionItem="itemOnze" class="raiox-card">
+      <h2 ngbAccordionHeader>
+        <button ngbAccordionButton class="raiox-toggle">
+          <span class="raiox-icon"><i class="bi bi-person-video3"></i></span>
+          <span class="raiox-label">Missionários na Ativa {{ unidadeSelecionadaLabel }}</span>
+          <span class="raiox-chevron"><i class="bi bi-chevron-down"></i></span>
+        </button>
+      </h2>
+      <div ngbAccordionCollapse>
+        <div ngbAccordionBody class="raiox-body">
+          <ng-template>
+            <app-missionarios-na-ativa [unidade]="unidadeSelecionadaLabel"></app-missionarios-na-ativa>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
     <!-- ITEM 6: Membros Adultos Solteiros -->
     <div ngbAccordionItem="itemDez" class="raiox-card">
       <h2 ngbAccordionHeader>

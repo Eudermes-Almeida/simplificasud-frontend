@@ -12,6 +12,7 @@ import { HomensAvancandoSacerdocioComponent } from '../homens-avancando-sacerdoc
 import { ReunioesAtividadesLancamentosComponent } from '../reunioes-atividades-lancamentos/reunioes-atividades-lancamentos.component';
 import { JovensCriancasComponent } from '../jovens-criancas/jovens-criancas.component';
 import { MissionariosRetornadosComponent } from '../missionarios-retornados/missionarios-retornados.component';
+import { MissionariosNaAtivaComponent } from '../missionarios-na-ativa/missionarios-na-ativa.component';
 import { MembrosAdultosSolteirosComponent } from '../membros-adultos-solteiros/membros-adultos-solteiros.component';
 import { RodapeComponent } from '../rodape/rodape.component';
 import { AuthService } from '../../services/auth.service';
@@ -19,7 +20,7 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-pai',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgSelectModule, NgbAccordionModule, FrequenciaSacramentalComponent, RecemConversosComponent, SeminarioComponent, QualificacaoUnidadeComponent, PrioridadesProfeticasComponent, HomensAvancandoSacerdocioComponent, ReunioesAtividadesLancamentosComponent, JovensCriancasComponent, MissionariosRetornadosComponent, MembrosAdultosSolteirosComponent, RodapeComponent],
+  imports: [CommonModule, FormsModule, NgSelectModule, NgbAccordionModule, FrequenciaSacramentalComponent, RecemConversosComponent, SeminarioComponent, QualificacaoUnidadeComponent, PrioridadesProfeticasComponent, HomensAvancandoSacerdocioComponent, ReunioesAtividadesLancamentosComponent, JovensCriancasComponent, MissionariosRetornadosComponent, MissionariosNaAtivaComponent, MembrosAdultosSolteirosComponent, RodapeComponent],
   templateUrl: './pai.component.html',
   styleUrl: './pai.component.css'
 })
