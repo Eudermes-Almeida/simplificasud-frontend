@@ -145,34 +145,25 @@
         <input type="radio" name="filtroRecomendacaoMembrosSolteiros" value="todos"
                [checked]="filtroAtivo === null"
                (change)="mudarFiltroAtivo(null)">
-        <span>Todos</span>
+        <span>Todos <span class="rx-filtro-radio-contagem">({{ contagemFiltro.todos }})</span></span>
       </label>
       <label class="rx-filtro-radio rx-filtro-radio-ativa" [ngClass]="{ 'active': filtroAtivo === 'ativa' }">
         <input type="radio" name="filtroRecomendacaoMembrosSolteiros" value="ativa"
                [checked]="filtroAtivo === 'ativa'"
                (change)="mudarFiltroAtivo('ativa')">
-        <span>Recomendação Ativa</span>
+        <span>Recomendação Ativa <span class="rx-filtro-radio-contagem">({{ contagemFiltro.ativa }})</span></span>
       </label>
       <label class="rx-filtro-radio rx-filtro-radio-vencida" [ngClass]="{ 'active': filtroAtivo === 'vencida' }">
         <input type="radio" name="filtroRecomendacaoMembrosSolteiros" value="vencida"
                [checked]="filtroAtivo === 'vencida'"
                (change)="mudarFiltroAtivo('vencida')">
-        <span>Recomendação Vencida ou não emitida</span>
+        <span>Recomendação Vencida ou não emitida <span class="rx-filtro-radio-contagem">({{ contagemFiltro.vencida }})</span></span>
       </label>
-    </div>
-
-    <div class="rx-filtro-radios mt-3" role="radiogroup" aria-label="Filtrar por recomendação ativa e sem chamado">
-      <label class="rx-filtro-radio" [ngClass]="{ 'active': filtroExtra === 'todos' }">
-        <input type="radio" name="filtroExtraMembrosSolteiros" value="todos"
-               [checked]="filtroExtra === 'todos'"
-               (change)="mudarFiltroExtra('todos')">
-        <span>Todos <span class="rx-filtro-radio-contagem">({{ contagemFiltroExtra.todos }})</span></span>
-      </label>
-      <label class="rx-filtro-radio" [ngClass]="{ 'active': filtroExtra === 'ativaSemChamado' }">
-        <input type="radio" name="filtroExtraMembrosSolteiros" value="ativaSemChamado"
-               [checked]="filtroExtra === 'ativaSemChamado'"
-               (change)="mudarFiltroExtra('ativaSemChamado')">
-        <span>Recomendação ativa e Sem chamado <span class="rx-filtro-radio-contagem">({{ contagemFiltroExtra.ativaSemChamado }})</span></span>
+      <label class="rx-filtro-radio" [ngClass]="{ 'active': filtroAtivo === 'ativaSemChamado' }">
+        <input type="radio" name="filtroRecomendacaoMembrosSolteiros" value="ativaSemChamado"
+               [checked]="filtroAtivo === 'ativaSemChamado'"
+               (change)="mudarFiltroAtivo('ativaSemChamado')">
+        <span>Recomendação Ativa e Sem chamado <span class="rx-filtro-radio-contagem">({{ contagemFiltro.ativaSemChamado }})</span></span>
       </label>
     </div>
 
