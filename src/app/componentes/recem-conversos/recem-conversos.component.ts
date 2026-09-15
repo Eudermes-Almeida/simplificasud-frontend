@@ -6,7 +6,9 @@ interface ConversoDetalhe {
   nome: string;
   idade: number;
   unidade: string;
+  sexo: string;
   dataBatismo: string;
+  batizadoUltimos30Dias: boolean;
   chamado: boolean;
   chamadoNome: string;
   ministrador: boolean;
@@ -20,6 +22,18 @@ interface ConversoMinistracao {
   ministrador: string[];
   ministradora: string[];
 }
+
+// Chave de cada card de KPI do Resumo que também funciona como filtro da aba Detalhes
+// (null = sem filtro, mostra todo mundo) — mesmo padrão de
+// homens-avancando-sacerdocio.component.ts.
+type FiltroDetalhe =
+  | 'batismos30'
+  | 'sexoMasculino'
+  | 'ordenados'
+  | 'recomendacao'
+  | 'chamado'
+  | 'ministradores'
+  | null;
 
 @Component({
   selector: 'app-recem-conversos',
@@ -59,6 +73,19 @@ export class RecemConversosComponent implements OnChanges {
   // "sexo" define se o card de Ministradora é renderizado: homens só têm Ministrador.
   ministradoresConversos: ConversoMinistracao[] = [];
 
+  // Filtro acionado pelo botão "Detalhes" de cada card do Resumo — a aba Detalhes usa isso
+  // pra restringir a listagem em vez de sempre mostrar todo mundo.
+  filtroAtivo: FiltroDetalhe = null;
+
+  private static readonly LABEL_FILTRO: Record<Exclude<FiltroDetalhe, null>, string> = {
+    batismos30: 'Batizados nos últimos 30 dias',
+    sexoMasculino: 'Sexo masculino',
+    ordenados: 'Ordenados ao sacerdócio',
+    recomendacao: 'Com recomendação ao templo',
+    chamado: 'Receberam um chamado',
+    ministradores: 'Com ministradores',
+  };
+
   constructor(private raioxApiService: RaioxApiService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -70,6 +97,7 @@ export class RecemConversosComponent implements OnChanges {
   private buscarDados(): void {
     this.carregando = true;
     this.erroCarregamento = null;
+    this.filtroAtivo = null;
 
     this.raioxApiService.buscaDetalhesConversos(this.unidade).subscribe({
       next: (dados) => {
@@ -126,7 +154,9 @@ export class RecemConversosComponent implements OnChanges {
       nome: dto.nome,
       idade: Number(dto.idade),
       unidade: dto.unidade,
+      sexo: dto.sexo,
       dataBatismo: this.formatarDataBrasileira(dto.data_batismo),
+      batizadoUltimos30Dias: this.hasBatismoNosUltimos30Dias(dto.data_batismo),
       chamado: this.temChamado(dto.tem_chamado),
       chamadoNome: dto.tem_chamado,
       ministrador: this.temMinistracao(dto),
@@ -237,5 +267,41 @@ export class RecemConversosComponent implements OnChanges {
 
   mudarAba(nomeDaAba: string): void {
     this.abaAtiva = nomeDaAba;
+  }
+
+  // Lista efetivamente exibida na aba Detalhes — aplica o filtro do card clicado no Resumo
+  // (ou mostra todo mundo quando não há filtro ativo, inclusive vindo do card "Qt Batismos").
+  get detalhesFiltrados(): ConversoDetalhe[] {
+    switch (this.filtroAtivo) {
+      case 'batismos30':
+        return this.detalhesConversos.filter(p => p.batizadoUltimos30Dias);
+      case 'sexoMasculino':
+        return this.detalhesConversos.filter(p => p.sexo === 'M' && p.idade >= 11);
+      case 'ordenados':
+        return this.detalhesConversos.filter(p => p.sacerdocio !== 'Não Ordenado' && p.sacerdocio !== 'Não se aplica');
+      case 'recomendacao':
+        return this.detalhesConversos.filter(p => this.recomendacaoEmitida(p.recomendacao));
+      case 'chamado':
+        return this.detalhesConversos.filter(p => p.chamado);
+      case 'ministradores':
+        return this.detalhesConversos.filter(p => p.ministrador);
+      default:
+        return this.detalhesConversos;
+    }
+  }
+
+  get labelFiltroAtivo(): string | null {
+    return this.filtroAtivo ? RecemConversosComponent.LABEL_FILTRO[this.filtroAtivo] : null;
+  }
+
+  // Acionado pelo botão "Detalhes" de cada card do Resumo — troca de aba e já aplica o filtro
+  // correspondente. `null` (card "Qt Batismos") só troca de aba, sem filtrar.
+  detalharCard(filtro: FiltroDetalhe): void {
+    this.filtroAtivo = filtro;
+    this.abaAtiva = 'detalhes';
+  }
+
+  limparFiltro(): void {
+    this.filtroAtivo = null;
   }
 }

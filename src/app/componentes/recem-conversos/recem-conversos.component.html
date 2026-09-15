@@ -53,6 +53,9 @@
           <span class="rx-kpi-value">{{ resumoConversos.qtBatismos.valor }}</span>
           <span class="rx-kpi-label">Qt Batismos últimos 12 meses</span>
         </span>
+        <button type="button" class="rx-kpi-detalhar" (click)="detalharCard(null)">
+          Detalhes <i class="bi bi-arrow-right-short"></i>
+        </button>
       </div>
 
       <!-- 2. Data Batismo (batismos nos últimos 30 dias) -->
@@ -62,6 +65,9 @@
           <span class="rx-kpi-value">{{ resumoConversos.batismosUltimos30Dias.valor }}</span>
           <span class="rx-kpi-label">Foram batizados nos últimos 30 dias.</span>
         </span>
+        <button type="button" class="rx-kpi-detalhar" (click)="detalharCard('batismos30')">
+          Detalhes <i class="bi bi-arrow-right-short"></i>
+        </button>
       </div>
 
       <!-- 3. Sexo Masculino -->
@@ -74,6 +80,9 @@
           </span>
           <span class="rx-kpi-label">Sexo Masculino (maiores de 11 anos)</span>
         </span>
+        <button type="button" class="rx-kpi-detalhar" (click)="detalharCard('sexoMasculino')">
+          Detalhes <i class="bi bi-arrow-right-short"></i>
+        </button>
       </div>
 
       <!-- 4. Ordenados ao Sacerdócio -->
@@ -87,6 +96,9 @@
           <span class="rx-kpi-label">Ordenados ao sacerdócio</span>
           <span class="rx-kpi-nota">* Percentual em relação aos aptos ao sacerdócio.</span>
         </span>
+        <button type="button" class="rx-kpi-detalhar" (click)="detalharCard('ordenados')">
+          Detalhes <i class="bi bi-arrow-right-short"></i>
+        </button>
       </div>
 
       <!-- 5. Com Recomendação ao Templo -->
@@ -99,6 +111,9 @@
           </span>
           <span class="rx-kpi-label">Com recomendação ao templo</span>
         </span>
+        <button type="button" class="rx-kpi-detalhar" (click)="detalharCard('recomendacao')">
+          Detalhes <i class="bi bi-arrow-right-short"></i>
+        </button>
       </div>
 
       <!-- 6. Receberam um Chamado -->
@@ -111,6 +126,9 @@
           </span>
           <span class="rx-kpi-label">Receberam um chamado</span>
         </span>
+        <button type="button" class="rx-kpi-detalhar" (click)="detalharCard('chamado')">
+          Detalhes <i class="bi bi-arrow-right-short"></i>
+        </button>
       </div>
 
       <!-- 7. Com Ministradores -->
@@ -123,6 +141,9 @@
           </span>
           <span class="rx-kpi-label">Com ministradores</span>
         </span>
+        <button type="button" class="rx-kpi-detalhar" (click)="detalharCard('ministradores')">
+          Detalhes <i class="bi bi-arrow-right-short"></i>
+        </button>
       </div>
 
     </div>
@@ -130,9 +151,20 @@
 
   <!-- CONTEÚDO DA ABA DETALHES********************************************************************** (Permanece a grade de meses original) -->
   <div class="tab-pane fade" [ngClass]="{ 'show active': abaAtiva === 'detalhes' }" role="tabpanel">
-    
+
+    <div class="rx-filtro-ativo" *ngIf="labelFiltroAtivo">
+      <span>
+        <i class="bi bi-funnel-fill"></i>
+        Filtrando por: <span class="rx-filtro-nome">{{ labelFiltroAtivo }}</span>
+        ({{ detalhesFiltrados.length }} de {{ detalhesConversos.length }})
+      </span>
+      <button type="button" class="rx-filtro-limpar" (click)="limparFiltro()">
+        <i class="bi bi-x-lg"></i> Limpar filtro
+      </button>
+    </div>
+
     <div class="rx-pessoa-lista my-3">
-      <div class="rx-pessoa-card" *ngFor="let pessoa of detalhesConversos">
+      <div class="rx-pessoa-card" *ngFor="let pessoa of detalhesFiltrados">
 
         <div class="rx-pessoa-header">
           <span class="rx-pessoa-nome">{{ pessoa.nome }}</span>
