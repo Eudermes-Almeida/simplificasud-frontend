@@ -62,7 +62,12 @@ export interface HomensPreparadosDTO {
   unidade: string;
   nome: string;
   idade: string;
-  ativo: string;
+  data_batismo: string;
+  tem_chamado: string;
+  ministradora: string;
+  ministrador: string;
+  recomendacao: string;
+  sacerdocio: string;
 }
 
 export interface PrioridadesProfeticasDTO {

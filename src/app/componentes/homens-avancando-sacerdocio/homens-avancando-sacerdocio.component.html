@@ -2,7 +2,7 @@
 
   <!-- Título Interno -->
   <h5 class="text-uppercase mb-3 fw-bold text-secondary small px-1 tracking-wide">
-    Homens Recém-Conversos Ativos
+    Homens Adultos Recém-Conversos
   </h5>
 
   <div class="d-flex align-items-center gap-2 text-muted my-3" *ngIf="carregando">
@@ -14,36 +14,169 @@
     {{ erroCarregamento }}
   </div>
 
-  <!-- Sem abas: seção tem um único conteúdo -->
-  <div class="rx-pessoa-lista my-3">
-    <div class="rx-pessoa-card" *ngFor="let homem of homens">
+  <!-- Abas: Resumo / Detalhes -->
+  <ul class="nav nav-tabs rx-tabs" id="homensPreparadosTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link rx-tab-btn"
+              [ngClass]="{ 'active': abaAtiva === 'resumo' }"
+              (click)="mudarAba('resumo')"
+              type="button" role="tab">
+        <i class="bi bi-clipboard-data"></i>
+        <span>Resumo</span>
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link rx-tab-btn"
+              [ngClass]="{ 'active': abaAtiva === 'detalhes' }"
+              (click)="mudarAba('detalhes')"
+              type="button" role="tab">
+        <i class="bi bi-table"></i>
+        <span>Detalhes</span>
+      </button>
+    </li>
+  </ul>
 
-      <div class="rx-pessoa-header">
-        <span class="rx-pessoa-nome">{{ homem.nome }}</span>
-        <span class="rx-pessoa-idade">{{ homem.idade }} anos</span>
-      </div>
+  <div class="tab-content mt-3" id="homensPreparadosTabConteudo">
 
-      <div class="rx-pessoa-campos">
-        <div class="rx-pessoa-campo" [ngClass]="ativoClasse(homem.ativo)">
-          <span class="rx-pessoa-campo-icon">
-            <i class="bi" [ngClass]="homem.ativo ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
-          </span>
-          <span class="rx-pessoa-campo-texto">
-            <span class="rx-pessoa-campo-label">Ativo</span>
-            <span class="rx-pessoa-campo-valor">{{ homem.ativo ? 'Sim' : 'Não' }}</span>
+    <!-- CONTEÚDO DA ABA RESUMO -->
+    <div class="tab-pane fade" [ngClass]="{ 'show active': abaAtiva === 'resumo' }" role="tabpanel">
+      <div class="rx-kpi-grid my-3">
+
+        <!-- 1. Qt Batismos -->
+        <div class="rx-kpi-card rx-kpi-hero">
+          <span class="rx-kpi-icon"><i class="bi bi-person-plus-fill"></i></span>
+          <span class="rx-kpi-text">
+            <span class="rx-kpi-value">{{ resumoHomens.qtBatismos.valor }}</span>
+            <span class="rx-kpi-label">Homens adultos batizados últimos 12 meses</span>
           </span>
         </div>
 
-        <div class="rx-pessoa-campo" *ngIf="unidade === 'Estaca Betim'">
-          <span class="rx-pessoa-campo-icon"><i class="bi bi-geo-alt-fill"></i></span>
-          <span class="rx-pessoa-campo-texto">
-            <span class="rx-pessoa-campo-label">Unidade</span>
-            <span class="rx-pessoa-campo-valor">{{ homem.unidade }}</span>
+        <!-- 2. Batismos nos últimos 30 dias -->
+        <div class="rx-kpi-card">
+          <span class="rx-kpi-icon"><i class="bi bi-calendar-check-fill"></i></span>
+          <span class="rx-kpi-text">
+            <span class="rx-kpi-value">{{ resumoHomens.batismosUltimos30Dias.valor }}</span>
+            <span class="rx-kpi-label">Homens adultos batizados nos últimos 30 dias</span>
           </span>
+        </div>
+
+        <!-- 3. Ordenados ao Sacerdócio -->
+        <div class="rx-kpi-card">
+          <span class="rx-kpi-icon"><i class="bi bi-award-fill"></i></span>
+          <span class="rx-kpi-text">
+            <span class="rx-kpi-value">
+              {{ resumoHomens.ordenandosSacerdocio.valor }}
+              <small class="rx-kpi-pct">{{ resumoHomens.ordenandosSacerdocio.pct }}%</small>
+            </span>
+            <span class="rx-kpi-label">Ordenados ao sacerdócio</span>
+          </span>
+        </div>
+
+        <!-- 4. Com Recomendação ao Templo -->
+        <div class="rx-kpi-card">
+          <span class="rx-kpi-icon"><i class="bi bi-bank2"></i></span>
+          <span class="rx-kpi-text">
+            <span class="rx-kpi-value">
+              {{ resumoHomens.comRecomendacaoTemplos.valor }}
+              <small class="rx-kpi-pct">{{ resumoHomens.comRecomendacaoTemplos.pct }}%</small>
+            </span>
+            <span class="rx-kpi-label">Com recomendação ao templo</span>
+          </span>
+        </div>
+
+        <!-- 5. Receberam um Chamado -->
+        <div class="rx-kpi-card">
+          <span class="rx-kpi-icon"><i class="bi bi-briefcase-fill"></i></span>
+          <span class="rx-kpi-text">
+            <span class="rx-kpi-value">
+              {{ resumoHomens.receberamChamado.valor }}
+              <small class="rx-kpi-pct">{{ resumoHomens.receberamChamado.pct }}%</small>
+            </span>
+            <span class="rx-kpi-label">Receberam um chamado</span>
+          </span>
+        </div>
+
+        <!-- 6. Com Ministradores -->
+        <div class="rx-kpi-card">
+          <span class="rx-kpi-icon"><i class="bi bi-people-fill"></i></span>
+          <span class="rx-kpi-text">
+            <span class="rx-kpi-value">
+              {{ resumoHomens.comMinistradores.valor }}
+              <small class="rx-kpi-pct">{{ resumoHomens.comMinistradores.pct }}%</small>
+            </span>
+            <span class="rx-kpi-label">Com ministradores</span>
+          </span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CONTEÚDO DA ABA DETALHES -->
+    <div class="tab-pane fade" [ngClass]="{ 'show active': abaAtiva === 'detalhes' }" role="tabpanel">
+
+      <div class="rx-pessoa-lista my-3">
+        <div class="rx-pessoa-card" *ngFor="let pessoa of detalhesHomens">
+
+          <div class="rx-pessoa-header">
+            <span class="rx-pessoa-nome">{{ pessoa.nome }}</span>
+            <span class="rx-pessoa-idade">{{ pessoa.idade }} anos</span>
+          </div>
+
+          <div class="rx-pessoa-campos">
+            <div class="rx-pessoa-campo">
+              <span class="rx-pessoa-campo-icon"><i class="bi bi-calendar-check"></i></span>
+              <span class="rx-pessoa-campo-texto">
+                <span class="rx-pessoa-campo-label">Data Batismo</span>
+                <span class="rx-pessoa-campo-valor">{{ pessoa.dataBatismo }}</span>
+              </span>
+            </div>
+
+            <div class="rx-pessoa-campo" [ngClass]="pessoa.chamado ? 'rx-campo-positivo' : 'rx-campo-negativo'">
+              <span class="rx-pessoa-campo-icon"><i class="bi" [ngClass]="pessoa.chamado ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i></span>
+              <span class="rx-pessoa-campo-texto">
+                <span class="rx-pessoa-campo-label">Chamado</span>
+                <span class="rx-pessoa-campo-valor">{{ pessoa.chamado ? pessoa.chamadoNome : 'Não' }}</span>
+              </span>
+            </div>
+
+            <div class="rx-pessoa-campo" [ngClass]="pessoa.ministrador ? 'rx-campo-positivo' : 'rx-campo-negativo'">
+              <span class="rx-pessoa-campo-icon"><i class="bi" [ngClass]="pessoa.ministrador ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i></span>
+              <span class="rx-pessoa-campo-texto">
+                <span class="rx-pessoa-campo-label">Ministrador</span>
+                <span class="rx-pessoa-campo-valor">{{ pessoa.ministrador ? 'Sim' : 'Não' }}</span>
+              </span>
+            </div>
+
+            <div class="rx-pessoa-campo" [ngClass]="recomendacaoEmitida(pessoa.recomendacao) ? 'rx-campo-positivo' : 'rx-campo-neutro'">
+              <span class="rx-pessoa-campo-icon"><i class="bi bi-bank2"></i></span>
+              <span class="rx-pessoa-campo-texto">
+                <span class="rx-pessoa-campo-label">Recomendação</span>
+                <span class="rx-pessoa-campo-valor" [ngClass]="{ 'fst-italic': !recomendacaoEmitida(pessoa.recomendacao) }">{{ textoRecomendacao(pessoa.recomendacao) }}</span>
+              </span>
+            </div>
+
+            <div class="rx-pessoa-campo" [ngClass]="sacerdocioClasse(pessoa.sacerdocio)">
+              <span class="rx-pessoa-campo-icon"><i class="bi bi-award-fill"></i></span>
+              <span class="rx-pessoa-campo-texto">
+                <span class="rx-pessoa-campo-label">Sacerdócio</span>
+                <span class="rx-pessoa-campo-valor">{{ pessoa.sacerdocio }}</span>
+              </span>
+            </div>
+
+            <div class="rx-pessoa-campo" *ngIf="unidade === 'Estaca Betim'">
+              <span class="rx-pessoa-campo-icon"><i class="bi bi-geo-alt-fill"></i></span>
+              <span class="rx-pessoa-campo-texto">
+                <span class="rx-pessoa-campo-label">Unidade</span>
+                <span class="rx-pessoa-campo-valor">{{ pessoa.unidade }}</span>
+              </span>
+            </div>
+          </div>
+
         </div>
       </div>
 
     </div>
+
   </div>
 
 </div>

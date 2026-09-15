@@ -82,6 +82,24 @@
       </div>
     </div>
 
+    <!-- ITEM: Homens Adultos Recém-Conversos -->
+    <div ngbAccordionItem="itemSeis" class="raiox-card">
+      <h2 ngbAccordionHeader>
+        <button ngbAccordionButton class="raiox-toggle">
+          <span class="raiox-icon"><i class="bi bi-person-arms-up"></i></span>
+          <span class="raiox-label">Homens Adultos Recém-Conversos {{ unidadeSelecionadaLabel }}</span>
+          <span class="raiox-chevron"><i class="bi bi-chevron-down"></i></span>
+        </button>
+      </h2>
+      <div ngbAccordionCollapse>
+        <div ngbAccordionBody class="raiox-body">
+          <ng-template>
+            <app-homens-avancando-sacerdocio [unidade]="unidadeSelecionadaLabel"></app-homens-avancando-sacerdocio>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
     <!-- ITEM 3: Jovens e Crianças -->
     <div ngbAccordionItem="itemTres" class="raiox-card">
       <h2 ngbAccordionHeader>
@@ -167,24 +185,6 @@
         <div ngbAccordionBody class="raiox-body">
           <ng-template>
             <app-membros-adultos-solteiros [unidade]="unidadeSelecionadaLabel"></app-membros-adultos-solteiros>
-          </ng-template>
-        </div>
-      </div>
-    </div>
-
-    <!-- ITEM 7: Homens Avançando ao Sacerdócio -->
-    <div ngbAccordionItem="itemSeis" class="raiox-card">
-      <h2 ngbAccordionHeader>
-        <button ngbAccordionButton class="raiox-toggle">
-          <span class="raiox-icon"><i class="bi bi-person-arms-up"></i></span>
-          <span class="raiox-label">Homens Recém-Conversos Ativos {{ unidadeSelecionadaLabel }}</span>
-          <span class="raiox-chevron"><i class="bi bi-chevron-down"></i></span>
-        </button>
-      </h2>
-      <div ngbAccordionCollapse>
-        <div ngbAccordionBody class="raiox-body">
-          <ng-template>
-            <app-homens-avancando-sacerdocio [unidade]="unidadeSelecionadaLabel"></app-homens-avancando-sacerdocio>
           </ng-template>
         </div>
       </div>
