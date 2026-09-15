@@ -241,4 +241,26 @@ export class JovensCriancasComponent implements OnChanges {
   get mocasFiltradas(): Moca[] {
     return this.aplicarFiltroIdade(this.mocas, this.filtroIdadeMocas);
   }
+
+  // Totalizador exibido dentro de cada pill do filtro (ex.: "Todos (140)") — mesma lista/regra
+  // de aplicarFiltroIdade, só trocando o retorno por .length.
+  private contarPorFiltroIdade<T extends { idade: number }>(lista: T[], filtro: FiltroIdade): number {
+    return this.aplicarFiltroIdade(lista, filtro).length;
+  }
+
+  get contagemIdadeRapazes(): Record<FiltroIdade, number> {
+    return {
+      todos: this.contarPorFiltroIdade(this.rapazes, 'todos'),
+      menores13: this.contarPorFiltroIdade(this.rapazes, 'menores13'),
+      maiores14: this.contarPorFiltroIdade(this.rapazes, 'maiores14'),
+    };
+  }
+
+  get contagemIdadeMocas(): Record<FiltroIdade, number> {
+    return {
+      todos: this.contarPorFiltroIdade(this.mocas, 'todos'),
+      menores13: this.contarPorFiltroIdade(this.mocas, 'menores13'),
+      maiores14: this.contarPorFiltroIdade(this.mocas, 'maiores14'),
+    };
+  }
 }

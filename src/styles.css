@@ -573,6 +573,13 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 6px 14px -6px rgba(37, 99, 235, 0.5);
 }
 
+/* Totalizador entre parênteses dentro da pill (ex.: "Todos (140)") — opacity em vez de uma cor
+   fixa porque o fundo da pill muda de branco (inativa) pra degradê azul (ativa). */
+.rx-filtro-radio-contagem {
+  opacity: 0.65;
+  font-weight: 700;
+}
+
 @media (max-width: 576px) {
   .rx-filtro-radios {
     flex-direction: column;
