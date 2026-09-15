@@ -7,10 +7,16 @@ interface MissionarioDetalhe {
   idade: string;
   unidade: string;
   recomendacaoTemplo: string;
+  selado: boolean;
   estadoCivil: string;
   paisMissao: string;
   chamados: string[];
 }
+
+// Chave de cada card de KPI do Resumo que também funciona como filtro da aba Detalhes
+// (null = sem filtro, mostra todo mundo) — mesmo padrão de
+// homens-avancando-sacerdocio.component.ts/recem-conversos.component.ts.
+type FiltroDetalhe = 'inativos' | 'ativos' | 'selados' | 'chamado' | 'solteiros' | null;
 
 @Component({
   selector: 'app-missionarios-retornados',
@@ -46,6 +52,18 @@ export class MissionariosRetornadosComponent implements OnChanges {
   // Lista de missionários (fonte única usada pelos cards da aba Detalhes)
   detalhesMissionarios: MissionarioDetalhe[] = [];
 
+  // Filtro acionado pelo botão "Detalhes" de cada card do Resumo — a aba Detalhes usa isso
+  // pra restringir a listagem em vez de sempre mostrar todo mundo.
+  filtroAtivo: FiltroDetalhe = null;
+
+  private static readonly LABEL_FILTRO: Record<Exclude<FiltroDetalhe, null>, string> = {
+    inativos: 'Inativos',
+    ativos: 'Ativos',
+    selados: 'Selados no templo',
+    chamado: 'Com chamados',
+    solteiros: 'Solteiros',
+  };
+
   // Bandeira (código ISO 3166-1 alpha-2, usado pela lib flag-icons) por país de missão — só
   // as 10 opções confirmadas pelo usuário. Um país fora dessa lista não deve exibir nenhum
   // ícone no lugar (ver bandeira()), não um genérico.
@@ -76,6 +94,7 @@ export class MissionariosRetornadosComponent implements OnChanges {
   private buscarDados(): void {
     this.carregando = true;
     this.erroCarregamento = null;
+    this.filtroAtivo = null;
 
     this.raioxApiService.buscaMissionariosRetornados(this.unidade).subscribe({
       next: (dados) => {
@@ -121,6 +140,7 @@ export class MissionariosRetornadosComponent implements OnChanges {
       idade: dto.idade,
       unidade: dto.unidade,
       recomendacaoTemplo: dto.recomendacaotemplo,
+      selado: dto.selado === 'Sim',
       estadoCivil: dto.solteiro === 'Sim' ? 'Solteiro' : 'Casado',
       paisMissao: dto.paismissao,
       // Vários chamados vêm concatenados numa única célula, separados por vírgula
@@ -156,5 +176,39 @@ export class MissionariosRetornadosComponent implements OnChanges {
     }
     const corteGraus = (this.resumoMissionarios.recomendacaoAtiva.valor / total) * 360;
     return `conic-gradient(#16a34a 0deg ${corteGraus}deg, #dc2626 ${corteGraus}deg 360deg)`;
+  }
+
+  // Lista efetivamente exibida na aba Detalhes — aplica o filtro do card clicado no Resumo
+  // (ou mostra todo mundo quando não há filtro ativo, inclusive vindo do card "Total").
+  get detalhesFiltrados(): MissionarioDetalhe[] {
+    switch (this.filtroAtivo) {
+      case 'inativos':
+        return this.detalhesMissionarios.filter(p => p.recomendacaoTemplo !== 'Ativa');
+      case 'ativos':
+        return this.detalhesMissionarios.filter(p => p.recomendacaoTemplo === 'Ativa');
+      case 'selados':
+        return this.detalhesMissionarios.filter(p => p.selado);
+      case 'chamado':
+        return this.detalhesMissionarios.filter(p => p.chamados.length > 0);
+      case 'solteiros':
+        return this.detalhesMissionarios.filter(p => p.estadoCivil === 'Solteiro');
+      default:
+        return this.detalhesMissionarios;
+    }
+  }
+
+  get labelFiltroAtivo(): string | null {
+    return this.filtroAtivo ? MissionariosRetornadosComponent.LABEL_FILTRO[this.filtroAtivo] : null;
+  }
+
+  // Acionado pelo botão "Detalhes" de cada card do Resumo — troca de aba e já aplica o filtro
+  // correspondente. `null` (card "Total") só troca de aba, sem filtrar.
+  detalharCard(filtro: FiltroDetalhe): void {
+    this.filtroAtivo = filtro;
+    this.abaAtiva = 'detalhes';
+  }
+
+  limparFiltro(): void {
+    this.filtroAtivo = null;
   }
 }

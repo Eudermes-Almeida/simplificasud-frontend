@@ -52,6 +52,9 @@
           <span class="rx-kpi-value">{{ resumoMissionarios.total.valor }}</span>
           <span class="rx-kpi-label">Total missionários retornados</span>
         </span>
+        <button type="button" class="rx-kpi-detalhar" (click)="detalharCard(null)">
+          Detalhes <i class="bi bi-arrow-right-short"></i>
+        </button>
       </div>
 
       <!-- 2. Inativos (total - recomendação ativa) -->
@@ -65,6 +68,9 @@
           <span class="rx-kpi-label">Inativos</span>
           <span class="rx-kpi-nota">(Recomendação ao Templo vencida)</span>
         </span>
+        <button type="button" class="rx-kpi-detalhar" (click)="detalharCard('inativos')">
+          Detalhes <i class="bi bi-arrow-right-short"></i>
+        </button>
       </div>
 
       <!-- 3. Recomendação ativa -->
@@ -78,6 +84,9 @@
           <span class="rx-kpi-label">Ativos</span>
           <span class="rx-kpi-nota">(Recomendação ao templo Ativa)</span>
         </span>
+        <button type="button" class="rx-kpi-detalhar" (click)="detalharCard('ativos')">
+          Detalhes <i class="bi bi-arrow-right-short"></i>
+        </button>
       </div>
 
       <!-- 4. Selados no templo -->
@@ -90,6 +99,9 @@
           </span>
           <span class="rx-kpi-label">Selados no templo</span>
         </span>
+        <button type="button" class="rx-kpi-detalhar" (click)="detalharCard('selados')">
+          Detalhes <i class="bi bi-arrow-right-short"></i>
+        </button>
       </div>
 
       <!-- 5. Com chamados -->
@@ -102,6 +114,9 @@
           </span>
           <span class="rx-kpi-label">Com chamados</span>
         </span>
+        <button type="button" class="rx-kpi-detalhar" (click)="detalharCard('chamado')">
+          Detalhes <i class="bi bi-arrow-right-short"></i>
+        </button>
       </div>
 
       <!-- 6. Solteiros -->
@@ -114,6 +129,9 @@
           </span>
           <span class="rx-kpi-label">Solteiros</span>
         </span>
+        <button type="button" class="rx-kpi-detalhar" (click)="detalharCard('solteiros')">
+          Detalhes <i class="bi bi-arrow-right-short"></i>
+        </button>
       </div>
 
       <!-- 7. Matriculados no instituto (temporariamente desativado a pedido do usuário)
@@ -134,8 +152,20 @@
 
   <!-- CONTEÚDO DA ABA DETALHES -->
   <div class="tab-pane fade" [ngClass]="{ 'show active': abaAtiva === 'detalhes' }" role="tabpanel">
+
+    <div class="rx-filtro-ativo" *ngIf="labelFiltroAtivo">
+      <span>
+        <i class="bi bi-funnel-fill"></i>
+        Filtrando por: <span class="rx-filtro-nome">{{ labelFiltroAtivo }}</span>
+        ({{ detalhesFiltrados.length }} de {{ detalhesMissionarios.length }})
+      </span>
+      <button type="button" class="rx-filtro-limpar" (click)="limparFiltro()">
+        <i class="bi bi-x-lg"></i> Limpar filtro
+      </button>
+    </div>
+
     <div class="rx-pessoa-lista my-3">
-      <div class="rx-pessoa-card" *ngFor="let pessoa of detalhesMissionarios">
+      <div class="rx-pessoa-card" *ngFor="let pessoa of detalhesFiltrados">
 
         <div class="rx-pessoa-header">
           <span class="rx-pessoa-nome">{{ pessoa.nome }}</span>
