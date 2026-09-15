@@ -1,0 +1,13 @@
+/* Variantes de cor do chip "Filtrando por: X" (.rx-filtro-nome é neutro/azul por padrão em
+   styles.css) — aqui o filtro é de frequência (bom/ruim), então ganha a mesma paleta verde/
+   vermelho já usada em .rx-kpi-positivo/.rx-kpi-negativo, diferente de outras seções (ex.:
+   homens-avancando-sacerdocio) onde o filtro não é um julgamento de valor. */
+.rx-filtro-nome-positivo {
+  background: linear-gradient(120deg, #16a34a, #15803d);
+  border-color: #15803d;
+}
+
+.rx-filtro-nome-negativo {
+  background: linear-gradient(120deg, #dc2626, #b91c1c);
+  border-color: #b91c1c;
+}

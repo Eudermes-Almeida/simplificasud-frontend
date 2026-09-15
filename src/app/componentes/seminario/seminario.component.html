@@ -108,7 +108,11 @@
     <div class="rx-filtro-ativo" *ngIf="labelFiltroAtivo">
       <span>
         <i class="bi bi-funnel-fill"></i>
-        Filtrando por: <span class="rx-filtro-nome">{{ labelFiltroAtivo }}</span>
+        Filtrando por:
+        <span class="rx-filtro-nome"
+              [ngClass]="{ 'rx-filtro-nome-positivo': filtroAtivo === 'acima75', 'rx-filtro-nome-negativo': filtroAtivo === 'abaixo75' }">
+          {{ labelFiltroAtivo }}
+        </span>
         ({{ detalhesFiltrados.length }} de {{ detalhesSeminario.length }})
       </span>
       <button type="button" class="rx-filtro-limpar" (click)="limparFiltro()">
