@@ -12,6 +12,19 @@ interface MembroDetalhe {
   chamados: string[];
 }
 
+// Chave de cada card de KPI do Resumo que também funciona como filtro da aba Detalhes
+// (null = sem filtro, mostra todo mundo) — mesmo padrão de
+// homens-avancando-sacerdocio.component.ts/recem-conversos.component.ts. Substitui o antigo
+// "filtroRecomendacao" (que só cobria ativa/vencida) porque agora "Com chamados" também
+// precisa entrar como filtro, e as 3 pills existentes (Todos/Ativa/Vencida) passam a refletir
+// este mesmo estado unificado em vez de um próprio.
+type FiltroDetalhe = 'ativa' | 'vencida' | 'chamado' | null;
+
+// Filtro adicional (radio-pill com totalizador) na aba Detalhes — mesma técnica do filtro
+// Berçário em jovens-criancas.component.ts / "Ativos e Sem Chamado" em
+// missionarios-retornados.component.ts, combinado por cima do FiltroDetalhe acima.
+type FiltroExtra = 'todos' | 'ativaSemChamado';
+
 @Component({
   selector: 'app-membros-adultos-solteiros',
   standalone: true,
@@ -48,9 +61,19 @@ export class MembrosAdultosSolteirosComponent implements OnChanges {
   // Lista de membros (fonte única usada pelos cards da aba Detalhes)
   detalhesMembros: MembroDetalhe[] = [];
 
-  // Filtro por recomendação ao templo na aba Detalhes (radio buttons) — "todos" é o estado
-  // inicial (nenhuma filtragem), mesmo critério "ativa vs. resto" já usado no Resumo/Gráfico.
-  filtroRecomendacao: 'todos' | 'ativa' | 'vencida' = 'todos';
+  // Filtro acionado tanto pelas 3 pills fixas da aba Detalhes quanto pelo botão "Detalhes" dos
+  // cards do Resumo (Recomendação Vencida/Recomendação Ativa/Com chamados) — null é "Todos".
+  filtroAtivo: FiltroDetalhe = null;
+
+  private static readonly LABEL_FILTRO: Record<Exclude<FiltroDetalhe, null>, string> = {
+    ativa: 'Recomendação Ativa',
+    vencida: 'Recomendação Vencida ou não emitida',
+    chamado: 'Com chamados',
+  };
+
+  // Filtro adicional na aba Detalhes (radio-pill Todos/Recomendação ativa e Sem chamado) —
+  // reseta junto com filtroAtivo a cada troca de unidade.
+  filtroExtra: FiltroExtra = 'todos';
 
   // Bandeira (código ISO 3166-1 alpha-2, usado pela lib flag-icons) por país de missão — mesmo
   // mapa de missionarios-retornados.component.ts, com "Reino Unido" (gb) acrescentado porque
@@ -88,7 +111,8 @@ export class MembrosAdultosSolteirosComponent implements OnChanges {
         this.resumoMembros = this.calcularResumo(dados);
         this.detalhesMembros = dados.map(dto => this.mapDetalhe(dto));
         // Troca de unidade não deve carregar um filtro escolhido antes — sempre volta pra "todos".
-        this.filtroRecomendacao = 'todos';
+        this.filtroAtivo = null;
+        this.filtroExtra = 'todos';
         this.carregando = false;
       },
       error: (err) => {
@@ -156,21 +180,70 @@ export class MembrosAdultosSolteirosComponent implements OnChanges {
     this.abaAtiva = nomeDaAba;
   }
 
-  mudarFiltroRecomendacao(valor: 'todos' | 'ativa' | 'vencida'): void {
-    this.filtroRecomendacao = valor;
+  // Usado tanto pelas 3 pills fixas da aba Detalhes (fica na mesma aba) quanto internamente
+  // por detalharCard (troca de aba) — ambos só precisam trocar o estado do filtro.
+  mudarFiltroAtivo(valor: FiltroDetalhe): void {
+    this.filtroAtivo = valor;
   }
 
-  // Lista exibida na aba Detalhes — aplica o radio de recomendação sobre detalhesMembros.
-  // "vencida" aqui é o mesmo complemento de "Ativa" usado em resumoMembros.inativos (Vencida,
-  // Não Emitida, Cancelada, Vence este mês etc. — tudo que não é literalmente "Ativa").
+  get labelFiltroAtivo(): string | null {
+    return this.filtroAtivo ? MembrosAdultosSolteirosComponent.LABEL_FILTRO[this.filtroAtivo] : null;
+  }
+
+  // Acionado pelo botão "Detalhes" dos cards do Resumo — troca de aba e já aplica o filtro
+  // correspondente.
+  detalharCard(filtro: FiltroDetalhe): void {
+    this.filtroAtivo = filtro;
+    this.abaAtiva = 'detalhes';
+  }
+
+  limparFiltro(): void {
+    this.filtroAtivo = null;
+  }
+
+  // Resultado do filtro ativo (pills fixas ou cards do Resumo), antes do filtro adicional
+  // (FiltroExtra) — separado em getter próprio pra ser reaproveitado tanto pela lista final
+  // quanto pelo totalizador do filtro adicional. "vencida" é o mesmo complemento de "Ativa"
+  // usado em resumoMembros.inativos (Vencida, Não Emitida, Cancelada, Vence este mês etc. —
+  // tudo que não é literalmente "Ativa").
+  private get detalhesPosFiltroAtivo(): MembroDetalhe[] {
+    switch (this.filtroAtivo) {
+      case 'ativa':
+        return this.detalhesMembros.filter(p => p.recomendacaoTemplo === 'Ativa');
+      case 'vencida':
+        return this.detalhesMembros.filter(p => p.recomendacaoTemplo !== 'Ativa');
+      case 'chamado':
+        return this.detalhesMembros.filter(p => p.chamados.length > 0);
+      default:
+        return this.detalhesMembros;
+    }
+  }
+
+  private aplicarFiltroExtra(lista: MembroDetalhe[], filtro: FiltroExtra): MembroDetalhe[] {
+    if (filtro === 'ativaSemChamado') {
+      return lista.filter(p => p.recomendacaoTemplo === 'Ativa' && p.chamados.length === 0);
+    }
+    return lista;
+  }
+
+  mudarFiltroExtra(valor: FiltroExtra): void {
+    this.filtroExtra = valor;
+  }
+
+  // Lista efetivamente exibida na aba Detalhes — combina o filtro ativo (pills fixas ou card do
+  // Resumo) com o filtro adicional (Todos/Recomendação ativa e Sem chamado) aplicado por cima.
   get detalhesFiltrados(): MembroDetalhe[] {
-    if (this.filtroRecomendacao === 'ativa') {
-      return this.detalhesMembros.filter(p => p.recomendacaoTemplo === 'Ativa');
-    }
-    if (this.filtroRecomendacao === 'vencida') {
-      return this.detalhesMembros.filter(p => p.recomendacaoTemplo !== 'Ativa');
-    }
-    return this.detalhesMembros;
+    return this.aplicarFiltroExtra(this.detalhesPosFiltroAtivo, this.filtroExtra);
+  }
+
+  // Totalizador exibido dentro de cada pill do filtro adicional — contado sobre o resultado do
+  // filtro ativo (não sobre a lista bruta), pra continuar coerente quando os dois são combinados.
+  get contagemFiltroExtra(): Record<FiltroExtra, number> {
+    const base = this.detalhesPosFiltroAtivo;
+    return {
+      todos: base.length,
+      ativaSemChamado: this.aplicarFiltroExtra(base, 'ativaSemChamado').length,
+    };
   }
 
   // Gráfico de pizza 3D (CSS puro, ver .html/.css) — Ativos (recomendação ativa) x Inativos.
