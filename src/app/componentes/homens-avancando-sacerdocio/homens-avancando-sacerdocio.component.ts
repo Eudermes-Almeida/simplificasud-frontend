@@ -7,12 +7,30 @@ interface HomemDetalhe {
   idade: number;
   unidade: string;
   dataBatismo: string;
+  batizadoUltimos30Dias: boolean;
   chamado: boolean;
   chamadoNome: string;
   ministrador: boolean;
   recomendacao: string;
   sacerdocio: string;
 }
+
+// Aba Ministradores — mesmo padrão de recem-conversos.component.ts, mas só com o bloco
+// Ministrador (aqui não existe "sexo"/Ministradora, 100% dos registros já são homens).
+interface HomemMinistracao {
+  nome: string;
+  ministrador: string[];
+}
+
+// Chave de cada card de KPI do Resumo que também funciona como filtro da aba Detalhes
+// (null = sem filtro, mostra todo mundo).
+type FiltroDetalhe =
+  | 'batismos30'
+  | 'ordenados'
+  | 'recomendacao'
+  | 'chamado'
+  | 'ministradores'
+  | null;
 
 @Component({
   selector: 'app-homens-avancando-sacerdocio',
@@ -47,6 +65,21 @@ export class HomensAvancandoSacerdocioComponent implements OnChanges {
   // Lista de homens sendo preparados (fonte única usada pelos cards da aba Detalhes)
   detalhesHomens: HomemDetalhe[] = [];
 
+  // Ministradores designados por homem (fonte única usada pelos cards da aba Ministradores)
+  ministradoresHomens: HomemMinistracao[] = [];
+
+  // Filtro acionado pelo botão "Click para Detalhar" de cada card do Resumo — a aba
+  // Detalhes usa isso pra restringir a listagem em vez de sempre mostrar todo mundo.
+  filtroAtivo: FiltroDetalhe = null;
+
+  private static readonly LABEL_FILTRO: Record<Exclude<FiltroDetalhe, null>, string> = {
+    batismos30: 'Batizados nos últimos 30 dias',
+    ordenados: 'Ordenados ao sacerdócio',
+    recomendacao: 'Com recomendação ao templo',
+    chamado: 'Receberam um chamado',
+    ministradores: 'Com ministradores',
+  };
+
   constructor(private raioxApiService: RaioxApiService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -58,6 +91,7 @@ export class HomensAvancandoSacerdocioComponent implements OnChanges {
   private buscarDados(): void {
     this.carregando = true;
     this.erroCarregamento = null;
+    this.filtroAtivo = null;
 
     this.raioxApiService.buscaHomensPreparados(this.unidade).subscribe({
       next: (dados) => {
@@ -73,6 +107,7 @@ export class HomensAvancandoSacerdocioComponent implements OnChanges {
 
         this.resumoHomens = this.calcularResumo(dadosNormalizados);
         this.detalhesHomens = dadosNormalizados.map(dto => this.mapDetalhe(dto));
+        this.ministradoresHomens = dadosNormalizados.map(dto => this.mapMinistracao(dto));
         this.carregando = false;
       },
       error: (err) => {
@@ -108,12 +143,25 @@ export class HomensAvancandoSacerdocioComponent implements OnChanges {
       nome: dto.nome,
       idade: Number(dto.idade),
       unidade: dto.unidade,
-      dataBatismo: this.formatarDataBrasileira(dto.data_batismo),
+      dataBatismo: dto.data_batismo,
+      batizadoUltimos30Dias: this.hasBatismoNosUltimos30Dias(dto.data_batismo),
       chamado: this.temChamado(dto.tem_chamado),
       chamadoNome: dto.tem_chamado,
       ministrador: !this.semDesignacao(dto.ministrador),
       recomendacao: dto.recomendacao,
       sacerdocio: dto.sacerdocio,
+    };
+  }
+
+  // Nomes separados por ";" (mesma convenção de 2026-09 usada em detalhesconversos) — cada
+  // nome já vem no formato "Sobrenome, Nome", por isso não pode splitar por vírgula.
+  private mapMinistracao(dto: HomensPreparadosDTO): HomemMinistracao {
+    const paraLista = (valor: string) =>
+      this.semDesignacao(valor) ? [] : valor.split(';').map(nome => nome.trim());
+
+    return {
+      nome: dto.nome,
+      ministrador: paraLista(dto.ministrador),
     };
   }
 
@@ -131,23 +179,26 @@ export class HomensAvancandoSacerdocioComponent implements OnChanges {
     return !!valor && valor !== 'Sem chamado';
   }
 
-  // data_batismo vem da API em formato ISO (aaaa-mm-dd) - compara direto contra
-  // "hoje - 30 dias" sem lib de datas.
+  // data_batismo vem da API em formato brasileiro (dd/mm/aaaa, direto da planilha) - new Date()
+  // nativo interpreta string com "/" como mm/dd/aaaa americano e erra a conta, por isso o
+  // parse manual abaixo.
   private hasBatismoNosUltimos30Dias(dataBatismo: string): boolean {
-    const data = new Date(dataBatismo);
-    if (isNaN(data.getTime())) return false;
+    const data = this.parseDataBrasileira(dataBatismo);
+    if (!data) return false;
 
+    const hoje = new Date();
     const limite = new Date();
     limite.setDate(limite.getDate() - 30);
 
-    return data >= limite;
+    return data >= limite && data <= hoje;
   }
 
-  // Exibição (aba Detalhes) em dd/mm/aaaa — o valor bruto ISO segue intocado no resto do
-  // fluxo (hasBatismoNosUltimos30Dias compara contra ele), essa é só a transformação de exibição.
-  private formatarDataBrasileira(dataIso: string): string {
-    const [ano, mes, dia] = (dataIso || '').split('-');
-    return ano && mes && dia ? `${dia}/${mes}/${ano}` : dataIso;
+  private parseDataBrasileira(dataBatismo: string): Date | null {
+    const [dia, mes, ano] = (dataBatismo || '').split('/').map(Number);
+    if (!dia || !mes || !ano) return null;
+
+    const data = new Date(ano, mes - 1, dia);
+    return isNaN(data.getTime()) ? null : data;
   }
 
   sacerdocioClasse(valor: string): string {
@@ -172,5 +223,39 @@ export class HomensAvancandoSacerdocioComponent implements OnChanges {
 
   mudarAba(nomeDaAba: string): void {
     this.abaAtiva = nomeDaAba;
+  }
+
+  // Lista efetivamente exibida na aba Detalhes — aplica o filtro do card clicado no Resumo
+  // (ou mostra todo mundo quando não há filtro ativo, inclusive vindo do card "Qt Batismos").
+  get detalhesFiltrados(): HomemDetalhe[] {
+    switch (this.filtroAtivo) {
+      case 'batismos30':
+        return this.detalhesHomens.filter(p => p.batizadoUltimos30Dias);
+      case 'ordenados':
+        return this.detalhesHomens.filter(p => p.sacerdocio !== 'Não Ordenado');
+      case 'recomendacao':
+        return this.detalhesHomens.filter(p => this.recomendacaoEmitida(p.recomendacao));
+      case 'chamado':
+        return this.detalhesHomens.filter(p => p.chamado);
+      case 'ministradores':
+        return this.detalhesHomens.filter(p => p.ministrador);
+      default:
+        return this.detalhesHomens;
+    }
+  }
+
+  get labelFiltroAtivo(): string | null {
+    return this.filtroAtivo ? HomensAvancandoSacerdocioComponent.LABEL_FILTRO[this.filtroAtivo] : null;
+  }
+
+  // Acionado pelo botão "Click para Detalhar" de cada card do Resumo — troca de aba e já
+  // aplica o filtro correspondente. `null` (card "Qt Batismos") só troca de aba, sem filtrar.
+  detalharCard(filtro: FiltroDetalhe): void {
+    this.filtroAtivo = filtro;
+    this.abaAtiva = 'detalhes';
+  }
+
+  limparFiltro(): void {
+    this.filtroAtivo = null;
   }
 }

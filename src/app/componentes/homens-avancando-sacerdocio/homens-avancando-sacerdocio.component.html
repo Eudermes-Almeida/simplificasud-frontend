@@ -34,6 +34,15 @@
         <span>Detalhes</span>
       </button>
     </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link rx-tab-btn"
+              [ngClass]="{ 'active': abaAtiva === 'ministradores' }"
+              (click)="mudarAba('ministradores')"
+              type="button" role="tab">
+        <i class="bi bi-people-fill"></i>
+        <span>Ministradores</span>
+      </button>
+    </li>
   </ul>
 
   <div class="tab-content mt-3" id="homensPreparadosTabConteudo">
@@ -49,6 +58,9 @@
             <span class="rx-kpi-value">{{ resumoHomens.qtBatismos.valor }}</span>
             <span class="rx-kpi-label">Homens adultos batizados últimos 12 meses</span>
           </span>
+          <button type="button" class="rx-kpi-detalhar" (click)="detalharCard(null)">
+            Detalhes <i class="bi bi-arrow-right-short"></i>
+          </button>
         </div>
 
         <!-- 2. Batismos nos últimos 30 dias -->
@@ -58,6 +70,9 @@
             <span class="rx-kpi-value">{{ resumoHomens.batismosUltimos30Dias.valor }}</span>
             <span class="rx-kpi-label">Homens adultos batizados nos últimos 30 dias</span>
           </span>
+          <button type="button" class="rx-kpi-detalhar" (click)="detalharCard('batismos30')">
+            Detalhes <i class="bi bi-arrow-right-short"></i>
+          </button>
         </div>
 
         <!-- 3. Ordenados ao Sacerdócio -->
@@ -70,6 +85,9 @@
             </span>
             <span class="rx-kpi-label">Ordenados ao sacerdócio</span>
           </span>
+          <button type="button" class="rx-kpi-detalhar" (click)="detalharCard('ordenados')">
+            Detalhes <i class="bi bi-arrow-right-short"></i>
+          </button>
         </div>
 
         <!-- 4. Com Recomendação ao Templo -->
@@ -82,6 +100,9 @@
             </span>
             <span class="rx-kpi-label">Com recomendação ao templo</span>
           </span>
+          <button type="button" class="rx-kpi-detalhar" (click)="detalharCard('recomendacao')">
+            Detalhes <i class="bi bi-arrow-right-short"></i>
+          </button>
         </div>
 
         <!-- 5. Receberam um Chamado -->
@@ -94,6 +115,9 @@
             </span>
             <span class="rx-kpi-label">Receberam um chamado</span>
           </span>
+          <button type="button" class="rx-kpi-detalhar" (click)="detalharCard('chamado')">
+            Detalhes <i class="bi bi-arrow-right-short"></i>
+          </button>
         </div>
 
         <!-- 6. Com Ministradores -->
@@ -106,6 +130,9 @@
             </span>
             <span class="rx-kpi-label">Com ministradores</span>
           </span>
+          <button type="button" class="rx-kpi-detalhar" (click)="detalharCard('ministradores')">
+            Detalhes <i class="bi bi-arrow-right-short"></i>
+          </button>
         </div>
 
       </div>
@@ -114,8 +141,19 @@
     <!-- CONTEÚDO DA ABA DETALHES -->
     <div class="tab-pane fade" [ngClass]="{ 'show active': abaAtiva === 'detalhes' }" role="tabpanel">
 
+      <div class="rx-filtro-ativo" *ngIf="labelFiltroAtivo">
+        <span>
+          <i class="bi bi-funnel-fill"></i>
+          Filtrando por: <span class="rx-filtro-nome">{{ labelFiltroAtivo }}</span>
+          ({{ detalhesFiltrados.length }} de {{ detalhesHomens.length }})
+        </span>
+        <button type="button" class="rx-filtro-limpar" (click)="limparFiltro()">
+          <i class="bi bi-x-lg"></i> Limpar filtro
+        </button>
+      </div>
+
       <div class="rx-pessoa-lista my-3">
-        <div class="rx-pessoa-card" *ngFor="let pessoa of detalhesHomens">
+        <div class="rx-pessoa-card" *ngFor="let pessoa of detalhesFiltrados">
 
           <div class="rx-pessoa-header">
             <span class="rx-pessoa-nome">{{ pessoa.nome }}</span>
@@ -169,6 +207,31 @@
                 <span class="rx-pessoa-campo-label">Unidade</span>
                 <span class="rx-pessoa-campo-valor">{{ pessoa.unidade }}</span>
               </span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CONTEÚDO DA ABA MINISTRADORES -->
+    <div class="tab-pane fade" [ngClass]="{ 'show active': abaAtiva === 'ministradores' }" role="tabpanel">
+
+      <div class="rx-pessoa-lista my-3">
+        <div class="rx-pessoa-card" *ngFor="let pessoa of ministradoresHomens">
+
+          <div class="rx-pessoa-header">
+            <span class="rx-pessoa-nome">{{ pessoa.nome }}</span>
+          </div>
+
+          <div class="rx-minist-grid">
+            <div class="rx-minist-bloco">
+              <span class="rx-minist-label"><i class="bi bi-gender-male"></i> Ministrador</span>
+              <div class="rx-minist-tags">
+                <span class="rx-tag" *ngFor="let nome of pessoa.ministrador">{{ nome }}</span>
+                <span class="rx-tag rx-tag-alerta" *ngIf="!pessoa.ministrador.length">Não designado</span>
+              </div>
             </div>
           </div>
 

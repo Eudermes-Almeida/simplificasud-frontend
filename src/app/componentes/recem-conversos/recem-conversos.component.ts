@@ -126,7 +126,7 @@ export class RecemConversosComponent implements OnChanges {
       nome: dto.nome,
       idade: Number(dto.idade),
       unidade: dto.unidade,
-      dataBatismo: this.formatarDataBrasileira(dto.data_batismo),
+      dataBatismo: dto.data_batismo,
       chamado: this.temChamado(dto.tem_chamado),
       chamadoNome: dto.tem_chamado,
       ministrador: this.temMinistracao(dto),
@@ -153,24 +153,26 @@ export class RecemConversosComponent implements OnChanges {
     return !!valor && valor !== 'Sem chamado';
   }
 
-  // data_batismo vem da API em formato ISO (aaaa-mm-dd, ver seminario.data_ultima_presenca
-  // pela mesma convenção) - compara direto contra "hoje - 30 dias" sem lib de datas.
+  // data_batismo vem da API em formato brasileiro (dd/mm/aaaa, direto da planilha) - new Date()
+  // nativo interpreta string com "/" como mm/dd/aaaa americano e erra a conta, por isso o
+  // parse manual abaixo.
   private hasBatismoNosUltimos30Dias(dataBatismo: string): boolean {
-    const data = new Date(dataBatismo);
-    if (isNaN(data.getTime())) return false;
+    const data = this.parseDataBrasileira(dataBatismo);
+    if (!data) return false;
 
+    const hoje = new Date();
     const limite = new Date();
     limite.setDate(limite.getDate() - 30);
 
-    return data >= limite;
+    return data >= limite && data <= hoje;
   }
 
-  // Exibição (aba Detalhes) em dd/mm/aaaa — o valor bruto ISO (aaaa-mm-dd) segue intocado no
-  // resto do fluxo (hasBatismoNosUltimos30Dias compara contra ele), essa é só a transformação
-  // de exibição, mesmo padrão do formatarAniversario em missionarios-na-ativa.
-  private formatarDataBrasileira(dataIso: string): string {
-    const [ano, mes, dia] = (dataIso || '').split('-');
-    return ano && mes && dia ? `${dia}/${mes}/${ano}` : dataIso;
+  private parseDataBrasileira(dataBatismo: string): Date | null {
+    const [dia, mes, ano] = (dataBatismo || '').split('/').map(Number);
+    if (!dia || !mes || !ano) return null;
+
+    const data = new Date(ano, mes - 1, dia);
+    return isNaN(data.getTime()) ? null : data;
   }
 
   // Regra por sexo (não por convenção de placeholder): homens só contam pela coluna

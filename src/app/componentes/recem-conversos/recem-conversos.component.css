@@ -37,43 +37,6 @@
   color: #94a3b8;
 }
 
-/* ---------- MINISTRADORES: BLOCOS DE TAGS DENTRO DO CARD ---------- */
-
-.rx-minist-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 0.85rem;
-}
-
-.rx-minist-bloco {
-  background: var(--rx-50, #eef6ff);
-  border-radius: 0.7rem;
-  padding: 0.65rem 0.75rem;
-}
-
-.rx-minist-label {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  color: #64748b;
-  margin-bottom: 0.5rem;
-}
-
-.rx-minist-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-}
-
-/* .rx-tag/.rx-tag-alerta agora vivem em src/styles.css — promovidas a globais quando
-   missionarios-retornados passou a precisar do mesmo padrão de pílula. */
-
-@media (max-width: 576px) {
-  .rx-minist-grid {
-    grid-template-columns: 1fr;
-  }
-}
+/* .rx-minist-*/.rx-tag/.rx-tag-alerta agora vivem em src/styles.css — .rx-tag* foi promovida
+   quando missionarios-retornados passou a precisar do mesmo padrão de pílula, e .rx-minist-*
+   quando homens-avancando-sacerdocio passou a precisar do mesmo bloco de tags. */
