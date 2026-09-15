@@ -88,8 +88,31 @@
   </div>
 
   <!-- CONTEÚDO: ABA RAPAZES -->
-  <div class="rx-pessoa-lista my-3" *ngIf="abaAtiva === 'rapazes'">
-    <div class="rx-pessoa-card" *ngFor="let pessoa of rapazes">
+  <div *ngIf="abaAtiva === 'rapazes'">
+
+    <div class="rx-filtro-radios mt-3" role="radiogroup" aria-label="Filtrar rapazes por faixa etária">
+      <label class="rx-filtro-radio" [ngClass]="{ 'active': filtroIdadeRapazes === 'todos' }">
+        <input type="radio" name="filtroIdadeRapazes" value="todos"
+               [checked]="filtroIdadeRapazes === 'todos'"
+               (change)="mudarFiltroIdadeRapazes('todos')">
+        <span>Todos</span>
+      </label>
+      <label class="rx-filtro-radio" [ngClass]="{ 'active': filtroIdadeRapazes === 'menores13' }">
+        <input type="radio" name="filtroIdadeRapazes" value="menores13"
+               [checked]="filtroIdadeRapazes === 'menores13'"
+               (change)="mudarFiltroIdadeRapazes('menores13')">
+        <span>Menores que 13 anos</span>
+      </label>
+      <label class="rx-filtro-radio" [ngClass]="{ 'active': filtroIdadeRapazes === 'maiores14' }">
+        <input type="radio" name="filtroIdadeRapazes" value="maiores14"
+               [checked]="filtroIdadeRapazes === 'maiores14'"
+               (change)="mudarFiltroIdadeRapazes('maiores14')">
+        <span>Maiores de 14 anos</span>
+      </label>
+    </div>
+
+    <div class="rx-pessoa-lista my-3">
+    <div class="rx-pessoa-card" *ngFor="let pessoa of rapazesFiltrados">
       <div class="rx-pessoa-header">
         <span class="rx-pessoa-nome">{{ pessoa.nome }}</span>
         <span class="rx-pessoa-idade">{{ pessoa.idade }} anos</span>
@@ -121,11 +144,36 @@
         </div>
       </div>
     </div>
+    </div>
+
   </div>
 
   <!-- CONTEÚDO: ABA MOÇAS -->
-  <div class="rx-pessoa-lista my-3" *ngIf="abaAtiva === 'mocas'">
-    <div class="rx-pessoa-card" *ngFor="let pessoa of mocas">
+  <div *ngIf="abaAtiva === 'mocas'">
+
+    <div class="rx-filtro-radios mt-3" role="radiogroup" aria-label="Filtrar moças por faixa etária">
+      <label class="rx-filtro-radio" [ngClass]="{ 'active': filtroIdadeMocas === 'todos' }">
+        <input type="radio" name="filtroIdadeMocas" value="todos"
+               [checked]="filtroIdadeMocas === 'todos'"
+               (change)="mudarFiltroIdadeMocas('todos')">
+        <span>Todos</span>
+      </label>
+      <label class="rx-filtro-radio" [ngClass]="{ 'active': filtroIdadeMocas === 'menores13' }">
+        <input type="radio" name="filtroIdadeMocas" value="menores13"
+               [checked]="filtroIdadeMocas === 'menores13'"
+               (change)="mudarFiltroIdadeMocas('menores13')">
+        <span>Menores que 13 anos</span>
+      </label>
+      <label class="rx-filtro-radio" [ngClass]="{ 'active': filtroIdadeMocas === 'maiores14' }">
+        <input type="radio" name="filtroIdadeMocas" value="maiores14"
+               [checked]="filtroIdadeMocas === 'maiores14'"
+               (change)="mudarFiltroIdadeMocas('maiores14')">
+        <span>Maiores de 14 anos</span>
+      </label>
+    </div>
+
+    <div class="rx-pessoa-lista my-3">
+    <div class="rx-pessoa-card" *ngFor="let pessoa of mocasFiltradas">
       <div class="rx-pessoa-header">
         <span class="rx-pessoa-nome">{{ pessoa.nome }}</span>
         <span class="rx-pessoa-idade">{{ pessoa.idade }} anos</span>
@@ -149,6 +197,8 @@
         </div>
       </div>
     </div>
+    </div>
+
   </div>
 
   <!-- CONTEÚDO: ABA CRIANÇAS -->

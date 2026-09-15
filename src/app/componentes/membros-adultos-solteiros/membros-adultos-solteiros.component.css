@@ -1,45 +1,8 @@
-/* ---------- FILTRO POR RECOMENDAÇÃO (radios na aba Detalhes) ----------
-   Pill style consistente com .rx-tab-btn (nav-tabs), mas com input[type=radio] nativo por
-   baixo (semântica real de radio, não um clone visual) — variantes ativa/vencida ganham cor
-   própria quando marcadas, mesma paleta usada em .rx-kpi-positivo/.rx-kpi-negativo. */
-
-.rx-filtro-radios {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-}
-
-.rx-filtro-radio {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  border-radius: 999px;
-  border: 1.5px solid var(--rx-100);
-  background: #fff;
-  color: var(--rx-700);
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.rx-filtro-radio input[type="radio"] {
-  margin: 0;
-  accent-color: var(--rx-600);
-  cursor: pointer;
-}
-
-.rx-filtro-radio:hover {
-  border-color: var(--rx-300);
-}
-
-.rx-filtro-radio.active {
-  border-color: transparent;
-  background: linear-gradient(120deg, var(--rx-600), var(--rx-800));
-  color: #fff;
-  box-shadow: 0 6px 14px -6px rgba(37, 99, 235, 0.5);
-}
+/* .rx-filtro-radios/.rx-filtro-radio (pill style + input[type=radio] nativo) agora vivem em
+   src/styles.css — promovidas a globais quando jovens-criancas passou a precisar do mesmo
+   padrão de filtro. As variantes de cor abaixo são específicas desta tela (recomendação
+   ativa=verde/vencida=vermelho, mesma paleta de .rx-kpi-positivo/.rx-kpi-negativo) — jovens-
+   criancas não julga "bom/ruim" faixa etária, então usa só o azul padrão (.active) do global. */
 
 .rx-filtro-radio-ativa.active {
   background: linear-gradient(120deg, #16a34a, #15803d);
@@ -49,16 +12,6 @@
 .rx-filtro-radio-vencida.active {
   background: linear-gradient(120deg, #dc2626, #b91c1c);
   box-shadow: 0 6px 14px -6px rgba(220, 38, 38, 0.5);
-}
-
-@media (max-width: 576px) {
-  .rx-filtro-radios {
-    flex-direction: column;
-  }
-
-  .rx-filtro-radio {
-    width: 100%;
-  }
 }
 
 /* Bandeira (SVG estático em assets/flags/, vendorizado do pacote flag-icons — ver

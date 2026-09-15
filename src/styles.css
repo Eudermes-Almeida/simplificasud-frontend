@@ -527,6 +527,62 @@ h1, h2, h3, h4, h5, h6 {
   color: #94a3b8;
 }
 
+/* ---------- FILTRO EM RADIO (pills na aba Detalhes) ----------
+   Pill style consistente com .rx-tab-btn (nav-tabs), mas com input[type=radio] nativo por
+   baixo (semântica real de radio, não um clone visual). Usado por qualquer seção que precise
+   de um filtro simples de poucas opções sobre uma listagem de pessoas (membros-adultos-
+   solteiros: recomendação ativa/vencida; jovens-criancas: faixa etária). Variantes de cor
+   específicas (ex.: .rx-filtro-radio-ativa/.rx-filtro-radio-vencida) ficam locais ao
+   componente que precisa delas — o padrão sem variante usa este azul neutro. */
+
+.rx-filtro-radios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.rx-filtro-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--rx-100);
+  background: #fff;
+  color: var(--rx-700);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.rx-filtro-radio input[type="radio"] {
+  margin: 0;
+  accent-color: var(--rx-600);
+  cursor: pointer;
+}
+
+.rx-filtro-radio:hover {
+  border-color: var(--rx-300);
+}
+
+.rx-filtro-radio.active {
+  border-color: transparent;
+  background: linear-gradient(120deg, var(--rx-600), var(--rx-800));
+  color: #fff;
+  box-shadow: 0 6px 14px -6px rgba(37, 99, 235, 0.5);
+}
+
+@media (max-width: 576px) {
+  .rx-filtro-radios {
+    flex-direction: column;
+  }
+
+  .rx-filtro-radio {
+    width: 100%;
+  }
+}
+
 /* ---------- SELO DE STATUS (pílula verde/vermelha) ----------
    Usado em qualquer indicador binário/de progresso (qualificacao-unidade,
    reunioes-atividades-lancamentos, ...): "Cumprido"/"Faltam N", "OK"/"NÃO",

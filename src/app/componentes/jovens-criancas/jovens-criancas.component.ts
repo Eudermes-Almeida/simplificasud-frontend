@@ -5,6 +5,11 @@ import { RaioxApiService } from '../../services/raiox-api.service';
 
 type AbaJovens = 'resumo' | 'rapazes' | 'mocas' | 'criancas';
 
+// Filtro por faixa etária nas abas Rapazes/Moças — mesmo padrão de radio-pill já usado em
+// membros-adultos-solteiros.component.ts (filtroRecomendacao), aqui sem variante de cor porque
+// faixa etária não é um julgamento "bom/ruim".
+type FiltroIdade = 'todos' | 'menores13' | 'maiores14';
+
 interface GrupoResumo {
   nome: string;
   icone: string;
@@ -78,6 +83,11 @@ export class JovensCriancasComponent implements OnChanges {
   mocas: Moca[] = [];
   criancas: Crianca[] = [];
 
+  // Filtro de faixa etária independente por aba — trocar o filtro de Rapazes não deve afetar
+  // a listagem de Moças, e vice-versa.
+  filtroIdadeRapazes: FiltroIdade = 'todos';
+  filtroIdadeMocas: FiltroIdade = 'todos';
+
   constructor(private raioxApiService: RaioxApiService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -114,6 +124,10 @@ export class JovensCriancasComponent implements OnChanges {
           recomendacaoBatisterio: dto.recomendacao_batisterio || 'Não Emitida',
         }));
         this.criancas = criancas.map(dto => ({ nome: dto.nome, sexo: dto.sexo as 'M' | 'F', idade: Number(dto.idade), unidade: dto.unidade }));
+
+        // Troca de unidade não deve carregar um filtro escolhido antes — sempre volta pra "todos".
+        this.filtroIdadeRapazes = 'todos';
+        this.filtroIdadeMocas = 'todos';
 
         // "Estaca Betim" traz 1 linha por unidade (9 no total) — somar sempre funciona,
         // seja 1 unidade específica (soma = no-op) ou a estaca inteira (soma = total real).
@@ -202,5 +216,29 @@ export class JovensCriancasComponent implements OnChanges {
     return vencida
       ? { texto: `Vencida em ${valor}`, classe: 'rx-campo-negativo' }
       : { texto: `Ativa vence em ${valor}`, classe: 'rx-campo-positivo' };
+  }
+
+  mudarFiltroIdadeRapazes(valor: FiltroIdade): void {
+    this.filtroIdadeRapazes = valor;
+  }
+
+  mudarFiltroIdadeMocas(valor: FiltroIdade): void {
+    this.filtroIdadeMocas = valor;
+  }
+
+  // "Menores que 13 anos" inclui o 13 e "Maiores de 14 anos" inclui o 14 (pedido explícito do
+  // usuário) — não há sobreposição nem lacuna entre as duas faixas.
+  private aplicarFiltroIdade<T extends { idade: number }>(lista: T[], filtro: FiltroIdade): T[] {
+    if (filtro === 'menores13') return lista.filter(p => p.idade <= 13);
+    if (filtro === 'maiores14') return lista.filter(p => p.idade >= 14);
+    return lista;
+  }
+
+  get rapazesFiltrados(): Rapaz[] {
+    return this.aplicarFiltroIdade(this.rapazes, this.filtroIdadeRapazes);
+  }
+
+  get mocasFiltradas(): Moca[] {
+    return this.aplicarFiltroIdade(this.mocas, this.filtroIdadeMocas);
   }
 }
