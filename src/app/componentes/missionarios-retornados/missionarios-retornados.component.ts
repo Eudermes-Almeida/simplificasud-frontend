@@ -18,6 +18,11 @@ interface MissionarioDetalhe {
 // homens-avancando-sacerdocio.component.ts/recem-conversos.component.ts.
 type FiltroDetalhe = 'inativos' | 'ativos' | 'selados' | 'chamado' | 'solteiros' | null;
 
+// Filtro adicional (radio-pill com totalizador) na aba Detalhes — mesma técnica do filtro
+// Berçário em jovens-criancas.component.ts, aqui combinado por cima do filtro dos cards
+// (FiltroDetalhe acima), não em substituição a ele.
+type FiltroExtra = 'todos' | 'ativoSemChamado';
+
 @Component({
   selector: 'app-missionarios-retornados',
   standalone: true,
@@ -64,6 +69,10 @@ export class MissionariosRetornadosComponent implements OnChanges {
     solteiros: 'Solteiros',
   };
 
+  // Filtro adicional na aba Detalhes (radio-pill Todos/Ativos e Sem Chamado) — reseta junto
+  // com filtroAtivo a cada troca de unidade.
+  filtroExtra: FiltroExtra = 'todos';
+
   // Bandeira (código ISO 3166-1 alpha-2, usado pela lib flag-icons) por país de missão — só
   // as 10 opções confirmadas pelo usuário. Um país fora dessa lista não deve exibir nenhum
   // ícone no lugar (ver bandeira()), não um genérico.
@@ -95,6 +104,7 @@ export class MissionariosRetornadosComponent implements OnChanges {
     this.carregando = true;
     this.erroCarregamento = null;
     this.filtroAtivo = null;
+    this.filtroExtra = 'todos';
 
     this.raioxApiService.buscaMissionariosRetornados(this.unidade).subscribe({
       next: (dados) => {
@@ -178,9 +188,10 @@ export class MissionariosRetornadosComponent implements OnChanges {
     return `conic-gradient(#16a34a 0deg ${corteGraus}deg, #dc2626 ${corteGraus}deg 360deg)`;
   }
 
-  // Lista efetivamente exibida na aba Detalhes — aplica o filtro do card clicado no Resumo
-  // (ou mostra todo mundo quando não há filtro ativo, inclusive vindo do card "Total").
-  get detalhesFiltrados(): MissionarioDetalhe[] {
+  // Resultado do filtro dos cards do Resumo (FiltroDetalhe), antes do filtro adicional
+  // (FiltroExtra) — separado em getter próprio pra poder ser reaproveitado tanto pela lista
+  // final quanto pelo totalizador do filtro adicional.
+  private get detalhesPosFiltroCard(): MissionarioDetalhe[] {
     switch (this.filtroAtivo) {
       case 'inativos':
         return this.detalhesMissionarios.filter(p => p.recomendacaoTemplo !== 'Ativa');
@@ -195,6 +206,35 @@ export class MissionariosRetornadosComponent implements OnChanges {
       default:
         return this.detalhesMissionarios;
     }
+  }
+
+  private aplicarFiltroExtra(lista: MissionarioDetalhe[], filtro: FiltroExtra): MissionarioDetalhe[] {
+    if (filtro === 'ativoSemChamado') {
+      return lista.filter(p => p.recomendacaoTemplo === 'Ativa' && p.chamados.length === 0);
+    }
+    return lista;
+  }
+
+  mudarFiltroExtra(valor: FiltroExtra): void {
+    this.filtroExtra = valor;
+  }
+
+  // Lista efetivamente exibida na aba Detalhes — combina o filtro do card clicado no Resumo
+  // (ou mostra todo mundo quando não há filtro ativo, inclusive vindo do card "Total") com o
+  // filtro adicional (Todos/Ativos e Sem Chamado) aplicado por cima.
+  get detalhesFiltrados(): MissionarioDetalhe[] {
+    return this.aplicarFiltroExtra(this.detalhesPosFiltroCard, this.filtroExtra);
+  }
+
+  // Totalizador exibido dentro de cada pill do filtro adicional — contado sobre o resultado
+  // do filtro dos cards (não sobre a lista bruta), pra continuar coerente com o que já está
+  // sendo mostrado quando os dois filtros são combinados.
+  get contagemFiltroExtra(): Record<FiltroExtra, number> {
+    const base = this.detalhesPosFiltroCard;
+    return {
+      todos: base.length,
+      ativoSemChamado: this.aplicarFiltroExtra(base, 'ativoSemChamado').length,
+    };
   }
 
   get labelFiltroAtivo(): string | null {

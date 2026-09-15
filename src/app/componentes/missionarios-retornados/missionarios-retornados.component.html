@@ -164,6 +164,21 @@
       </button>
     </div>
 
+    <div class="rx-filtro-radios mt-3" role="radiogroup" aria-label="Filtrar por ativos e sem chamado">
+      <label class="rx-filtro-radio" [ngClass]="{ 'active': filtroExtra === 'todos' }">
+        <input type="radio" name="filtroExtraMissionarios" value="todos"
+               [checked]="filtroExtra === 'todos'"
+               (change)="mudarFiltroExtra('todos')">
+        <span>Todos <span class="rx-filtro-radio-contagem">({{ contagemFiltroExtra.todos }})</span></span>
+      </label>
+      <label class="rx-filtro-radio" [ngClass]="{ 'active': filtroExtra === 'ativoSemChamado' }">
+        <input type="radio" name="filtroExtraMissionarios" value="ativoSemChamado"
+               [checked]="filtroExtra === 'ativoSemChamado'"
+               (change)="mudarFiltroExtra('ativoSemChamado')">
+        <span>Ativos e Sem Chamado <span class="rx-filtro-radio-contagem">({{ contagemFiltroExtra.ativoSemChamado }})</span></span>
+      </label>
+    </div>
+
     <div class="rx-pessoa-lista my-3">
       <div class="rx-pessoa-card" *ngFor="let pessoa of detalhesFiltrados">
 
