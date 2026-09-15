@@ -215,11 +215,11 @@
         <input type="radio" name="filtroCrianca" value="bercario"
                [checked]="filtroCrianca === 'bercario'"
                (change)="mudarFiltroCrianca('bercario')">
-        <span>Berçário* <span class="rx-filtro-radio-contagem">({{ contagemCriancas.bercario }})</span></span>
+        <span>Berçário<span class="rx-asterisco">*</span> <span class="rx-filtro-radio-contagem">({{ contagemCriancas.bercario }})</span></span>
       </label>
     </div>
 
-    <div class="rx-progresso-nota mt-2">* De 18 meses a 3 anos</div>
+    <div class="rx-progresso-nota mt-2"><span class="rx-asterisco">*</span> De 18 meses a 3 anos</div>
 
     <div class="rx-nome-lista my-3">
       <div class="rx-nome-item" *ngFor="let crianca of criancasFiltradas">

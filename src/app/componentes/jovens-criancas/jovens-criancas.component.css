@@ -127,6 +127,16 @@
   color: #94a3b8;
 }
 
+/* Asterisco de remissão a uma nota (ex.: "Berçário*") — maior e vermelho pra chamar mais
+   atenção do que o texto ao redor, tanto dentro da pill do filtro quanto na nota de rodapé. */
+.rx-asterisco {
+  color: #dc2626;
+  font-weight: 700;
+  font-size: 1.3em;
+  line-height: 1;
+  margin-right: 0.15em;
+}
+
 /* Ícone de destaque (âmbar) — só o card de Matrículas Seminário usa,
    pra não ficar visualmente idêntico e "sem vida" ao lado dos outros 3. */
 .rx-progresso-icon-destaque {
