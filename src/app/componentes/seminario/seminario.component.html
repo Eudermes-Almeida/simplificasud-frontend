@@ -55,6 +55,9 @@
           </span>
           <span class="rx-kpi-label">Total de matriculados</span>
         </span>
+        <button type="button" class="rx-kpi-detalhar" (click)="detalharCard(null)">
+          Detalhes <i class="bi bi-arrow-right-short"></i>
+        </button>
       </div>
 
       <!-- 3. Frequência Acima de 75% -->
@@ -67,6 +70,9 @@
           </span>
           <span class="rx-kpi-label">Frequência acima de 75%</span>
         </span>
+        <button type="button" class="rx-kpi-detalhar" (click)="detalharCard('acima75')">
+          Detalhes <i class="bi bi-arrow-right-short"></i>
+        </button>
       </div>
 
       <!-- 4. Frequência Abaixo de 75% -->
@@ -79,6 +85,9 @@
           </span>
           <span class="rx-kpi-label">Frequência Abaixo de 75%</span>
         </span>
+        <button type="button" class="rx-kpi-detalhar" (click)="detalharCard('abaixo75')">
+          Detalhes <i class="bi bi-arrow-right-short"></i>
+        </button>
       </div>
 
       <!-- 5. Frequência Média Turma -->
@@ -96,8 +105,19 @@
     <!-- CONTEÚDO DA ABA DETALHES (cartão por aluno, mesmo padrão do recem-conversos) -->
   <div class="tab-pane fade" [ngClass]="{ 'show active': abaAtiva === 'detalhes' }" role="tabpanel">
 
+    <div class="rx-filtro-ativo" *ngIf="labelFiltroAtivo">
+      <span>
+        <i class="bi bi-funnel-fill"></i>
+        Filtrando por: <span class="rx-filtro-nome">{{ labelFiltroAtivo }}</span>
+        ({{ detalhesFiltrados.length }} de {{ detalhesSeminario.length }})
+      </span>
+      <button type="button" class="rx-filtro-limpar" (click)="limparFiltro()">
+        <i class="bi bi-x-lg"></i> Limpar filtro
+      </button>
+    </div>
+
     <div class="rx-pessoa-lista my-3">
-      <div class="rx-pessoa-card" *ngFor="let aluno of detalhesSeminario">
+      <div class="rx-pessoa-card" *ngFor="let aluno of detalhesFiltrados">
 
         <div class="rx-pessoa-header">
           <span class="rx-pessoa-nome">{{ aluno.nome }}</span>

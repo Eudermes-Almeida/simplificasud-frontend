@@ -12,6 +12,11 @@ interface AlunoSeminario {
   dataUltimaPresenca: string;
 }
 
+// Chave de cada card de KPI do Resumo que também funciona como filtro da aba Detalhes
+// (null = sem filtro, mostra todo mundo) — mesmo padrão de
+// homens-avancando-sacerdocio.component.ts/recem-conversos.component.ts.
+type FiltroDetalhe = 'acima75' | 'abaixo75' | null;
+
 @Component({
   selector: 'app-seminario',
   standalone: true,
@@ -43,6 +48,15 @@ export class SeminarioComponent implements OnChanges {
   // Alunos matriculados no Seminário (aba Detalhes)
   detalhesSeminario: AlunoSeminario[] = [];
 
+  // Filtro acionado pelo botão "Detalhes" dos cards do Resumo — a aba Detalhes usa isso pra
+  // restringir a listagem em vez de sempre mostrar todo mundo.
+  filtroAtivo: FiltroDetalhe = null;
+
+  private static readonly LABEL_FILTRO: Record<Exclude<FiltroDetalhe, null>, string> = {
+    acima75: 'Frequência acima de 75%',
+    abaixo75: 'Frequência abaixo de 75%',
+  };
+
   constructor(private raioxApiService: RaioxApiService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -54,6 +68,7 @@ export class SeminarioComponent implements OnChanges {
   private buscarDados(): void {
     this.carregando = true;
     this.erroCarregamento = null;
+    this.filtroAtivo = null;
 
     forkJoin({
       seminario: this.raioxApiService.buscaSeminario(this.unidade),
@@ -118,5 +133,34 @@ export class SeminarioComponent implements OnChanges {
 
   frequenciaIcone(pct: number): string {
     return pct >= 75 ? 'bi-graph-up-arrow' : 'bi-graph-down-arrow';
+  }
+
+  // Lista efetivamente exibida na aba Detalhes — aplica o filtro do card clicado no Resumo
+  // (ou mostra todo mundo quando não há filtro ativo, inclusive vindo do card "Total de
+  // matriculados").
+  get detalhesFiltrados(): AlunoSeminario[] {
+    switch (this.filtroAtivo) {
+      case 'acima75':
+        return this.detalhesSeminario.filter(a => a.frequenciaPct >= 75);
+      case 'abaixo75':
+        return this.detalhesSeminario.filter(a => a.frequenciaPct < 75);
+      default:
+        return this.detalhesSeminario;
+    }
+  }
+
+  get labelFiltroAtivo(): string | null {
+    return this.filtroAtivo ? SeminarioComponent.LABEL_FILTRO[this.filtroAtivo] : null;
+  }
+
+  // Acionado pelo botão "Detalhes" dos cards do Resumo — troca de aba e já aplica o filtro
+  // correspondente. `null` (card "Total de matriculados") só troca de aba, sem filtrar.
+  detalharCard(filtro: FiltroDetalhe): void {
+    this.filtroAtivo = filtro;
+    this.abaAtiva = 'detalhes';
+  }
+
+  limparFiltro(): void {
+    this.filtroAtivo = null;
   }
 }
