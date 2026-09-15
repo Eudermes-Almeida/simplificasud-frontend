@@ -126,7 +126,7 @@ export class RecemConversosComponent implements OnChanges {
       nome: dto.nome,
       idade: Number(dto.idade),
       unidade: dto.unidade,
-      dataBatismo: dto.data_batismo,
+      dataBatismo: this.formatarDataBrasileira(dto.data_batismo),
       chamado: this.temChamado(dto.tem_chamado),
       chamadoNome: dto.tem_chamado,
       ministrador: this.temMinistracao(dto),
@@ -153,11 +153,13 @@ export class RecemConversosComponent implements OnChanges {
     return !!valor && valor !== 'Sem chamado';
   }
 
-  // data_batismo vem da API em formato brasileiro (dd/mm/aaaa, direto da planilha) - new Date()
-  // nativo interpreta string com "/" como mm/dd/aaaa americano e erra a conta, por isso o
-  // parse manual abaixo.
+  // data_batismo em detalhesconversos vem da API em formato ISO (aaaa-mm-dd) - diferente de
+  // homenspreparados, que vem em dd/mm/aaaa (planilhas/cargas distintas, ver
+  // 016_carga_detalhesconversos_local.sql vs 019_carga_homenspreparados_local.sql). Parse manual
+  // em vez de new Date(dataBatismo) direto porque esse construtor trata string ISO "aaaa-mm-dd"
+  // como UTC meia-noite, podendo exibir o dia anterior dependendo do fuso horário local.
   private hasBatismoNosUltimos30Dias(dataBatismo: string): boolean {
-    const data = this.parseDataBrasileira(dataBatismo);
+    const data = this.parseDataIso(dataBatismo);
     if (!data) return false;
 
     const hoje = new Date();
@@ -167,12 +169,20 @@ export class RecemConversosComponent implements OnChanges {
     return data >= limite && data <= hoje;
   }
 
-  private parseDataBrasileira(dataBatismo: string): Date | null {
-    const [dia, mes, ano] = (dataBatismo || '').split('/').map(Number);
+  private parseDataIso(dataBatismo: string): Date | null {
+    const [ano, mes, dia] = (dataBatismo || '').split('-').map(Number);
     if (!dia || !mes || !ano) return null;
 
     const data = new Date(ano, mes - 1, dia);
     return isNaN(data.getTime()) ? null : data;
+  }
+
+  // Exibição (aba Detalhes) em dd/mm/aaaa — o valor bruto ISO (aaaa-mm-dd) segue intocado no
+  // resto do fluxo (hasBatismoNosUltimos30Dias compara contra ele), essa é só a transformação
+  // de exibição.
+  private formatarDataBrasileira(dataIso: string): string {
+    const [ano, mes, dia] = (dataIso || '').split('-');
+    return ano && mes && dia ? `${dia}/${mes}/${ano}` : dataIso;
   }
 
   // Regra por sexo (não por convenção de placeholder): homens só contam pela coluna
