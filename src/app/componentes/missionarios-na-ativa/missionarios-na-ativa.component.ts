@@ -16,6 +16,11 @@ interface MissionarioDetalhe {
   fotoQuebrada: boolean;
 }
 
+// Chave de cada card de KPI do Resumo que também funciona como filtro da aba Detalhes
+// (null = sem filtro, mostra todo mundo) — mesmo padrão de
+// homens-avancando-sacerdocio.component.ts/recem-conversos.component.ts.
+type FiltroDetalhe = 'noCampo' | 'sedeIgreja' | 'preenchendo' | null;
+
 @Component({
   selector: 'app-missionarios-na-ativa',
   standalone: true,
@@ -50,6 +55,16 @@ export class MissionariosNaAtivaComponent implements OnChanges {
   // Lista de missionários (fonte única usada pelos cards da aba Detalhes)
   detalhesMissionarios: MissionarioDetalhe[] = [];
 
+  // Filtro acionado pelo botão "Detalhes" de cada card do Resumo — a aba Detalhes usa isso
+  // pra restringir a listagem em vez de sempre mostrar todo mundo.
+  filtroAtivo: FiltroDetalhe = null;
+
+  private static readonly LABEL_FILTRO: Record<Exclude<FiltroDetalhe, null>, string> = {
+    noCampo: 'No Campo',
+    sedeIgreja: 'Sede da Igreja',
+    preenchendo: 'Preenchendo',
+  };
+
   constructor(private raioxApiService: RaioxApiService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -61,6 +76,7 @@ export class MissionariosNaAtivaComponent implements OnChanges {
   private buscarDados(): void {
     this.carregando = true;
     this.erroCarregamento = null;
+    this.filtroAtivo = null;
 
     this.raioxApiService.buscaDadosMissionarios(this.unidade).subscribe({
       next: (dados) => {
@@ -161,5 +177,35 @@ export class MissionariosNaAtivaComponent implements OnChanges {
     const anguloNoCampo = (this.resumoMissionarios.noCampo.valor / total) * 360;
     const anguloSedeIgreja = anguloNoCampo + (this.resumoMissionarios.sedeIgreja.valor / total) * 360;
     return `conic-gradient(#16a34a 0deg ${anguloNoCampo}deg, #2563eb ${anguloNoCampo}deg ${anguloSedeIgreja}deg, #f59e0b ${anguloSedeIgreja}deg 360deg)`;
+  }
+
+  // Lista efetivamente exibida na aba Detalhes — aplica o filtro do card clicado no Resumo
+  // (ou mostra todo mundo quando não há filtro ativo).
+  get detalhesFiltrados(): MissionarioDetalhe[] {
+    switch (this.filtroAtivo) {
+      case 'noCampo':
+        return this.detalhesMissionarios.filter(p => p.status === 'No Campo');
+      case 'sedeIgreja':
+        return this.detalhesMissionarios.filter(p => p.status === 'Sede da Igreja');
+      case 'preenchendo':
+        return this.detalhesMissionarios.filter(p => p.status === 'Preenchendo');
+      default:
+        return this.detalhesMissionarios;
+    }
+  }
+
+  get labelFiltroAtivo(): string | null {
+    return this.filtroAtivo ? MissionariosNaAtivaComponent.LABEL_FILTRO[this.filtroAtivo] : null;
+  }
+
+  // Acionado pelo botão "Detalhes" de cada card do Resumo — troca de aba e já aplica o filtro
+  // correspondente.
+  detalharCard(filtro: FiltroDetalhe): void {
+    this.filtroAtivo = filtro;
+    this.abaAtiva = 'detalhes';
+  }
+
+  limparFiltro(): void {
+    this.filtroAtivo = null;
   }
 }
