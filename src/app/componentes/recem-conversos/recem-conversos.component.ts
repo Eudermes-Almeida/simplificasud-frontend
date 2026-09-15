@@ -8,6 +8,7 @@ interface ConversoDetalhe {
   unidade: string;
   dataBatismo: string;
   chamado: boolean;
+  chamadoNome: string;
   ministrador: boolean;
   recomendacao: string;
   sacerdocio: string;
@@ -125,8 +126,9 @@ export class RecemConversosComponent implements OnChanges {
       nome: dto.nome,
       idade: Number(dto.idade),
       unidade: dto.unidade,
-      dataBatismo: dto.data_batismo,
+      dataBatismo: this.formatarDataBrasileira(dto.data_batismo),
       chamado: this.temChamado(dto.tem_chamado),
+      chamadoNome: dto.tem_chamado,
       ministrador: this.temMinistracao(dto),
       recomendacao: dto.recomendacao,
       sacerdocio: dto.sacerdocio,
@@ -163,21 +165,35 @@ export class RecemConversosComponent implements OnChanges {
     return data >= limite;
   }
 
-  // Tem ministração se houver um ministrador OU uma ministradora designados — homens só têm
-  // ministrador (o campo "ministradora" vem com um placeholder de "não se aplica" na origem
-  // pra eles, nunca uma designação real).
+  // Exibição (aba Detalhes) em dd/mm/aaaa — o valor bruto ISO (aaaa-mm-dd) segue intocado no
+  // resto do fluxo (hasBatismoNosUltimos30Dias compara contra ele), essa é só a transformação
+  // de exibição, mesmo padrão do formatarAniversario em missionarios-na-ativa.
+  private formatarDataBrasileira(dataIso: string): string {
+    const [ano, mes, dia] = (dataIso || '').split('-');
+    return ano && mes && dia ? `${dia}/${mes}/${ano}` : dataIso;
+  }
+
+  // Regra por sexo (não por convenção de placeholder): homens só contam pela coluna
+  // "ministrador" (a "ministradora" nunca se aplica a eles, seja qual for o valor bruto vindo
+  // da planilha); mulheres contam se houver designação em QUALQUER uma das duas colunas (OR).
   private temMinistracao(dto: DetalhesConversosDTO): boolean {
-    const semMinistradora = this.semDesignacao(dto.ministradora) || RecemConversosComponent.SEM_MINISTRADORA_HOMEM.includes(dto.ministradora);
-    return !this.semDesignacao(dto.ministrador) || !semMinistradora;
+    if (dto.sexo === 'M') {
+      return !this.semDesignacao(dto.ministrador);
+    }
+    return !this.semDesignacao(dto.ministrador) || !this.semDesignacao(dto.ministradora);
   }
 
   // "Sem designação" (nenhum ministrador/ministradora) e o placeholder do campo Ministradora em
   // registros masculinos viram lista vazia — nunca um nome de fato.
+  //
+  // Separador entre pessoas mudou de vírgula para ponto e vírgula na migração de 2026-09 (cada
+  // nome já vem no formato "Sobrenome, Nome" — splitar por vírgula quebrava um nome no meio,
+  // ex: "Anunciação, Cristiano ; Oliveira, Creciane" virava 3 fragmentos em vez de 2 pessoas).
   private mapMinistracao(dto: DetalhesConversosDTO): ConversoMinistracao {
     const paraLista = (valor: string) =>
       (this.semDesignacao(valor) || RecemConversosComponent.SEM_MINISTRADORA_HOMEM.includes(valor))
         ? []
-        : valor.split(',').map(nome => nome.trim());
+        : valor.split(';').map(nome => nome.trim());
 
     return {
       nome: dto.nome,
@@ -198,6 +214,13 @@ export class RecemConversosComponent implements OnChanges {
   // até vencer. Qualquer outro valor (ex: "Recomendação Não Emitida") não conta.
   recomendacaoEmitida(valor: string): boolean {
     return valor === 'Ativa' || valor.toLowerCase().includes('vence');
+  }
+
+  // O dado bruto da não-emitida já vem como "Recomendação Não Emitida" (repete o rótulo do
+  // card, que já diz "Recomendação") — mostra só "Não Emitida" nesse caso; os demais valores
+  // (Ativa/Vence...) continuam exibidos como vieram.
+  textoRecomendacao(valor: string): string {
+    return this.recomendacaoEmitida(valor) ? valor : 'Não Emitida';
   }
 
   mudarAba(nomeDaAba: string): void {

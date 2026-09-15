@@ -76,15 +76,16 @@
         </span>
       </div>
 
-      <!-- 4. Ordenandos ao Sacerdócio -->
+      <!-- 4. Ordenados ao Sacerdócio -->
       <div class="rx-kpi-card">
         <span class="rx-kpi-icon"><i class="bi bi-award-fill"></i></span>
         <span class="rx-kpi-text">
           <span class="rx-kpi-value">
             {{ resumoConversos.ordenandosSacerdocio.valor }}
-            <small class="rx-kpi-pct">{{ resumoConversos.ordenandosSacerdocio.pct }}%</small>
+            <small class="rx-kpi-pct">{{ resumoConversos.ordenandosSacerdocio.pct }}%<span class="rx-kpi-asterisco">*</span></small>
           </span>
-          <span class="rx-kpi-label">Ordenandos ao sacerdócio</span>
+          <span class="rx-kpi-label">Ordenados ao sacerdócio</span>
+          <span class="rx-kpi-nota">* Percentual em relação aos aptos ao sacerdócio.</span>
         </span>
       </div>
 
@@ -151,7 +152,7 @@
             <span class="rx-pessoa-campo-icon"><i class="bi" [ngClass]="pessoa.chamado ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i></span>
             <span class="rx-pessoa-campo-texto">
               <span class="rx-pessoa-campo-label">Chamado</span>
-              <span class="rx-pessoa-campo-valor">{{ pessoa.chamado ? 'Sim' : 'Não' }}</span>
+              <span class="rx-pessoa-campo-valor">{{ pessoa.chamado ? pessoa.chamadoNome : 'Não' }}</span>
             </span>
           </div>
 
@@ -167,7 +168,7 @@
             <span class="rx-pessoa-campo-icon"><i class="bi bi-bank2"></i></span>
             <span class="rx-pessoa-campo-texto">
               <span class="rx-pessoa-campo-label">Recomendação</span>
-              <span class="rx-pessoa-campo-valor">{{ pessoa.recomendacao }}</span>
+              <span class="rx-pessoa-campo-valor" [ngClass]="{ 'fst-italic': !recomendacaoEmitida(pessoa.recomendacao) }">{{ textoRecomendacao(pessoa.recomendacao) }}</span>
             </span>
           </div>
 

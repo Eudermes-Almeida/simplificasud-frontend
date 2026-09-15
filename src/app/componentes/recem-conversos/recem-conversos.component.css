@@ -22,6 +22,21 @@
 /* As classes de cartão por pessoa (rx-pessoa-, rx-campo-) agora vivem em
    src/styles.css — são compartilhadas com seminario e outras seções. */
 
+/* Asterisco do card "Ordenados ao sacerdócio", remetendo à nota de rodapé abaixo
+   (percentual calculado sobre os aptos ao sacerdócio, não sobre o total de batismos). */
+.rx-kpi-asterisco {
+  color: #dc2626;
+  font-weight: 700;
+  margin-left: 0.1rem;
+}
+
+/* Nota de rodapé do card — mesmo padrão de missionarios-retornados.component.css. */
+.rx-kpi-nota {
+  font-size: 0.72rem;
+  font-style: italic;
+  color: #94a3b8;
+}
+
 /* ---------- MINISTRADORES: BLOCOS DE TAGS DENTRO DO CARD ---------- */
 
 .rx-minist-grid {
