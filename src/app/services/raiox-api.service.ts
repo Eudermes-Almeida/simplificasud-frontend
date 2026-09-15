@@ -16,7 +16,7 @@ export interface DetalhesConversosDTO {
   nome: string;
   sexo: string;
   idade: string;
-  ativo: string;
+  data_batismo: string;
   tem_chamado: string;
   ministradora: string;
   ministrador: string;

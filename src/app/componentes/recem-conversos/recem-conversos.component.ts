@@ -6,7 +6,7 @@ interface ConversoDetalhe {
   nome: string;
   idade: number;
   unidade: string;
-  ativo: boolean;
+  dataBatismo: string;
   chamado: boolean;
   ministrador: boolean;
   recomendacao: string;
@@ -43,7 +43,7 @@ export class RecemConversosComponent implements OnChanges {
   // recalculados a cada busca (ver buscarDados/calcularResumo).
   resumoConversos = {
     qtBatismos: { valor: 0, pct: 100 },
-    ativos: { valor: 0, pct: 0 },
+    batismosUltimos30Dias: { valor: 0 },
     sexoMasculino: { valor: 0, pct: 0 },
     ordenandosSacerdocio: { valor: 0, pct: 0 },
     comRecomendacaoTemplos: { valor: 0, pct: 0 },
@@ -100,20 +100,20 @@ export class RecemConversosComponent implements OnChanges {
 
   private calcularResumo(dados: DetalhesConversosDTO[]): typeof this.resumoConversos {
     const total = dados.length;
-    const pct = (contagem: number) => total > 0 ? Math.round((contagem / total) * 100) : 0;
+    const pct = (contagem: number, base: number = total) => base > 0 ? Math.round((contagem / base) * 100) : 0;
 
-    const ativos = dados.filter(d => d.ativo === 'Sim').length;
-    const sexoMasculino = dados.filter(d => d.sexo === 'M').length;
-    const ordenandosSacerdocio = dados.filter(d => d.sacerdocio !== 'Não ordenado' && d.sacerdocio !== 'Não se aplica').length;
+    const batismosUltimos30Dias = dados.filter(d => this.hasBatismoNosUltimos30Dias(d.data_batismo)).length;
+    const sexoMasculino = dados.filter(d => d.sexo === 'M' && Number(d.idade) >= 11).length;
+    const ordenandosSacerdocio = dados.filter(d => d.sacerdocio !== 'Não Ordenado' && d.sacerdocio !== 'Não se aplica').length;
     const comRecomendacaoTemplos = dados.filter(d => this.recomendacaoEmitida(d.recomendacao)).length;
-    const receberamChamado = dados.filter(d => d.tem_chamado === 'Sim').length;
+    const receberamChamado = dados.filter(d => this.temChamado(d.tem_chamado)).length;
     const comMinistradores = dados.filter(d => this.temMinistracao(d)).length;
 
     return {
       qtBatismos: { valor: total, pct: 100 },
-      ativos: { valor: ativos, pct: pct(ativos) },
+      batismosUltimos30Dias: { valor: batismosUltimos30Dias },
       sexoMasculino: { valor: sexoMasculino, pct: pct(sexoMasculino) },
-      ordenandosSacerdocio: { valor: ordenandosSacerdocio, pct: pct(ordenandosSacerdocio) },
+      ordenandosSacerdocio: { valor: ordenandosSacerdocio, pct: pct(ordenandosSacerdocio, sexoMasculino) },
       comRecomendacaoTemplos: { valor: comRecomendacaoTemplos, pct: pct(comRecomendacaoTemplos) },
       receberamChamado: { valor: receberamChamado, pct: pct(receberamChamado) },
       comMinistradores: { valor: comMinistradores, pct: pct(comMinistradores) },
@@ -125,8 +125,8 @@ export class RecemConversosComponent implements OnChanges {
       nome: dto.nome,
       idade: Number(dto.idade),
       unidade: dto.unidade,
-      ativo: dto.ativo === 'Sim',
-      chamado: dto.tem_chamado === 'Sim',
+      dataBatismo: dto.data_batismo,
+      chamado: this.temChamado(dto.tem_chamado),
       ministrador: this.temMinistracao(dto),
       recomendacao: dto.recomendacao,
       sacerdocio: dto.sacerdocio,
@@ -143,6 +143,24 @@ export class RecemConversosComponent implements OnChanges {
 
   private semDesignacao(valor: string): boolean {
     return RecemConversosComponent.SEM_DESIGNACAO.includes(valor);
+  }
+
+  // tem_chamado vem da API como "Sem chamado" ou o nome do próprio cargo (ex: "Secretário
+  // do Quórum de Élderes") - nunca um booleano "Sim"/"Não".
+  private temChamado(valor: string): boolean {
+    return !!valor && valor !== 'Sem chamado';
+  }
+
+  // data_batismo vem da API em formato ISO (aaaa-mm-dd, ver seminario.data_ultima_presenca
+  // pela mesma convenção) - compara direto contra "hoje - 30 dias" sem lib de datas.
+  private hasBatismoNosUltimos30Dias(dataBatismo: string): boolean {
+    const data = new Date(dataBatismo);
+    if (isNaN(data.getTime())) return false;
+
+    const limite = new Date();
+    limite.setDate(limite.getDate() - 30);
+
+    return data >= limite;
   }
 
   // Tem ministração se houver um ministrador OU uma ministradora designados — homens só têm
@@ -171,12 +189,15 @@ export class RecemConversosComponent implements OnChanges {
 
   sacerdocioClasse(valor: string): string {
     if (valor === 'Não se aplica') return 'rx-campo-neutro';
-    if (valor === 'Não ordenado') return 'rx-campo-negativo';
+    if (valor === 'Não Ordenado') return 'rx-campo-negativo';
     return 'rx-campo-positivo';
   }
 
+  // Considera "ativa" tanto o status "Ativa" quanto qualquer variação "Vence..."
+  // (vence este mês/em dois meses/em três meses) - a recomendação continua valendo
+  // até vencer. Qualquer outro valor (ex: "Recomendação Não Emitida") não conta.
   recomendacaoEmitida(valor: string): boolean {
-    return valor !== 'Não Emitida';
+    return valor === 'Ativa' || valor.toLowerCase().includes('vence');
   }
 
   mudarAba(nomeDaAba: string): void {

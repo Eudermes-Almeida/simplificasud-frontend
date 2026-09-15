@@ -55,15 +55,12 @@
         </span>
       </div>
 
-      <!-- 2. Ativos -->
+      <!-- 2. Data Batismo (batismos nos últimos 30 dias) -->
       <div class="rx-kpi-card">
-        <span class="rx-kpi-icon"><i class="bi bi-person-check-fill"></i></span>
+        <span class="rx-kpi-icon"><i class="bi bi-calendar-check-fill"></i></span>
         <span class="rx-kpi-text">
-          <span class="rx-kpi-value">
-            {{ resumoConversos.ativos.valor }}
-            <small class="rx-kpi-pct">{{ resumoConversos.ativos.pct }}%</small>
-          </span>
-          <span class="rx-kpi-label">Ativos</span>
+          <span class="rx-kpi-value">{{ resumoConversos.batismosUltimos30Dias.valor }}</span>
+          <span class="rx-kpi-label">Foram batizados nos últimos 30 dias.</span>
         </span>
       </div>
 
@@ -75,7 +72,7 @@
             {{ resumoConversos.sexoMasculino.valor }}
             <small class="rx-kpi-pct">{{ resumoConversos.sexoMasculino.pct }}%</small>
           </span>
-          <span class="rx-kpi-label">Sexo Masculino</span>
+          <span class="rx-kpi-label">Sexo Masculino (maiores de 11 anos)</span>
         </span>
       </div>
 
@@ -142,11 +139,11 @@
         </div>
 
         <div class="rx-pessoa-campos">
-          <div class="rx-pessoa-campo" [ngClass]="pessoa.ativo ? 'rx-campo-positivo' : 'rx-campo-negativo'">
-            <span class="rx-pessoa-campo-icon"><i class="bi" [ngClass]="pessoa.ativo ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i></span>
+          <div class="rx-pessoa-campo">
+            <span class="rx-pessoa-campo-icon"><i class="bi bi-calendar-check"></i></span>
             <span class="rx-pessoa-campo-texto">
-              <span class="rx-pessoa-campo-label">Ativo</span>
-              <span class="rx-pessoa-campo-valor">{{ pessoa.ativo ? 'Sim' : 'Não' }}</span>
+              <span class="rx-pessoa-campo-label">Data Batismo</span>
+              <span class="rx-pessoa-campo-valor">{{ pessoa.dataBatismo }}</span>
             </span>
           </div>
 
