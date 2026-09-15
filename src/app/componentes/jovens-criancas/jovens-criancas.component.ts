@@ -10,6 +10,13 @@ type AbaJovens = 'resumo' | 'rapazes' | 'mocas' | 'criancas';
 // faixa etária não é um julgamento "bom/ruim".
 type FiltroIdade = 'todos' | 'menores13' | 'maiores14';
 
+// Filtro da aba Crianças — berçário é 18 meses a 3 anos (ver nota exibida no template), mas
+// "idade" só vem em anos completos, sem granularidade de mês. Aproximação assumida: idade
+// entre 1 e 3 anos (exclui idade=0, que é sempre < 18 meses; inclui todo o ano de 1 ano, já
+// que uma fração dele — 18 a 23 meses — pertence ao berçário e não há como separar sem o mês
+// de nascimento).
+type FiltroCrianca = 'todos' | 'bercario';
+
 interface GrupoResumo {
   nome: string;
   icone: string;
@@ -88,6 +95,9 @@ export class JovensCriancasComponent implements OnChanges {
   filtroIdadeRapazes: FiltroIdade = 'todos';
   filtroIdadeMocas: FiltroIdade = 'todos';
 
+  // Filtro da aba Crianças (berçário) — mesma lógica de reset por unidade dos outros dois.
+  filtroCrianca: FiltroCrianca = 'todos';
+
   constructor(private raioxApiService: RaioxApiService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -128,6 +138,7 @@ export class JovensCriancasComponent implements OnChanges {
         // Troca de unidade não deve carregar um filtro escolhido antes — sempre volta pra "todos".
         this.filtroIdadeRapazes = 'todos';
         this.filtroIdadeMocas = 'todos';
+        this.filtroCrianca = 'todos';
 
         // "Estaca Betim" traz 1 linha por unidade (9 no total) — somar sempre funciona,
         // seja 1 unidade específica (soma = no-op) ou a estaca inteira (soma = total real).
@@ -261,6 +272,26 @@ export class JovensCriancasComponent implements OnChanges {
       todos: this.contarPorFiltroIdade(this.mocas, 'todos'),
       menores13: this.contarPorFiltroIdade(this.mocas, 'menores13'),
       maiores14: this.contarPorFiltroIdade(this.mocas, 'maiores14'),
+    };
+  }
+
+  mudarFiltroCrianca(valor: FiltroCrianca): void {
+    this.filtroCrianca = valor;
+  }
+
+  private aplicarFiltroCrianca(lista: Crianca[], filtro: FiltroCrianca): Crianca[] {
+    if (filtro === 'bercario') return lista.filter(c => c.idade >= 1 && c.idade <= 3);
+    return lista;
+  }
+
+  get criancasFiltradas(): Crianca[] {
+    return this.aplicarFiltroCrianca(this.criancas, this.filtroCrianca);
+  }
+
+  get contagemCriancas(): Record<FiltroCrianca, number> {
+    return {
+      todos: this.aplicarFiltroCrianca(this.criancas, 'todos').length,
+      bercario: this.aplicarFiltroCrianca(this.criancas, 'bercario').length,
     };
   }
 }
