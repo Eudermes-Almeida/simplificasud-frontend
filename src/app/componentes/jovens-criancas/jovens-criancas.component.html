@@ -68,7 +68,7 @@
         <div class="rx-progresso-linha">
           <span class="rx-progresso-label rx-progresso-label-ativos">{{ labelAtivos(item) }}:</span>
           <span>
-            <span class="rx-progresso-num" [ngClass]="classeAtivos(item)">{{ item.ativos }}</span>
+            <span class="rx-progresso-num rx-progresso-num-ativos">{{ item.ativos }}</span>
             <span class="rx-progresso-pct" *ngIf="mostrarPercentual(item)">({{ percentual(item) }}%)</span>
           </span>
         </div>

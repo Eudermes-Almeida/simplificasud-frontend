@@ -97,18 +97,16 @@
   font-variant-numeric: proportional-nums;
 }
 
-/* Linha "Ativos/Ativas" — rótulo sempre verde; número/percentual seguem o
-   mesmo corte >=75% verde / <75% vermelho já usado no componente seminario. */
+/* Linha "Ativos/Ativas" — sempre um dado positivo (não um limiar de qualidade),
+   então rótulo e número ficam sempre em verde, nunca vermelho. Tons diferentes
+   entre os dois (label mais claro, número mais escuro) só pra separar visualmente
+   um do outro, já que ambos compartilham a mesma linha. */
 .rx-progresso-label-ativos {
   color: #16a34a;
 }
 
-.rx-progresso-num-positivo {
-  color: #16a34a;
-}
-
-.rx-progresso-num-negativo {
-  color: #dc2626;
+.rx-progresso-num-ativos {
+  color: #15803d;
 }
 
 .rx-progresso-pct {

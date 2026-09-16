@@ -115,8 +115,9 @@ export class JovensCriancasComponent implements OnChanges {
       mocas: this.raioxApiService.buscaMocas(this.unidade),
       criancas: this.raioxApiService.buscaCriancas(this.unidade),
       resumo: this.raioxApiService.buscaResumoJovens(this.unidade),
+      seminario: this.raioxApiService.buscaSeminario(this.unidade),
     }).subscribe({
-      next: ({ rapazes, mocas, criancas, resumo }) => {
+      next: ({ rapazes, mocas, criancas, resumo, seminario }) => {
         // Backend omite a chave (JSON-B) quando recomendacao_batisterio vem nulo no banco
         // (registros com dado quebrado, ex: idade='*') — normaliza pro mesmo texto usado
         // pra quem nunca teve recomendação emitida, igual já feito em recem-conversos.
@@ -145,15 +146,26 @@ export class JovensCriancasComponent implements OnChanges {
         const somar = (campo: keyof typeof resumo[0]) =>
           resumo.reduce((acc, item) => acc + Number(item[campo]), 0);
 
+        // Matrículas Seminário vem direto da tabela seminario (mesma fonte usada por
+        // seminario.component.ts), não da resumojovens — mesma inconsistência entre resumo
+        // pré-calculado e detalhamento real que já existia em rapazes/moças/crianças.
+        const frequenciasSeminario = seminario.map(dto => Number(dto.percentual_frequencia.replace('%', '')));
+        const totalMatriculadosSeminario = seminario.length;
+        const acima75Seminario = frequenciasSeminario.filter(pct => pct >= 75).length;
+
+        // Total de rapazes/moças/crianças vem da CONTAGEM do detalhamento (this.rapazes/mocas/criancas),
+        // não da soma da tabela resumojovens — a fonte raspada da planilha é inconsistente entre as
+        // duas abas (ex: resumo diz 140 rapazes, detalhamento lista 145), e o detalhamento é a lista
+        // real de registros, então prevalece sobre o pré-calculado (pedido explícito do usuário).
         this.resumoJovens = [
-          { nome: 'Rapazes', icone: 'bi-gender-male', ativos: somar('rapazes_ativos'), total: somar('rapazes_total'), labelAtivos: 'Ativos', recomendacaoBatisterio: somar('rapazes_recomendacao_batisterio') },
-          { nome: 'Moças', icone: 'bi-gender-female', ativos: somar('mocas_ativas'), total: somar('mocas_total'), labelAtivos: 'Ativas', recomendacaoBatisterio: somar('mocas_recomendacao_batisterio') },
-          { nome: 'Crianças', icone: 'bi-emoji-smile-fill', ativos: somar('criancas_total_ativas'), total: somar('total_criancas'), labelAtivos: 'Ativas' },
+          { nome: 'Rapazes', icone: 'bi-gender-male', ativos: somar('rapazes_ativos'), total: this.rapazes.length, labelAtivos: 'Ativos', recomendacaoBatisterio: somar('rapazes_recomendacao_batisterio') },
+          { nome: 'Moças', icone: 'bi-gender-female', ativos: somar('mocas_ativas'), total: this.mocas.length, labelAtivos: 'Ativas', recomendacaoBatisterio: somar('mocas_recomendacao_batisterio') },
+          { nome: 'Crianças', icone: 'bi-emoji-smile-fill', ativos: somar('criancas_total_ativas'), total: this.criancas.length, labelAtivos: 'Ativas' },
           {
             nome: 'Matrículas Seminário',
             icone: 'bi-book-half',
-            ativos: somar('frequencia_acima_75'),
-            total: somar('total_matriculados_seminario'),
+            ativos: acima75Seminario,
+            total: totalMatriculadosSeminario,
             labelTotal: 'Total Matrículas',
             labelAtivos: 'Alunos com frequência acima de 75%',
             iconeDestaque: true
@@ -194,12 +206,6 @@ export class JovensCriancasComponent implements OnChanges {
 
   mostrarPercentual(item: GrupoResumo): boolean {
     return item.mostrarPercentual !== false;
-  }
-
-  // Mesmo corte >=75% verde / <75% vermelho já usado no componente seminario
-  // (frequenciaClasse) — reaproveitado aqui pro número/percentual de "ativos".
-  classeAtivos(item: GrupoResumo): string {
-    return this.percentual(item) >= 75 ? 'rx-progresso-num-positivo' : 'rx-progresso-num-negativo';
   }
 
   sacerdocioClasse(status: string): string {
