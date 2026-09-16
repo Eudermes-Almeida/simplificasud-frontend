@@ -48,10 +48,12 @@
    desenhado dentro da própria imagem. Moldura em "plaquinha" arredondada (não círculo,
    que cortaria o texto na parte de baixo da imagem quadrada). */
 .raiox-hero-logo {
-  width: 150px;
-  height: auto;
+  /* Largura > altura de propósito (a imagem original é quase quadrada) — esticada
+     horizontalmente a pedido do usuário; object-fit "fill" (padrão do <img>) é o que
+     produz esse esticamento em vez de manter a proporção original. */
+  width: 230px;
+  height: 150px;
   border-radius: 1.25rem;
-  border: 1px solid rgba(255, 255, 255, 0.35);
   box-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.45);
   margin-bottom: 1rem;
 }
@@ -319,7 +321,8 @@
   }
 
   .raiox-hero-logo {
-    width: 110px;
+    width: 170px;
+    height: 111px;
   }
 
   .raiox-container {
@@ -345,7 +348,8 @@
 
 @media (max-width: 420px) {
   .raiox-hero-logo {
-    width: 96px;
+    width: 150px;
+    height: 98px;
   }
 
   .raiox-hero-subtitle {
