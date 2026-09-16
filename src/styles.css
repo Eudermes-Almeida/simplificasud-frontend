@@ -666,6 +666,19 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: 0.25rem;
 }
 
+/* Logomarca oficial (assets/logo-simplifica-sud.jpg) — usada só na tela de login
+   (login-senha.component), que antes usava .rx-auth-badge/.rx-auth-title genéricos pra
+   "Simplifica Sud". primeiro-acesso.component continua com .rx-auth-badge/.rx-auth-title
+   (ali o texto é "Primeiro Acesso", o nome da etapa, não da marca — a logo não se aplica). */
+.rx-auth-logo {
+  width: 130px;
+  height: auto;
+  border-radius: 1.1rem;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.45);
+  margin-bottom: 0.75rem;
+}
+
 .rx-auth-subtitle {
   margin: 0;
   opacity: 0.9;

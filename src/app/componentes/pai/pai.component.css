@@ -43,26 +43,17 @@
   margin: 0 auto;
 }
 
-.raiox-hero-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.16);
+/* Logomarca oficial (assets/logo-simplifica-sud.jpg) — substitui o antigo ícone genérico
+   (bi-bar-chart-line-fill) + <h1> de texto, já que a logo traz o nome "Simplifica Sud"
+   desenhado dentro da própria imagem. Moldura em "plaquinha" arredondada (não círculo,
+   que cortaria o texto na parte de baixo da imagem quadrada). */
+.raiox-hero-logo {
+  width: 150px;
+  height: auto;
+  border-radius: 1.25rem;
   border: 1px solid rgba(255, 255, 255, 0.35);
-  font-size: 1.75rem;
+  box-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.45);
   margin-bottom: 1rem;
-  backdrop-filter: blur(2px);
-}
-
-.raiox-hero-title {
-  font-weight: 800;
-  font-size: clamp(1.6rem, 3vw, 2.4rem);
-  letter-spacing: -0.02em;
-  margin-bottom: 0.5rem;
-  color: #fff !important;
 }
 
 .raiox-hero-subtitle {
@@ -327,10 +318,8 @@
     border-radius: 0 0 1.5rem 1.5rem;
   }
 
-  .raiox-hero-badge {
-    width: 52px;
-    height: 52px;
-    font-size: 1.4rem;
+  .raiox-hero-logo {
+    width: 110px;
   }
 
   .raiox-container {
@@ -355,8 +344,8 @@
 }
 
 @media (max-width: 420px) {
-  .raiox-hero-title {
-    font-size: 1.35rem;
+  .raiox-hero-logo {
+    width: 96px;
   }
 
   .raiox-hero-subtitle {
