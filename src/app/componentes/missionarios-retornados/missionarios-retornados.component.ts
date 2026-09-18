@@ -7,9 +7,7 @@ interface MissionarioDetalhe {
   nome: string;
   idade: string;
   unidade: string;
-  // Ausente (não vem do backend) pro nível B - ver isNivelB() abaixo e memória
-  // project-raiox-matriz-acesso-ab-design.
-  recomendacaoTemplo?: string;
+  recomendacaoTemplo: string;
   selado: boolean;
   estadoCivil: string;
   paisMissao: string;
@@ -97,12 +95,12 @@ export class MissionariosRetornadosComponent implements OnChanges {
 
   constructor(private raioxApiService: RaioxApiService, private authService: AuthService) {}
 
-  // Nível B (Conselho/Sumo Conselho) não vê status de recomendação ao templo - nem os
-  // cards de KPI Ativos/Inativos, nem o gráfico, nem o campo no detalhamento, nem o filtro
-  // "Ativos e Sem Chamado". O backend já nem manda o campo recomendacaotemplo pra esse
-  // nível (ver ContextoAutenticacao.isNivelB no backend); aqui só ajusta a tela pra não
-  // mostrar cards/filtros que ficariam com número errado (zerado) sem esse dado. Ver
-  // memória project-raiox-matriz-acesso-ab-design.
+  // Nível B (Conselho/Sumo Conselho) vê os cards de KPI e o gráfico normalmente - só não
+  // pode "detalhar" essa informação: o botão "Detalhes" dos cards Inativos/Ativos, o campo
+  // no detalhamento por pessoa e o filtro "Ativos e Sem Chamado" não renderizam pra esse
+  // nível (decisão revisada 2026-09-18 após validação com os líderes: aba Resumo precisa
+  // mostrar todos os cards). O backend manda o dado pra todo mundo agora - essa é só a
+  // camada de UI que impede "detalhar". Ver memória project-raiox-matriz-acesso-ab-design.
   get isNivelB(): boolean {
     return this.authService.isNivelB();
   }
@@ -172,7 +170,7 @@ export class MissionariosRetornadosComponent implements OnChanges {
     };
   }
 
-  recomendacaoClasse(valor: string | undefined): string {
+  recomendacaoClasse(valor: string): string {
     if (valor === 'Ativa') return 'rx-campo-positivo';
     if (valor === 'Vence este mês') return 'rx-campo-neutro';
     return 'rx-campo-negativo';

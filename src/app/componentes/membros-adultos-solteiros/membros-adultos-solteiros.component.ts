@@ -7,9 +7,7 @@ interface MembroDetalhe {
   nome: string;
   idade: string;
   unidade: string;
-  // Ausente (não vem do backend) pro nível B - ver isNivelB() abaixo e memória
-  // project-raiox-matriz-acesso-ab-design.
-  recomendacaoTemplo?: string;
+  recomendacaoTemplo: string;
   sexo: string;
   paisMissao: string;
   chamados: string[];
@@ -93,8 +91,10 @@ export class MembrosAdultosSolteirosComponent implements OnChanges {
 
   constructor(private raioxApiService: RaioxApiService, private authService: AuthService) {}
 
-  // Nível B não vê status de recomendação ao templo - ver mesmo comentário em
-  // missionarios-retornados.component.ts e memória project-raiox-matriz-acesso-ab-design.
+  // Nível B vê os cards de KPI e o gráfico normalmente - só não pode "detalhar" (botão
+  // "Detalhes" dos cards, pills de filtro por status e campo no detalhamento não
+  // renderizam). Ver mesmo comentário em missionarios-retornados.component.ts e memória
+  // project-raiox-matriz-acesso-ab-design.
   get isNivelB(): boolean {
     return this.authService.isNivelB();
   }
@@ -166,7 +166,7 @@ export class MembrosAdultosSolteirosComponent implements OnChanges {
     };
   }
 
-  recomendacaoClasse(valor: string | undefined): string {
+  recomendacaoClasse(valor: string): string {
     if (valor === 'Ativa') return 'rx-campo-positivo';
     if (valor === 'Vence este mês') return 'rx-campo-neutro';
     return 'rx-campo-negativo';

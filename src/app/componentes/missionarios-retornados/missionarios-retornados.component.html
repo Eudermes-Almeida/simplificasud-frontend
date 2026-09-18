@@ -27,7 +27,7 @@
       <span>Detalhes</span>
     </button>
   </li>
-  <li class="nav-item" role="presentation" *ngIf="!isNivelB">
+  <li class="nav-item" role="presentation">
     <button class="nav-link rx-tab-btn"
             [ngClass]="{ 'active': abaAtiva === 'grafico' }"
             (click)="mudarAba('grafico')"
@@ -57,8 +57,9 @@
         </button>
       </div>
 
-      <!-- 2. Inativos (total - recomendação ativa) - card não existe pro nível B -->
-      <div class="rx-kpi-card rx-kpi-negativo" *ngIf="!isNivelB">
+      <!-- 2. Inativos (total - recomendação ativa) - card visivel pro nivel B, so o botao
+      "Detalhes" (que filtra o detalhamento por status) e que nao renderiza -->
+      <div class="rx-kpi-card rx-kpi-negativo">
         <span class="rx-kpi-icon"><i class="bi bi-emoji-tear-fill"></i></span>
         <span class="rx-kpi-text">
           <span class="rx-kpi-value">
@@ -68,13 +69,14 @@
           <span class="rx-kpi-label">Inativos</span>
           <span class="rx-kpi-nota">(Recomendação ao Templo vencida)</span>
         </span>
-        <button type="button" class="rx-kpi-detalhar" (click)="detalharCard('inativos')">
+        <button type="button" class="rx-kpi-detalhar" *ngIf="!isNivelB" (click)="detalharCard('inativos')">
           Detalhes <i class="bi bi-arrow-right-short"></i>
         </button>
       </div>
 
-      <!-- 3. Recomendação ativa - card não existe pro nível B -->
-      <div class="rx-kpi-card rx-kpi-positivo" *ngIf="!isNivelB">
+      <!-- 3. Recomendação ativa - card visivel pro nivel B, so o botao "Detalhes" que
+      nao renderiza -->
+      <div class="rx-kpi-card rx-kpi-positivo">
         <span class="rx-kpi-icon"><i class="bi bi-bank2"></i></span>
         <span class="rx-kpi-text">
           <span class="rx-kpi-value">
@@ -84,7 +86,7 @@
           <span class="rx-kpi-label">Ativos</span>
           <span class="rx-kpi-nota">(Recomendação ao templo Ativa)</span>
         </span>
-        <button type="button" class="rx-kpi-detalhar" (click)="detalharCard('ativos')">
+        <button type="button" class="rx-kpi-detalhar" *ngIf="!isNivelB" (click)="detalharCard('ativos')">
           Detalhes <i class="bi bi-arrow-right-short"></i>
         </button>
       </div>
@@ -239,8 +241,8 @@
     </div>
   </div>
 
-  <!-- CONTEÚDO DA ABA GRÁFICO (não existe pro nível B) -->
-  <div class="tab-pane fade" [ngClass]="{ 'show active': abaAtiva === 'grafico' }" role="tabpanel" *ngIf="!isNivelB">
+  <!-- CONTEÚDO DA ABA GRÁFICO -->
+  <div class="tab-pane fade" [ngClass]="{ 'show active': abaAtiva === 'grafico' }" role="tabpanel">
     <div class="card border-0 shadow-sm my-3 mx-auto">
       <div class="card-body p-4">
 
