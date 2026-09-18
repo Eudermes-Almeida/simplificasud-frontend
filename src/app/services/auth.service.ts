@@ -57,6 +57,15 @@ export class AuthService {
     return this.sessao?.escopo ?? '';
   }
 
+  // Nível B = "Conselho"/"Sumo Conselho"/"Professores" (escopo termina em "-B", ex.
+  // "Estaca-B"/"Ala-B") — restringe status de recomendação e o card de Qualificação de
+  // Unidade. Ver memória project-raiox-matriz-acesso-ab-design. Mesmo enforcement já
+  // existe no backend (ContextoAutenticacao.isNivelB) — aqui é só pra adaptar a UI,
+  // o dado sensível já nem chega na resposta da API pro nível B.
+  isNivelB(): boolean {
+    return this.getEscopo().trim().toLowerCase().endsWith('-b');
+  }
+
   login(login: string, senha: string): Observable<LoginResponse> {
     return this.http
       .post<LoginResponse>(`${environment.apiUrl}/auth/login`, { login, senha })

@@ -10,6 +10,9 @@ export interface FrequenciaSacramentalDTO {
   frequencia: string;
 }
 
+// recomendacao: ausente (não só vazio) quando o líder logado é nível B (Conselho/
+// Sumo Conselho/Professores) - o backend nem manda a chave nesse caso. Ver
+// ContextoAutenticacao.isNivelB no backend e AuthService.isNivelB() aqui no front.
 export interface DetalhesConversosDTO {
   id: number;
   unidade: string;
@@ -20,7 +23,7 @@ export interface DetalhesConversosDTO {
   tem_chamado: string;
   ministradora: string;
   ministrador: string;
-  recomendacao: string;
+  recomendacao?: string;
   sacerdocio: string;
 }
 
@@ -30,7 +33,7 @@ export interface RapazesDTO {
   nome: string;
   idade: string;
   sacerdocio: string;
-  recomendacao_batisterio: string;
+  recomendacao_batisterio?: string;
 }
 
 export interface MocasDTO {
@@ -38,7 +41,7 @@ export interface MocasDTO {
   unidade: string;
   nome: string;
   idade: string;
-  recomendacao_batisterio: string;
+  recomendacao_batisterio?: string;
 }
 
 export interface CriancasDTO {
@@ -66,7 +69,7 @@ export interface HomensPreparadosDTO {
   tem_chamado: string;
   ministradora: string;
   ministrador: string;
-  recomendacao: string;
+  recomendacao?: string;
   sacerdocio: string;
 }
 
@@ -127,7 +130,7 @@ export interface MissionariosRetornadosDTO {
   solteiro: string;
   selado: string;
   matriculadoinstituto: string;
-  recomendacaotemplo: string;
+  recomendacaotemplo?: string;
   chamado: string;
   paismissao: string;
 }
@@ -139,7 +142,7 @@ export interface MembrosAdultosSolteirosDTO {
   sexo: string;
   idade: string;
   estadocivil: string;
-  recomendacaotemplo: string;
+  recomendacaotemplo?: string;
   paismissao: string;
   chamados: string;
 }

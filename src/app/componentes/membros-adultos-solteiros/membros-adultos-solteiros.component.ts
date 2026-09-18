@@ -1,12 +1,15 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MembrosAdultosSolteirosDTO, RaioxApiService } from '../../services/raiox-api.service';
+import { AuthService } from '../../services/auth.service';
 
 interface MembroDetalhe {
   nome: string;
   idade: string;
   unidade: string;
-  recomendacaoTemplo: string;
+  // Ausente (não vem do backend) pro nível B - ver isNivelB() abaixo e memória
+  // project-raiox-matriz-acesso-ab-design.
+  recomendacaoTemplo?: string;
   sexo: string;
   paisMissao: string;
   chamados: string[];
@@ -88,7 +91,13 @@ export class MembrosAdultosSolteirosComponent implements OnChanges {
     'Reino Unido': 'gb',
   };
 
-  constructor(private raioxApiService: RaioxApiService) {}
+  constructor(private raioxApiService: RaioxApiService, private authService: AuthService) {}
+
+  // Nível B não vê status de recomendação ao templo - ver mesmo comentário em
+  // missionarios-retornados.component.ts e memória project-raiox-matriz-acesso-ab-design.
+  get isNivelB(): boolean {
+    return this.authService.isNivelB();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['unidade'] && this.unidade) {
@@ -157,7 +166,7 @@ export class MembrosAdultosSolteirosComponent implements OnChanges {
     };
   }
 
-  recomendacaoClasse(valor: string): string {
+  recomendacaoClasse(valor: string | undefined): string {
     if (valor === 'Ativa') return 'rx-campo-positivo';
     if (valor === 'Vence este mês') return 'rx-campo-neutro';
     return 'rx-campo-negativo';

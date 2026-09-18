@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { forkJoin } from 'rxjs';
 import { RaioxApiService } from '../../services/raiox-api.service';
+import { AuthService } from '../../services/auth.service';
 
 type AbaJovens = 'resumo' | 'rapazes' | 'mocas' | 'criancas';
 
@@ -98,7 +99,15 @@ export class JovensCriancasComponent implements OnChanges {
   // Filtro da aba Crianças (berçário) — mesma lógica de reset por unidade dos outros dois.
   filtroCrianca: FiltroCrianca = 'todos';
 
-  constructor(private raioxApiService: RaioxApiService) {}
+  constructor(private raioxApiService: RaioxApiService, private authService: AuthService) {}
+
+  // Nível B não vê status de recomendação de batistério no detalhamento (Rapazes/Moças) -
+  // os cards de Resumo (recomendacaoBatisterio somado da tabela resumojovens) continuam
+  // corretos, essa restrição é só sobre o campo por pessoa. Ver memória
+  // project-raiox-matriz-acesso-ab-design.
+  get isNivelB(): boolean {
+    return this.authService.isNivelB();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['unidade'] && this.unidade) {

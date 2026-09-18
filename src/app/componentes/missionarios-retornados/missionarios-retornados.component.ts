@@ -1,12 +1,15 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MissionariosRetornadosDTO, RaioxApiService } from '../../services/raiox-api.service';
+import { AuthService } from '../../services/auth.service';
 
 interface MissionarioDetalhe {
   nome: string;
   idade: string;
   unidade: string;
-  recomendacaoTemplo: string;
+  // Ausente (não vem do backend) pro nível B - ver isNivelB() abaixo e memória
+  // project-raiox-matriz-acesso-ab-design.
+  recomendacaoTemplo?: string;
   selado: boolean;
   estadoCivil: string;
   paisMissao: string;
@@ -92,7 +95,17 @@ export class MissionariosRetornadosComponent implements OnChanges {
     'Portugal': 'pt',
   };
 
-  constructor(private raioxApiService: RaioxApiService) {}
+  constructor(private raioxApiService: RaioxApiService, private authService: AuthService) {}
+
+  // Nível B (Conselho/Sumo Conselho) não vê status de recomendação ao templo - nem os
+  // cards de KPI Ativos/Inativos, nem o gráfico, nem o campo no detalhamento, nem o filtro
+  // "Ativos e Sem Chamado". O backend já nem manda o campo recomendacaotemplo pra esse
+  // nível (ver ContextoAutenticacao.isNivelB no backend); aqui só ajusta a tela pra não
+  // mostrar cards/filtros que ficariam com número errado (zerado) sem esse dado. Ver
+  // memória project-raiox-matriz-acesso-ab-design.
+  get isNivelB(): boolean {
+    return this.authService.isNivelB();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['unidade'] && this.unidade) {
@@ -159,7 +172,7 @@ export class MissionariosRetornadosComponent implements OnChanges {
     };
   }
 
-  recomendacaoClasse(valor: string): string {
+  recomendacaoClasse(valor: string | undefined): string {
     if (valor === 'Ativa') return 'rx-campo-positivo';
     if (valor === 'Vence este mês') return 'rx-campo-neutro';
     return 'rx-campo-negativo';

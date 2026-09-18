@@ -27,7 +27,7 @@
       <span>Detalhes</span>
     </button>
   </li>
-  <li class="nav-item" role="presentation">
+  <li class="nav-item" role="presentation" *ngIf="!isNivelB">
     <button class="nav-link rx-tab-btn"
             [ngClass]="{ 'active': abaAtiva === 'grafico' }"
             (click)="mudarAba('grafico')"
@@ -54,8 +54,8 @@
         </span>
       </div>
 
-      <!-- 2. Inativos (total - recomendação ativa) -->
-      <div class="rx-kpi-card rx-kpi-negativo">
+      <!-- 2. Inativos (total - recomendação ativa) - card não existe pro nível B -->
+      <div class="rx-kpi-card rx-kpi-negativo" *ngIf="!isNivelB">
         <span class="rx-kpi-icon"><i class="bi bi-emoji-tear-fill"></i></span>
         <span class="rx-kpi-text">
           <span class="rx-kpi-value">
@@ -69,8 +69,8 @@
         </button>
       </div>
 
-      <!-- 3. Recomendação ativa -->
-      <div class="rx-kpi-card rx-kpi-positivo">
+      <!-- 3. Recomendação ativa - card não existe pro nível B -->
+      <div class="rx-kpi-card rx-kpi-positivo" *ngIf="!isNivelB">
         <span class="rx-kpi-icon"><i class="bi bi-bank2"></i></span>
         <span class="rx-kpi-text">
           <span class="rx-kpi-value">
@@ -147,19 +147,19 @@
                (change)="mudarFiltroAtivo(null)">
         <span>Todos <span class="rx-filtro-radio-contagem">({{ contagemFiltro.todos }})</span></span>
       </label>
-      <label class="rx-filtro-radio rx-filtro-radio-ativa" [ngClass]="{ 'active': filtroAtivo === 'ativa' }">
+      <label class="rx-filtro-radio rx-filtro-radio-ativa" *ngIf="!isNivelB" [ngClass]="{ 'active': filtroAtivo === 'ativa' }">
         <input type="radio" name="filtroRecomendacaoMembrosSolteiros" value="ativa"
                [checked]="filtroAtivo === 'ativa'"
                (change)="mudarFiltroAtivo('ativa')">
         <span>Recomendação Ativa <span class="rx-filtro-radio-contagem">({{ contagemFiltro.ativa }})</span></span>
       </label>
-      <label class="rx-filtro-radio rx-filtro-radio-vencida" [ngClass]="{ 'active': filtroAtivo === 'vencida' }">
+      <label class="rx-filtro-radio rx-filtro-radio-vencida" *ngIf="!isNivelB" [ngClass]="{ 'active': filtroAtivo === 'vencida' }">
         <input type="radio" name="filtroRecomendacaoMembrosSolteiros" value="vencida"
                [checked]="filtroAtivo === 'vencida'"
                (change)="mudarFiltroAtivo('vencida')">
         <span>Recomendação Vencida ou não emitida <span class="rx-filtro-radio-contagem">({{ contagemFiltro.vencida }})</span></span>
       </label>
-      <label class="rx-filtro-radio" [ngClass]="{ 'active': filtroAtivo === 'ativaSemChamado' }">
+      <label class="rx-filtro-radio" *ngIf="!isNivelB" [ngClass]="{ 'active': filtroAtivo === 'ativaSemChamado' }">
         <input type="radio" name="filtroRecomendacaoMembrosSolteiros" value="ativaSemChamado"
                [checked]="filtroAtivo === 'ativaSemChamado'"
                (change)="mudarFiltroAtivo('ativaSemChamado')">
@@ -176,7 +176,7 @@
         </div>
 
         <div class="rx-pessoa-campos">
-          <div class="rx-pessoa-campo" [ngClass]="recomendacaoClasse(pessoa.recomendacaoTemplo)">
+          <div class="rx-pessoa-campo" *ngIf="!isNivelB" [ngClass]="recomendacaoClasse(pessoa.recomendacaoTemplo)">
             <span class="rx-pessoa-campo-icon"><i class="bi bi-bank2"></i></span>
             <span class="rx-pessoa-campo-texto">
               <span class="rx-pessoa-campo-label">Recomendação ao templo</span>
@@ -227,8 +227,8 @@
     </div>
   </div>
 
-  <!-- CONTEÚDO DA ABA GRÁFICO -->
-  <div class="tab-pane fade" [ngClass]="{ 'show active': abaAtiva === 'grafico' }" role="tabpanel">
+  <!-- CONTEÚDO DA ABA GRÁFICO (não existe pro nível B) -->
+  <div class="tab-pane fade" [ngClass]="{ 'show active': abaAtiva === 'grafico' }" role="tabpanel" *ngIf="!isNivelB">
     <div class="card border-0 shadow-sm my-3 mx-auto">
       <div class="card-body p-4">
 

@@ -90,8 +90,8 @@
           </button>
         </div>
 
-        <!-- 4. Com Recomendação ao Templo -->
-        <div class="rx-kpi-card">
+        <!-- 4. Com Recomendação ao Templo - card não existe pro nível B -->
+        <div class="rx-kpi-card" *ngIf="!isNivelB">
           <span class="rx-kpi-icon"><i class="bi bi-bank2"></i></span>
           <span class="rx-kpi-text">
             <span class="rx-kpi-value">
@@ -185,7 +185,7 @@
               </span>
             </div>
 
-            <div class="rx-pessoa-campo" [ngClass]="recomendacaoEmitida(pessoa.recomendacao) ? 'rx-campo-positivo' : 'rx-campo-neutro'">
+            <div class="rx-pessoa-campo" *ngIf="!isNivelB" [ngClass]="recomendacaoEmitida(pessoa.recomendacao) ? 'rx-campo-positivo' : 'rx-campo-neutro'">
               <span class="rx-pessoa-campo-icon"><i class="bi bi-bank2"></i></span>
               <span class="rx-pessoa-campo-texto">
                 <span class="rx-pessoa-campo-label">Recomendação</span>

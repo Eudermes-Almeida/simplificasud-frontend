@@ -127,7 +127,7 @@
           </span>
         </div>
 
-        <div class="rx-pessoa-campo" [ngClass]="statusRecomendacaoBatisterio(pessoa.recomendacaoBatisterio).classe">
+        <div class="rx-pessoa-campo" *ngIf="!isNivelB" [ngClass]="statusRecomendacaoBatisterio(pessoa.recomendacaoBatisterio).classe">
           <span class="rx-pessoa-campo-icon"><i class="bi bi-droplet-fill"></i></span>
           <span class="rx-pessoa-campo-texto">
             <span class="rx-pessoa-campo-label">Recomendação Batistério</span>
@@ -180,7 +180,7 @@
       </div>
 
       <div class="rx-pessoa-campos">
-        <div class="rx-pessoa-campo" [ngClass]="statusRecomendacaoBatisterio(pessoa.recomendacaoBatisterio).classe">
+        <div class="rx-pessoa-campo" *ngIf="!isNivelB" [ngClass]="statusRecomendacaoBatisterio(pessoa.recomendacaoBatisterio).classe">
           <span class="rx-pessoa-campo-icon"><i class="bi bi-droplet-fill"></i></span>
           <span class="rx-pessoa-campo-texto">
             <span class="rx-pessoa-campo-label">Recomendação Batistério</span>

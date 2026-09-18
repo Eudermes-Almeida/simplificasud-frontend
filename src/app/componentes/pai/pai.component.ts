@@ -50,7 +50,15 @@ export class PaiComponent {
   }
 
   get escopoRestrito(): boolean {
-    return this.authService.getEscopo().toLowerCase() === 'ala';
+    // Prefixo, não igualdade exata: desde 2026-09-18 escopo guarda Estaca-A/Estaca-B/
+    // Ala-A/Ala-B (ver memória project-raiox-matriz-acesso-ab-design) - "ala" sozinho não
+    // aparece mais pra líder nenhum. Mesma correção já aplicada no AutorizacaoFilter do
+    // backend.
+    return this.authService.getEscopo().trim().toLowerCase().startsWith('ala');
+  }
+
+  get isNivelB(): boolean {
+    return this.authService.isNivelB();
   }
 
   get nomeLogado(): string {

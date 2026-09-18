@@ -1,6 +1,18 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DetalhesConversosDTO, RaioxApiService } from '../../services/raiox-api.service';
+import { AuthService } from '../../services/auth.service';
+
+// Forma de DetalhesConversosDTO depois de buscarDados normalizar os campos opcionais
+// (recomendacao ausente vira 'Não Emitida' etc) — usado como parâmetro de
+// calcularResumo/mapDetalhe/mapMinistracao, que sempre recebem o dado já normalizado,
+// nunca o DTO cru da API.
+type DetalhesConversosNormalizado = DetalhesConversosDTO & {
+  sacerdocio: string;
+  recomendacao: string;
+  ministrador: string;
+  ministradora: string;
+};
 
 interface ConversoDetalhe {
   nome: string;
@@ -86,7 +98,14 @@ export class RecemConversosComponent implements OnChanges {
     ministradores: 'Com ministradores',
   };
 
-  constructor(private raioxApiService: RaioxApiService) {}
+  constructor(private raioxApiService: RaioxApiService, private authService: AuthService) {}
+
+  // Nível B não vê status de recomendação ao templo - o card "Com recomendação ao templo"
+  // ficaria com número errado (zerado) sem esse dado, e o campo some do detalhamento. Ver
+  // memória project-raiox-matriz-acesso-ab-design.
+  get isNivelB(): boolean {
+    return this.authService.isNivelB();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['unidade'] && this.unidade) {
@@ -127,7 +146,7 @@ export class RecemConversosComponent implements OnChanges {
     });
   }
 
-  private calcularResumo(dados: DetalhesConversosDTO[]): typeof this.resumoConversos {
+  private calcularResumo(dados: DetalhesConversosNormalizado[]): typeof this.resumoConversos {
     const total = dados.length;
     const pct = (contagem: number, base: number = total) => base > 0 ? Math.round((contagem / base) * 100) : 0;
 
@@ -149,7 +168,7 @@ export class RecemConversosComponent implements OnChanges {
     };
   }
 
-  private mapDetalhe(dto: DetalhesConversosDTO): ConversoDetalhe {
+  private mapDetalhe(dto: DetalhesConversosNormalizado): ConversoDetalhe {
     return {
       nome: dto.nome,
       idade: Number(dto.idade),

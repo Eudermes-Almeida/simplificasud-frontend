@@ -27,7 +27,7 @@
       <span>Detalhes</span>
     </button>
   </li>
-  <li class="nav-item" role="presentation">
+  <li class="nav-item" role="presentation" *ngIf="!isNivelB">
     <button class="nav-link rx-tab-btn"
             [ngClass]="{ 'active': abaAtiva === 'grafico' }"
             (click)="mudarAba('grafico')"
@@ -57,8 +57,8 @@
         </button>
       </div>
 
-      <!-- 2. Inativos (total - recomendação ativa) -->
-      <div class="rx-kpi-card rx-kpi-negativo">
+      <!-- 2. Inativos (total - recomendação ativa) - card não existe pro nível B -->
+      <div class="rx-kpi-card rx-kpi-negativo" *ngIf="!isNivelB">
         <span class="rx-kpi-icon"><i class="bi bi-emoji-tear-fill"></i></span>
         <span class="rx-kpi-text">
           <span class="rx-kpi-value">
@@ -73,8 +73,8 @@
         </button>
       </div>
 
-      <!-- 3. Recomendação ativa -->
-      <div class="rx-kpi-card rx-kpi-positivo">
+      <!-- 3. Recomendação ativa - card não existe pro nível B -->
+      <div class="rx-kpi-card rx-kpi-positivo" *ngIf="!isNivelB">
         <span class="rx-kpi-icon"><i class="bi bi-bank2"></i></span>
         <span class="rx-kpi-text">
           <span class="rx-kpi-value">
@@ -171,7 +171,7 @@
                (change)="mudarFiltroExtra('todos')">
         <span>Todos <span class="rx-filtro-radio-contagem">({{ contagemFiltroExtra.todos }})</span></span>
       </label>
-      <label class="rx-filtro-radio" [ngClass]="{ 'active': filtroExtra === 'ativoSemChamado' }">
+      <label class="rx-filtro-radio" *ngIf="!isNivelB" [ngClass]="{ 'active': filtroExtra === 'ativoSemChamado' }">
         <input type="radio" name="filtroExtraMissionarios" value="ativoSemChamado"
                [checked]="filtroExtra === 'ativoSemChamado'"
                (change)="mudarFiltroExtra('ativoSemChamado')">
@@ -188,7 +188,7 @@
         </div>
 
         <div class="rx-pessoa-campos">
-          <div class="rx-pessoa-campo" [ngClass]="recomendacaoClasse(pessoa.recomendacaoTemplo)">
+          <div class="rx-pessoa-campo" *ngIf="!isNivelB" [ngClass]="recomendacaoClasse(pessoa.recomendacaoTemplo)">
             <span class="rx-pessoa-campo-icon"><i class="bi bi-bank2"></i></span>
             <span class="rx-pessoa-campo-texto">
               <span class="rx-pessoa-campo-label">Recomendação ao templo</span>
@@ -239,8 +239,8 @@
     </div>
   </div>
 
-  <!-- CONTEÚDO DA ABA GRÁFICO -->
-  <div class="tab-pane fade" [ngClass]="{ 'show active': abaAtiva === 'grafico' }" role="tabpanel">
+  <!-- CONTEÚDO DA ABA GRÁFICO (não existe pro nível B) -->
+  <div class="tab-pane fade" [ngClass]="{ 'show active': abaAtiva === 'grafico' }" role="tabpanel" *ngIf="!isNivelB">
     <div class="card border-0 shadow-sm my-3 mx-auto">
       <div class="card-body p-4">
 

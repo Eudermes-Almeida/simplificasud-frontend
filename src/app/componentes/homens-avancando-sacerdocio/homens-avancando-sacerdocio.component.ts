@@ -1,6 +1,16 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HomensPreparadosDTO, RaioxApiService } from '../../services/raiox-api.service';
+import { AuthService } from '../../services/auth.service';
+
+// Forma de HomensPreparadosDTO depois de buscarDados normalizar os campos opcionais
+// (recomendacao ausente vira 'Não Emitida' etc) — mesmo padrão de
+// recem-conversos.component.ts.
+type HomensPreparadosNormalizado = HomensPreparadosDTO & {
+  sacerdocio: string;
+  recomendacao: string;
+  ministrador: string;
+};
 
 interface HomemDetalhe {
   nome: string;
@@ -80,7 +90,13 @@ export class HomensAvancandoSacerdocioComponent implements OnChanges {
     ministradores: 'Com ministradores',
   };
 
-  constructor(private raioxApiService: RaioxApiService) {}
+  constructor(private raioxApiService: RaioxApiService, private authService: AuthService) {}
+
+  // Nível B não vê status de recomendação ao templo - mesmo motivo de
+  // recem-conversos.component.ts. Ver memória project-raiox-matriz-acesso-ab-design.
+  get isNivelB(): boolean {
+    return this.authService.isNivelB();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['unidade'] && this.unidade) {
@@ -118,7 +134,7 @@ export class HomensAvancandoSacerdocioComponent implements OnChanges {
     });
   }
 
-  private calcularResumo(dados: HomensPreparadosDTO[]): typeof this.resumoHomens {
+  private calcularResumo(dados: HomensPreparadosNormalizado[]): typeof this.resumoHomens {
     const total = dados.length;
     const pct = (contagem: number, base: number = total) => base > 0 ? Math.round((contagem / base) * 100) : 0;
 
@@ -138,7 +154,7 @@ export class HomensAvancandoSacerdocioComponent implements OnChanges {
     };
   }
 
-  private mapDetalhe(dto: HomensPreparadosDTO): HomemDetalhe {
+  private mapDetalhe(dto: HomensPreparadosNormalizado): HomemDetalhe {
     return {
       nome: dto.nome,
       idade: Number(dto.idade),

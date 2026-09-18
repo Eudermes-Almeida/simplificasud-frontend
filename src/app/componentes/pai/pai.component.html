@@ -189,8 +189,9 @@
       </div>
     </div>
 
-    <!-- ITEM 8: Qualificação da Unidade -->
-    <div ngbAccordionItem="itemCinco" class="raiox-card">
+    <!-- ITEM 8: Qualificação da Unidade (card não existe pro nível B - ver memória
+    project-raiox-matriz-acesso-ab-design) -->
+    <div ngbAccordionItem="itemCinco" class="raiox-card" *ngIf="!isNivelB">
       <h2 ngbAccordionHeader>
         <button ngbAccordionButton class="raiox-toggle">
           <span class="raiox-icon"><i class="bi bi-patch-check-fill"></i></span>
