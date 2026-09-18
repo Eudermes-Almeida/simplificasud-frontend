@@ -226,6 +226,28 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1;
 }
 
+/* Substitui o botão "Detalhes" nos cards de status de recomendação pro nível B
+   (Conselho/Sumo Conselho/Professores) — mesma posição/tamanho do botão, mas como aviso
+   em vez de ação clicável (ver memória project-raiox-matriz-acesso-ab-design). */
+.rx-kpi-restrito {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.2rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 0.5rem;
+  background: var(--rx-50);
+  color: var(--rx-700);
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.rx-kpi-restrito i {
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
 /* Aviso de filtro ativo na aba Detalhes, com botão pra voltar a ver todo mundo. */
 .rx-filtro-ativo {
   display: flex;
@@ -296,7 +318,8 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 0.85rem;
   }
 
-  .rx-kpi-detalhar {
+  .rx-kpi-detalhar,
+  .rx-kpi-restrito {
     flex-basis: 100%;
     font-size: 0.72rem;
   }

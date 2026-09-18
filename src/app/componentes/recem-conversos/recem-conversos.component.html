@@ -115,6 +115,9 @@
         <button type="button" class="rx-kpi-detalhar" *ngIf="!isNivelB" (click)="detalharCard('recomendacao')">
           Detalhes <i class="bi bi-arrow-right-short"></i>
         </button>
+        <span class="rx-kpi-restrito" *ngIf="isNivelB">
+          <i class="bi bi-lock-fill"></i> Detalhamento permitido somente para Presidência de Estaca e Bispados
+        </span>
       </div>
 
       <!-- 6. Receberam um Chamado -->

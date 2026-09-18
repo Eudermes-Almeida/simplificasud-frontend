@@ -68,6 +68,9 @@
         <button type="button" class="rx-kpi-detalhar" *ngIf="!isNivelB" (click)="detalharCard('vencida')">
           Detalhes <i class="bi bi-arrow-right-short"></i>
         </button>
+        <span class="rx-kpi-restrito" *ngIf="isNivelB">
+          <i class="bi bi-lock-fill"></i> Detalhamento permitido somente para Presidência de Estaca e Bispados
+        </span>
       </div>
 
       <!-- 3. Recomendação ativa - card visivel pro nivel B, so o botao "Detalhes" que
@@ -84,6 +87,9 @@
         <button type="button" class="rx-kpi-detalhar" *ngIf="!isNivelB" (click)="detalharCard('ativa')">
           Detalhes <i class="bi bi-arrow-right-short"></i>
         </button>
+        <span class="rx-kpi-restrito" *ngIf="isNivelB">
+          <i class="bi bi-lock-fill"></i> Detalhamento permitido somente para Presidência de Estaca e Bispados
+        </span>
       </div>
 
       <!-- 4. Com chamados -->
