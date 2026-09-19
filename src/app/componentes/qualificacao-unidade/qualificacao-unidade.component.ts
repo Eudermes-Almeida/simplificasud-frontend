@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RaioxApiService } from '../../services/raiox-api.service';
+import { AuthService } from '../../services/auth.service';
 
 interface IndicadorQualificacao {
   nome: string;
@@ -38,10 +39,19 @@ export class QualificacaoUnidadeComponent implements OnChanges {
     { nome: 'Frequência Sacramental', icone: 'bi-people-fill', necessario: METAS_ALA.frequenciaSacramental, atual: 0 }
   ];
 
-  constructor(private raioxApiService: RaioxApiService) {}
+  constructor(private raioxApiService: RaioxApiService, private authService: AuthService) {}
+
+  // Card inteiro é renderizado (acordeon aparece) pro nível B, mas o conteúdo é bloqueado
+  // no template - esse dado (total de fichas/dizimistas/frequência da unidade) é só pra
+  // Bispados e Presidência de Estaca. Nem chama a API pra esse nível, já que o backend
+  // responde 403 mesmo (ver QualificacaoUnidadeResource). Ver memória
+  // project-raiox-matriz-acesso-ab-design.
+  get isNivelB(): boolean {
+    return this.authService.isNivelB();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['unidade'] && this.unidade) {
+    if (changes['unidade'] && this.unidade && !this.isNivelB) {
       this.buscarDados();
     }
   }

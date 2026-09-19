@@ -248,6 +248,28 @@ h1, h2, h3, h4, h5, h6 {
   flex-shrink: 0;
 }
 
+/* Mensagem de bloqueio de card inteiro pro nível B (ex.: Qualificação da Unidade) - mesmo
+   padrão visual de caixa que .rx-filtro-ativo, mas sem ação (só informativo). */
+.rx-acesso-bloqueado {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  background: var(--rx-50);
+  border: 1px solid var(--rx-100);
+  border-radius: 0.85rem;
+  padding: 1.1rem 1.25rem;
+  margin: 0.5rem 0 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--rx-900);
+}
+
+.rx-acesso-bloqueado i {
+  font-size: 1.4rem;
+  color: var(--rx-700);
+  flex-shrink: 0;
+}
+
 /* Aviso de filtro ativo na aba Detalhes, com botão pra voltar a ver todo mundo. */
 .rx-filtro-ativo {
   display: flex;

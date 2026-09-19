@@ -5,46 +5,55 @@
     Qualificação da Unidade
   </h5>
 
-  <div class="d-flex align-items-center gap-2 text-muted my-3" *ngIf="carregando">
-    <div class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
-    <span>Carregando dados de qualificação da unidade...</span>
+  <!-- Nível B (Conselho/Sumo Conselho/Professores) - dado não chega a ser buscado, ver
+  isNivelB() no .ts -->
+  <div class="rx-acesso-bloqueado" *ngIf="isNivelB">
+    <i class="bi bi-lock-fill"></i>
+    <span>Dados acessíveis somente para Bispados e Presidência de Estaca</span>
   </div>
 
-  <div class="alert alert-danger my-3" role="alert" *ngIf="erroCarregamento">
-    {{ erroCarregamento }}
-  </div>
-
-  <!-- Grade com os 3 Cards de Indicadores -->
-  <div class="rx-kpi-grid mb-4">
-
-    <div class="rx-kpi-card" *ngFor="let item of indicadores"
-         [ngClass]="cumprido(item) ? 'rx-kpi-positivo' : 'rx-kpi-negativo'">
-
-      <span class="rx-qualif-titulo">{{ item.nome }}</span>
-
-      <div class="rx-qualif-topo">
-        <span class="rx-kpi-icon"><i class="bi" [ngClass]="item.icone"></i></span>
-        <span class="rx-selo" [ngClass]="cumprido(item) ? 'rx-selo-ok' : 'rx-selo-pendente'">
-          <i class="bi" [ngClass]="cumprido(item) ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'"></i>
-          {{ cumprido(item) ? 'Cumprido' : 'Faltam ' + faltam(item) }}
-        </span>
-      </div>
-
-      <span class="rx-kpi-value">{{ item.atual }}</span>
-
-      <div class="rx-qualif-meta">
-        Necessário: <strong>{{ item.necessario }}</strong>
-      </div>
+  <ng-container *ngIf="!isNivelB">
+    <div class="d-flex align-items-center gap-2 text-muted my-3" *ngIf="carregando">
+      <div class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
+      <span>Carregando dados de qualificação da unidade...</span>
     </div>
 
-  </div>
+    <div class="alert alert-danger my-3" role="alert" *ngIf="erroCarregamento">
+      {{ erroCarregamento }}
+    </div>
 
-  <!-- Banner do Status de Resultado Final -->
-  <div class="card border-0 text-white text-center py-3 fw-bold shadow-sm"
-       [ngClass]="isQualificada ? 'bg-success' : 'bg-danger'"
-       style="border-radius: 12px; letter-spacing: 0.05rem; font-size: 1.1rem;">
-    <i class="bi" [ngClass]="isQualificada ? 'bi-check-circle-fill me-2' : 'bi-exclamation-triangle-fill me-2'"></i>
-    {{ resultadoTexto | uppercase }}
-  </div>
+    <!-- Grade com os 3 Cards de Indicadores -->
+    <div class="rx-kpi-grid mb-4">
+
+      <div class="rx-kpi-card" *ngFor="let item of indicadores"
+           [ngClass]="cumprido(item) ? 'rx-kpi-positivo' : 'rx-kpi-negativo'">
+
+        <span class="rx-qualif-titulo">{{ item.nome }}</span>
+
+        <div class="rx-qualif-topo">
+          <span class="rx-kpi-icon"><i class="bi" [ngClass]="item.icone"></i></span>
+          <span class="rx-selo" [ngClass]="cumprido(item) ? 'rx-selo-ok' : 'rx-selo-pendente'">
+            <i class="bi" [ngClass]="cumprido(item) ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'"></i>
+            {{ cumprido(item) ? 'Cumprido' : 'Faltam ' + faltam(item) }}
+          </span>
+        </div>
+
+        <span class="rx-kpi-value">{{ item.atual }}</span>
+
+        <div class="rx-qualif-meta">
+          Necessário: <strong>{{ item.necessario }}</strong>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Banner do Status de Resultado Final -->
+    <div class="card border-0 text-white text-center py-3 fw-bold shadow-sm"
+         [ngClass]="isQualificada ? 'bg-success' : 'bg-danger'"
+         style="border-radius: 12px; letter-spacing: 0.05rem; font-size: 1.1rem;">
+      <i class="bi" [ngClass]="isQualificada ? 'bi-check-circle-fill me-2' : 'bi-exclamation-triangle-fill me-2'"></i>
+      {{ resultadoTexto | uppercase }}
+    </div>
+  </ng-container>
 
 </div>

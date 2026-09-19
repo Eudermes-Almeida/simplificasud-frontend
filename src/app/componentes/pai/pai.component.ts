@@ -57,10 +57,6 @@ export class PaiComponent {
     return this.authService.getEscopo().trim().toLowerCase().startsWith('ala');
   }
 
-  get isNivelB(): boolean {
-    return this.authService.isNivelB();
-  }
-
   get nomeLogado(): string {
     return this.authService.getNome();
   }
