@@ -1,0 +1,87 @@
+.rx-admin-sair-btn {
+  /* fixed (não absolute) de propósito: o formulário é longo (6 campos), e um botão
+     posicionado só em relação ao cabeçalho desaparecia da tela ao rolar pra baixo até
+     Salvar/Remover Acesso -- fixed mantém ele sempre alcançável, em qualquer scroll. */
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 20;
+  background: var(--rx-700);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.82rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px -4px rgba(15, 44, 89, 0.45);
+}
+
+.rx-admin-sair-btn:hover {
+  background: var(--rx-900);
+}
+
+.rx-admin-card {
+  max-width: 460px;
+}
+
+.rx-auth-campo select {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--rx-200);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  background: #fff;
+}
+
+.rx-auth-campo select:focus {
+  outline: none;
+  border-color: var(--rx-500);
+}
+
+.rx-admin-divisor {
+  border: none;
+  border-top: 1px solid var(--rx-100);
+  margin: 1.5rem 0;
+}
+
+.rx-admin-mensagem {
+  background: var(--rx-50);
+  color: var(--rx-900);
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 480px) {
+  .rx-admin-card {
+    max-width: 100%;
+  }
+}
+
+.rx-admin-modal-fundo {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+  padding: 1rem;
+}
+
+.rx-admin-modal {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  max-width: 360px;
+  width: 100%;
+  box-shadow: 0 20px 40px -12px rgba(15, 44, 89, 0.35);
+}
+
+.rx-admin-modal-texto {
+  color: var(--rx-900);
+  font-size: 1rem;
+  margin-bottom: 1.25rem;
+  text-align: center;
+}

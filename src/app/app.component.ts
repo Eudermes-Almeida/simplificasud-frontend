@@ -4,14 +4,15 @@ import { RouterOutlet } from '@angular/router';
 import { PaiComponent } from './componentes/pai/pai.component';
 import { LoginSenhaComponent } from './componentes/login-senha/login-senha.component';
 import { PrimeiroAcessoComponent } from './componentes/primeiro-acesso/primeiro-acesso.component';
+import { AdminPerfisComponent } from './componentes/admin-perfis/admin-perfis.component';
 import { AuthService } from './services/auth.service';
 
-type Tela = 'login' | 'primeiro-acesso' | 'dashboard';
+type Tela = 'login' | 'primeiro-acesso' | 'dashboard' | 'admin-perfis';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, PaiComponent, LoginSenhaComponent, PrimeiroAcessoComponent],
+  imports: [CommonModule, RouterOutlet, PaiComponent, LoginSenhaComponent, PrimeiroAcessoComponent, AdminPerfisComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -20,7 +21,7 @@ export class AppComponent {
 
   // No servidor (SSR/prerender) localStorage não existe, então estaAutenticado() sempre
   // volta false ali -- o cliente reavalia certo antes da primeira pintura, mas por isso
-  // as 3 telas abaixo usam ngSkipHydration (mesmo motivo do <app-pai> original: Angular
+  // as telas abaixo usam ngSkipHydration (mesmo motivo do <app-pai> original: Angular
   // não deve tentar reconciliar o DOM pré-renderizado nesta região).
   tela: Tela;
 
@@ -30,7 +31,7 @@ export class AppComponent {
   mensagemLogin = '';
 
   constructor(private authService: AuthService) {
-    this.tela = this.authService.estaAutenticado() ? 'dashboard' : 'login';
+    this.tela = this.telaInicialAutenticado();
 
     this.authService.sessaoExpirada$.subscribe(() => {
       this.mensagemLogin = 'Sua sessão expirou. Faça login novamente.';
@@ -40,7 +41,17 @@ export class AppComponent {
 
   aoAutenticar(): void {
     this.mensagemLogin = '';
-    this.tela = 'dashboard';
+    this.tela = this.authService.isMaster() ? 'admin-perfis' : 'dashboard';
+  }
+
+  // Perfil "Administrador Master" (ver memória project-raiox-admin-perfis) nunca vê o
+  // dashboard normal -- só a tela de administração de perfis, tanto no login quanto ao
+  // recarregar a página com uma sessão já salva.
+  private telaInicialAutenticado(): Tela {
+    if (!this.authService.estaAutenticado()) {
+      return 'login';
+    }
+    return this.authService.isMaster() ? 'admin-perfis' : 'dashboard';
   }
 
   irParaPrimeiroAcesso(): void {

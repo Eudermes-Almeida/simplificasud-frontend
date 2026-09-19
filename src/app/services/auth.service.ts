@@ -66,6 +66,13 @@ export class AuthService {
     return this.getEscopo().trim().toLowerCase().endsWith('-b');
   }
 
+  // Perfil "Administrador Master" (ver memória project-raiox-admin-perfis) -- não é um
+  // líder normal, só administra os perfis dos demais. AppComponent usa isto pra mandar
+  // direto pra tela de administração em vez do dashboard, e nunca deixá-lo ver o dashboard.
+  isMaster(): boolean {
+    return this.getEscopo().trim().toLowerCase() === 'master';
+  }
+
   login(login: string, senha: string): Observable<LoginResponse> {
     return this.http
       .post<LoginResponse>(`${environment.apiUrl}/auth/login`, { login, senha })

@@ -1,0 +1,109 @@
+<div class="rx-auth-tela">
+  <header class="rx-auth-hero">
+    <button type="button" class="rx-admin-sair-btn" (click)="sair.emit()">
+      <i class="bi bi-box-arrow-right"></i> Sair
+    </button>
+    <img src="assets/logo-simplifica-sud.jpg" alt="Simplifica Sud" class="rx-auth-logo" />
+    <p class="rx-auth-subtitle">Administração de Perfis</p>
+  </header>
+
+  <div class="rx-auth-card rx-admin-card">
+    <h2 class="rx-auth-card-titulo">Buscar perfil existente</h2>
+
+    <div class="rx-auth-campo">
+      <label for="registroBuscaInput">Registro de membro</label>
+      <input
+        id="registroBuscaInput"
+        type="text"
+        inputmode="numeric"
+        maxlength="13"
+        [ngModel]="registromembro"
+        (ngModelChange)="onRegistroInput($event)"
+        (keyup.enter)="buscar()"
+        [disabled]="carregando"
+        placeholder="000-0000-0000" />
+    </div>
+
+    <button type="button" class="rx-auth-btn rx-auth-btn-secundario" [disabled]="carregando" (click)="buscar()">
+      Buscar
+    </button>
+
+    <hr class="rx-admin-divisor" />
+
+    <h2 class="rx-auth-card-titulo">{{ liderId ? 'Editar perfil' : 'Novo perfil' }}</h2>
+
+    <div class="rx-auth-campo">
+      <label for="nomeInput">Nome</label>
+      <input id="nomeInput" type="text" [(ngModel)]="nome" [disabled]="carregando" placeholder="Nome completo" />
+    </div>
+
+    <div class="rx-auth-campo">
+      <label for="unidadeSelect">Unidade</label>
+      <select id="unidadeSelect" [(ngModel)]="unidade" [disabled]="carregando">
+        <option value="" disabled>Selecione</option>
+        <option *ngFor="let u of unidades" [value]="u">{{ u }}</option>
+      </select>
+    </div>
+
+    <div class="rx-auth-campo">
+      <label for="escopoSelect">Escopo</label>
+      <select id="escopoSelect" [(ngModel)]="escopo" [disabled]="carregando">
+        <option value="" disabled>Selecione</option>
+        <option *ngFor="let e of escopos" [value]="e">{{ e }}</option>
+      </select>
+    </div>
+
+    <div class="rx-auth-campo">
+      <label for="nascimentoAdminInput">Data de nascimento</label>
+      <input
+        id="nascimentoAdminInput"
+        type="text"
+        inputmode="numeric"
+        maxlength="10"
+        [ngModel]="nascimento"
+        (ngModelChange)="onNascimentoInput($event)"
+        [disabled]="carregando"
+        placeholder="DD/MM/AAAA" />
+    </div>
+
+    <div class="rx-auth-campo">
+      <label for="chamadoSelect">Chamado</label>
+      <select id="chamadoSelect" [(ngModel)]="chamado" [disabled]="carregando">
+        <option value="" disabled>Selecione</option>
+        <option *ngFor="let c of chamados" [value]="c">{{ c }}</option>
+      </select>
+    </div>
+
+    <p class="rx-auth-erro" *ngIf="erro">{{ erro }}</p>
+    <p class="rx-admin-mensagem" *ngIf="mensagem && !erro">{{ mensagem }}</p>
+
+    <div class="rx-auth-linha-botoes">
+      <button type="button" class="rx-auth-btn" [disabled]="carregando" (click)="salvar()">
+        {{ carregando ? 'Salvando...' : 'Salvar' }}
+      </button>
+      <button
+        type="button"
+        class="rx-auth-btn rx-auth-btn-secundario"
+        [disabled]="carregando || liderId === null"
+        (click)="abrirConfirmacaoRemoverAcesso()">
+        Remover Acesso
+      </button>
+    </div>
+  </div>
+
+  <div class="rx-admin-modal-fundo" *ngIf="mostrarConfirmacaoRemover">
+    <div class="rx-admin-modal">
+      <p class="rx-admin-modal-texto">
+        Deseja realmente remover o acesso do membro "{{ nome }}"?
+      </p>
+      <div class="rx-auth-linha-botoes">
+        <button type="button" class="rx-auth-btn rx-auth-btn-secundario" (click)="cancelarRemoverAcesso()">
+          Cancelar
+        </button>
+        <button type="button" class="rx-auth-btn" (click)="confirmarRemoverAcesso()">
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
