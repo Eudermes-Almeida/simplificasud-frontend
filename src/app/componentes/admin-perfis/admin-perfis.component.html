@@ -81,6 +81,15 @@
       <button type="button" class="rx-auth-btn" [disabled]="carregando" (click)="salvar()">
         {{ carregando ? 'Salvando...' : 'Salvar' }}
       </button>
+    </div>
+    <div class="rx-auth-linha-botoes rx-admin-linha-secundaria">
+      <button
+        type="button"
+        class="rx-auth-btn rx-auth-btn-secundario"
+        [disabled]="carregando || liderId === null"
+        (click)="abrirConfirmacaoRedefinirSenha()">
+        Redefinir Senha
+      </button>
       <button
         type="button"
         class="rx-auth-btn rx-auth-btn-secundario"
@@ -91,16 +100,19 @@
     </div>
   </div>
 
-  <div class="rx-admin-modal-fundo" *ngIf="mostrarConfirmacaoRemover">
+  <div class="rx-admin-modal-fundo" *ngIf="tipoConfirmacao">
     <div class="rx-admin-modal">
-      <p class="rx-admin-modal-texto">
+      <p class="rx-admin-modal-texto" *ngIf="tipoConfirmacao === 'remover-acesso'">
         Deseja realmente remover o acesso do membro "{{ nome }}"?
       </p>
+      <p class="rx-admin-modal-texto" *ngIf="tipoConfirmacao === 'redefinir-senha'">
+        Deseja realmente redefinir a senha do membro "{{ nome }}"? Ele(a) precisará refazer o Primeiro Acesso para escolher um novo login e senha.
+      </p>
       <div class="rx-auth-linha-botoes">
-        <button type="button" class="rx-auth-btn rx-auth-btn-secundario" (click)="cancelarRemoverAcesso()">
+        <button type="button" class="rx-auth-btn rx-auth-btn-secundario" (click)="cancelarConfirmacao()">
           Cancelar
         </button>
-        <button type="button" class="rx-auth-btn" (click)="confirmarRemoverAcesso()">
+        <button type="button" class="rx-auth-btn" (click)="confirmarAcaoPendente()">
           Confirmar
         </button>
       </div>

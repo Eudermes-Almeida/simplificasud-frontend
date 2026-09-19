@@ -36,4 +36,8 @@ export class AdminPerfisService {
   revogarAcesso(id: number): Observable<void> {
     return this.http.patch<void>(`${environment.apiUrl}/lideres/admin/${id}/revogar-acesso`, {});
   }
+
+  redefinirSenha(id: number): Observable<void> {
+    return this.http.patch<void>(`${environment.apiUrl}/lideres/admin/${id}/redefinir-senha`, {});
+  }
 }

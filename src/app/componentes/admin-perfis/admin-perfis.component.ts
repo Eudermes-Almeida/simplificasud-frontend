@@ -94,7 +94,9 @@ export class AdminPerfisComponent {
   carregando = false;
   mensagem = '';
   erro = '';
-  mostrarConfirmacaoRemover = false;
+  // null = nenhum modal aberto. Um único modal serve as duas confirmações destrutivas
+  // (texto/ação mudam conforme este valor) em vez de duplicar modal por ação.
+  tipoConfirmacao: 'remover-acesso' | 'redefinir-senha' | null = null;
 
   constructor(private adminService: AdminPerfisService) {}
 
@@ -191,24 +193,40 @@ export class AdminPerfisComponent {
     if (this.liderId === null) {
       return;
     }
-    this.mostrarConfirmacaoRemover = true;
+    this.tipoConfirmacao = 'remover-acesso';
   }
 
-  cancelarRemoverAcesso(): void {
-    this.mostrarConfirmacaoRemover = false;
-  }
-
-  confirmarRemoverAcesso(): void {
-    this.mostrarConfirmacaoRemover = false;
-
+  abrirConfirmacaoRedefinirSenha(): void {
     if (this.liderId === null) {
       return;
     }
+    this.tipoConfirmacao = 'redefinir-senha';
+  }
 
+  cancelarConfirmacao(): void {
+    this.tipoConfirmacao = null;
+  }
+
+  confirmarAcaoPendente(): void {
+    const acao = this.tipoConfirmacao;
+    this.tipoConfirmacao = null;
+
+    if (this.liderId === null || acao === null) {
+      return;
+    }
+
+    if (acao === 'remover-acesso') {
+      this.executarRemoverAcesso(this.liderId);
+    } else {
+      this.executarRedefinirSenha(this.liderId);
+    }
+  }
+
+  private executarRemoverAcesso(id: number): void {
     this.erro = '';
     this.mensagem = '';
     this.carregando = true;
-    this.adminService.revogarAcesso(this.liderId).subscribe({
+    this.adminService.revogarAcesso(id).subscribe({
       next: () => {
         this.carregando = false;
         this.escopo = '';
@@ -217,6 +235,22 @@ export class AdminPerfisComponent {
       error: () => {
         this.carregando = false;
         this.erro = 'Não foi possível remover o acesso. Tente novamente.';
+      },
+    });
+  }
+
+  private executarRedefinirSenha(id: number): void {
+    this.erro = '';
+    this.mensagem = '';
+    this.carregando = true;
+    this.adminService.redefinirSenha(id).subscribe({
+      next: () => {
+        this.carregando = false;
+        this.mensagem = 'Senha redefinida: este perfil precisará refazer o Primeiro Acesso para escolher um novo login e senha.';
+      },
+      error: () => {
+        this.carregando = false;
+        this.erro = 'Não foi possível redefinir a senha. Tente novamente.';
       },
     });
   }

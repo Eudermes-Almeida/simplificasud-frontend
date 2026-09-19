@@ -59,6 +59,10 @@
   }
 }
 
+.rx-admin-linha-secundaria {
+  margin-top: 0.6rem;
+}
+
 .rx-admin-modal-fundo {
   position: fixed;
   inset: 0;
