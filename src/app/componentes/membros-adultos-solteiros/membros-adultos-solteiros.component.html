@@ -167,7 +167,7 @@
                (change)="mudarFiltroAtivo('vencida')">
         <span>Recomendação Vencida ou não emitida <span class="rx-filtro-radio-contagem">({{ contagemFiltro.vencida }})</span></span>
       </label>
-      <label class="rx-filtro-radio" *ngIf="!isNivelB" [ngClass]="{ 'active': filtroAtivo === 'ativaSemChamado' }">
+      <label class="rx-filtro-radio" [ngClass]="{ 'active': filtroAtivo === 'ativaSemChamado' }">
         <input type="radio" name="filtroRecomendacaoMembrosSolteiros" value="ativaSemChamado"
                [checked]="filtroAtivo === 'ativaSemChamado'"
                (change)="mudarFiltroAtivo('ativaSemChamado')">
@@ -175,7 +175,14 @@
       </label>
     </div>
 
-    <div class="rx-pessoa-lista my-3">
+    <!-- Nível B pode clicar no filtro "Recomendação Ativa e Sem chamado", mas não pode ver
+    a lista de nomes resultante (mesmo motivo do botão "Detalhes" bloqueado) -->
+    <div class="rx-acesso-bloqueado my-3" *ngIf="isNivelB && filtroAtivo === 'ativaSemChamado'">
+      <i class="bi bi-lock-fill"></i>
+      <span>Dados acessíveis somente para Bispados e Presidência de Estaca</span>
+    </div>
+
+    <div class="rx-pessoa-lista my-3" *ngIf="!(isNivelB && filtroAtivo === 'ativaSemChamado')">
       <div class="rx-pessoa-card" *ngFor="let pessoa of detalhesFiltrados">
 
         <div class="rx-pessoa-header">
