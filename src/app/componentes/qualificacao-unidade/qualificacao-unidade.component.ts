@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { forkJoin } from 'rxjs';
 import { RaioxApiService } from '../../services/raiox-api.service';
 import { AuthService } from '../../services/auth.service';
 
@@ -13,8 +14,11 @@ interface IndicadorQualificacao {
 // Metas fixas dadas pelo usuário (2026-08-31) — o backend não guarda nenhuma meta para
 // esta tabela, só os 3 valores atuais por unidade. A Estaca Betim tem metas próprias,
 // diferentes (e maiores) das de cada ala/ramo individual.
-const METAS_ALA = { totalMembros: 250, dizimistasIntegrais: 20, frequenciaSacramental: 100 };
-const METAS_ESTACA_BETIM = { totalMembros: 2000, dizimistasIntegrais: 150, frequenciaSacramental: 500 };
+// Mudança de regra (2026-11-21): o 3º critério deixou de ser a Frequência Sacramental e passou
+// a ser "Membros Participantes" (coluna membros_participantes de prioridadesprofeticas), com a
+// mesma meta de antes (100 por ala/ramo, 500 para a estaca).
+const METAS_ALA = { totalMembros: 250, dizimistasIntegrais: 20, membrosParticipantes: 100 };
+const METAS_ESTACA_BETIM = { totalMembros: 2000, dizimistasIntegrais: 150, membrosParticipantes: 500 };
 const UNIDADE_ESTACA_BETIM = 'Estaca Betim';
 
 @Component({
@@ -36,7 +40,7 @@ export class QualificacaoUnidadeComponent implements OnChanges {
   indicadores: IndicadorQualificacao[] = [
     { nome: 'Nº de Fichas', icone: 'bi-file-earmark-text-fill', necessario: METAS_ALA.totalMembros, atual: 0 },
     { nome: 'Élderes Dizimistas Integrais', icone: 'bi-cash-coin', necessario: METAS_ALA.dizimistasIntegrais, atual: 0 },
-    { nome: 'Frequência Sacramental', icone: 'bi-people-fill', necessario: METAS_ALA.frequenciaSacramental, atual: 0 }
+    { nome: 'Membros Participantes', icone: 'bi-people-fill', necessario: METAS_ALA.membrosParticipantes, atual: 0 }
   ];
 
   constructor(private raioxApiService: RaioxApiService, private authService: AuthService) {}
@@ -60,25 +64,24 @@ export class QualificacaoUnidadeComponent implements OnChanges {
     this.carregando = true;
     this.erroCarregamento = null;
 
-    this.raioxApiService.buscaQualificacaoUnidade(this.unidade).subscribe({
-      next: (dados) => {
-        // "Estaca Betim" não tem linha própria nessa tabela (é snapshot 1-linha-por-unidade) —
-        // o backend devolve as 9 alas/ramos, então a soma aqui resolve os dois casos (unidade
-        // específica = 1 item, soma de 1 item = o próprio valor) sem precisar de um
-        // "if unidade === Estaca Betim" separado. frequencia_sacramental é uma contagem de
-        // presença (não percentual, apesar do nome) — mesma grandeza de [[frequenciasacramental]],
-        // então soma igual aos outros dois campos (confirmado: soma das 9 unidades = 580,
-        // batendo com o "atual" já verificado na seção Frequência Sacramental).
-        const totalMembros = dados.reduce((soma, d) => soma + Number(d.total_membros), 0);
-        const dizimistasIntegrais = dados.reduce((soma, d) => soma + Number(d.dizimistas_integrais), 0);
-        const frequenciaSacramental = dados.reduce((soma, d) => soma + Number(d.frequencia_sacramental), 0);
+    forkJoin({
+      qualificacao: this.raioxApiService.buscaQualificacaoUnidade(this.unidade),
+      prioridades: this.raioxApiService.buscaPrioridadesProfeticas(this.unidade)
+    }).subscribe({
+      next: ({ qualificacao, prioridades }) => {
+        // "Estaca Betim" não tem linha própria nessas tabelas (snapshot 1-linha-por-unidade) —
+        // o backend devolve as 9 alas/ramos nos dois endpoints, então a soma aqui resolve os
+        // dois casos (unidade específica = 1 item, soma de 1 item = o próprio valor).
+        const totalMembros = qualificacao.reduce((soma, d) => soma + Number(d.total_membros), 0);
+        const dizimistasIntegrais = qualificacao.reduce((soma, d) => soma + Number(d.dizimistas_integrais), 0);
+        const membrosParticipantes = prioridades.reduce((soma, d) => soma + Number(d.membros_participantes), 0);
 
         const metas = this.unidade === UNIDADE_ESTACA_BETIM ? METAS_ESTACA_BETIM : METAS_ALA;
 
         this.indicadores = [
           { nome: 'Nº de Fichas', icone: 'bi-file-earmark-text-fill', necessario: metas.totalMembros, atual: totalMembros },
           { nome: 'Élderes Dizimistas Integrais', icone: 'bi-cash-coin', necessario: metas.dizimistasIntegrais, atual: dizimistasIntegrais },
-          { nome: 'Frequência Sacramental', icone: 'bi-people-fill', necessario: metas.frequenciaSacramental, atual: frequenciaSacramental }
+          { nome: 'Membros Participantes', icone: 'bi-people-fill', necessario: metas.membrosParticipantes, atual: membrosParticipantes }
         ];
         this.carregando = false;
       },
