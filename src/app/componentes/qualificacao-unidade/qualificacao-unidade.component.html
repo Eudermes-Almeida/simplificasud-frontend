@@ -54,6 +54,47 @@
       <i class="bi" [ngClass]="isQualificada ? 'bi-check-circle-fill me-2' : 'bi-exclamation-triangle-fill me-2'"></i>
       {{ resultadoTexto | uppercase }}
     </div>
+
+    <!-- Resumo por unidade - só na visão da Estaca Betim -->
+    <ng-container *ngIf="resumoUnidades.length > 0">
+      <div class="rx-resumo-cabecalho">
+        <h5 class="text-uppercase fw-bold text-secondary small mb-0 tracking-wide">
+          Qualificação por unidade
+        </h5>
+        <span class="rx-resumo-contagem">
+          {{ totalUnidadesQualificadas }} de {{ totalUnidades }} unidades qualificadas
+        </span>
+      </div>
+
+      <div class="rx-resumo-grid">
+        <div class="rx-resumo-card" *ngFor="let r of resumoUnidades"
+             [ngClass]="{ 'rx-resumo-ok': unidadeQualificada(r), 'rx-resumo-pendente': !unidadeQualificada(r), 'rx-resumo-estaca': r.isEstaca }">
+
+          <div class="rx-resumo-topo">
+            <span class="rx-resumo-nome">
+              <i class="bi me-1" [ngClass]="r.isEstaca ? 'bi-buildings-fill' : 'bi-house-door-fill'"></i>
+              {{ r.unidade }}
+            </span>
+            <span class="rx-selo" [ngClass]="unidadeQualificada(r) ? 'rx-selo-ok' : 'rx-selo-pendente'">
+              <i class="bi" [ngClass]="unidadeQualificada(r) ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+              {{ unidadeQualificada(r) ? 'Qualificada' : 'Não qualificada' }}
+            </span>
+          </div>
+
+          <div class="rx-resumo-linha" *ngFor="let item of r.indicadores"
+               [ngClass]="cumprido(item) ? 'rx-linha-ok' : 'rx-linha-pendente'">
+            <i class="bi rx-resumo-status" [ngClass]="cumprido(item) ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+            <span class="rx-resumo-rotulo">
+              <i class="bi me-1" [ngClass]="item.icone"></i>{{ item.nome }}
+            </span>
+            <span class="rx-resumo-valor">
+              <strong>{{ item.atual }}</strong> / {{ item.necessario }}
+              <small *ngIf="!cumprido(item)">(faltam {{ faltam(item) }})</small>
+            </span>
+          </div>
+        </div>
+      </div>
+    </ng-container>
   </ng-container>
 
 </div>

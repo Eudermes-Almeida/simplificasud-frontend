@@ -11,6 +11,12 @@ interface IndicadorQualificacao {
   atual: number;
 }
 
+interface ResumoUnidade {
+  unidade: string;
+  isEstaca: boolean;
+  indicadores: IndicadorQualificacao[];
+}
+
 // Metas fixas dadas pelo usuário (2026-08-31) — o backend não guarda nenhuma meta para
 // esta tabela, só os 3 valores atuais por unidade. A Estaca Betim tem metas próprias,
 // diferentes (e maiores) das de cada ala/ramo individual.
@@ -36,6 +42,9 @@ export class QualificacaoUnidadeComponent implements OnChanges {
 
   carregando = false;
   erroCarregamento: string | null = null;
+
+  // Preenchido só quando a unidade selecionada é a Estaca Betim
+  resumoUnidades: ResumoUnidade[] = [];
 
   indicadores: IndicadorQualificacao[] = [
     { nome: 'Nº de Fichas', icone: 'bi-file-earmark-text-fill', necessario: METAS_ALA.totalMembros, atual: 0 },
@@ -76,13 +85,32 @@ export class QualificacaoUnidadeComponent implements OnChanges {
         const dizimistasIntegrais = qualificacao.reduce((soma, d) => soma + Number(d.dizimistas_integrais), 0);
         const membrosParticipantes = prioridades.reduce((soma, d) => soma + Number(d.membros_participantes), 0);
 
-        const metas = this.unidade === UNIDADE_ESTACA_BETIM ? METAS_ESTACA_BETIM : METAS_ALA;
+        const isEstaca = this.unidade === UNIDADE_ESTACA_BETIM;
+        const metas = isEstaca ? METAS_ESTACA_BETIM : METAS_ALA;
 
-        this.indicadores = [
-          { nome: 'Nº de Fichas', icone: 'bi-file-earmark-text-fill', necessario: metas.totalMembros, atual: totalMembros },
-          { nome: 'Élderes Dizimistas Integrais', icone: 'bi-cash-coin', necessario: metas.dizimistasIntegrais, atual: dizimistasIntegrais },
-          { nome: 'Membros Participantes', icone: 'bi-people-fill', necessario: metas.membrosParticipantes, atual: membrosParticipantes }
-        ];
+        this.indicadores = this.montarIndicadores(metas, totalMembros, dizimistasIntegrais, membrosParticipantes);
+
+        // Só na visão da Estaca: resumo da qualificação de cada unidade (Estaca primeiro).
+        // As duas tabelas são casadas pelo nome da unidade (mesma grafia nas duas cargas).
+        this.resumoUnidades = [];
+        if (isEstaca) {
+          const participantesPorUnidade = new Map(
+            prioridades.map(p => [p.unidade.trim().toUpperCase(), Number(p.membros_participantes)])
+          );
+          this.resumoUnidades = [
+            { unidade: UNIDADE_ESTACA_BETIM, isEstaca: true, indicadores: this.indicadores },
+            ...qualificacao.map(q => ({
+              unidade: q.unidade,
+              isEstaca: false,
+              indicadores: this.montarIndicadores(
+                METAS_ALA,
+                Number(q.total_membros),
+                Number(q.dizimistas_integrais),
+                participantesPorUnidade.get(q.unidade.trim().toUpperCase()) ?? 0
+              )
+            }))
+          ];
+        }
         this.carregando = false;
       },
       error: (err) => {
@@ -91,6 +119,28 @@ export class QualificacaoUnidadeComponent implements OnChanges {
         console.error('Erro ao buscar qualificação da unidade:', err);
       },
     });
+  }
+
+  private montarIndicadores(
+    metas: typeof METAS_ALA, totalMembros: number, dizimistasIntegrais: number, membrosParticipantes: number
+  ): IndicadorQualificacao[] {
+    return [
+      { nome: 'Nº de Fichas', icone: 'bi-file-earmark-text-fill', necessario: metas.totalMembros, atual: totalMembros },
+      { nome: 'Élderes Dizimistas Integrais', icone: 'bi-cash-coin', necessario: metas.dizimistasIntegrais, atual: dizimistasIntegrais },
+      { nome: 'Membros Participantes', icone: 'bi-people-fill', necessario: metas.membrosParticipantes, atual: membrosParticipantes }
+    ];
+  }
+
+  unidadeQualificada(resumo: ResumoUnidade): boolean {
+    return resumo.indicadores.every(item => this.cumprido(item));
+  }
+
+  get totalUnidadesQualificadas(): number {
+    return this.resumoUnidades.filter(r => !r.isEstaca && this.unidadeQualificada(r)).length;
+  }
+
+  get totalUnidades(): number {
+    return this.resumoUnidades.filter(r => !r.isEstaca).length;
   }
 
   cumprido(item: IndicadorQualificacao): boolean {
